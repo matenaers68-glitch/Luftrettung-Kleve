@@ -9,7 +9,6 @@
 
 <link rel="apple-touch-icon" href="F3FB6DCC-CFEA-4364-9AA3-C1D64EBEF4A6.png">
 
-<!-- Leaflet -->
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
@@ -17,7 +16,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
-<title>Luftrettung Goch & Kreis Kleve – V3.5</title>
+<title>Luftrettung Goch & Kreis Kleve – V3.6</title>
 
 <style>
 :root{
@@ -41,10 +40,7 @@ header{
   z-index:1000
 }
 
-h1{
-  margin:0 0 5px;
-  font-size:25px
-}
+h1{margin:0 0 5px;font-size:25px}
 
 .sub,.muted{color:#aeb9c4}
 .sub{font-size:14px}
@@ -170,7 +166,8 @@ h2{
   margin-left:5px
 }
 
-/* KARTE */
+
+/* ---------- KARTE ---------- */
 
 #map{
   width:100%;
@@ -198,6 +195,26 @@ h2{
   line-height:30px
 }
 
+
+/* Beschriftung des neuesten Punktes */
+
+.heliLabel{
+  background:#101820;
+  color:#fff;
+  border:1px solid #657789;
+  border-radius:8px;
+  padding:4px 7px;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.35);
+}
+
+.heliLabel:before{
+  display:none;
+}
+
+
 @media(max-width:650px){
 
   .grid{
@@ -215,16 +232,20 @@ h2{
 </style>
 </head>
 
+
 <body>
 
 <header>
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
+
 <div class="sub">
-Version 3.5 · Live-Erfassung · Karte · 14-Tage-Historie
+Version 3.6 · Live · 24-h-Flugspuren · 14-Tage-Historie
 </div>
 </header>
 
+
 <main>
+
 
 <section class="card">
 
@@ -232,6 +253,7 @@ Version 3.5 · Live-Erfassung · Karte · 14-Tage-Historie
 
 <div class="status">
 <div id="dot" class="dot"></div>
+
 <div id="status" class="big">
 Daten werden geladen …
 </div>
@@ -256,14 +278,14 @@ Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
 
 <section class="card">
 
-<h2>Live-Karte & Flugspuren</h2>
+<h2>Karte – letzte 24 Stunden</h2>
 
 <div id="map"></div>
 
 <div class="mapLegend">
-Kreis = 30-km-Überwachungsbereich um Goch ·
-🚁 = gespeicherte Hubschrauberposition ·
-Linien verbinden aufeinanderfolgende Positionen derselben Maschine.
+Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
+Die Flugspuren und Positionspunkte bleiben 24 Stunden sichtbar.
+Der jeweils neueste Punkt einer Maschine ist mit ihrem Namen beschriftet.
 </div>
 
 </section>
@@ -274,7 +296,9 @@ Linien verbinden aufeinanderfolgende Positionen derselben Maschine.
 <h2>Aktuell erkannte Hubschrauber</h2>
 
 <div id="aircraft">
-<div class="muted">Noch keine Daten geladen.</div>
+<div class="muted">
+Noch keine Daten geladen.
+</div>
 </div>
 
 </section>
@@ -288,12 +312,14 @@ Hubschrauber – letzte 14 Tage
 </h2>
 
 <div id="history">
-<div class="muted">Historie wird geladen …</div>
+<div class="muted">
+Historie wird geladen …
+</div>
 </div>
 
 <p class="small">
-Gespeichert werden die von unserem System erkannten Rotorcraft
-im überwachten 30-km-Bereich.
+Die Liste enthält die gespeicherten Hubschrauber-Erfassungen
+der letzten 14 Tage.
 </p>
 
 </section>
@@ -304,12 +330,14 @@ im überwachten 30-km-Bereich.
 <h2>Unsere beobachteten Maschinen</h2>
 
 <div class="grid">
+
 <div class="btn">Christoph 9</div>
 <div class="btn">Lifeliner 3</div>
 <div class="btn">Christoph 8</div>
 <div class="btn">Christoph Westfalen</div>
 <div class="btn">Christoph Dortmund</div>
 <div class="btn">Polizeihubschrauber</div>
+
 </div>
 
 <p class="small">
@@ -328,27 +356,39 @@ werden erfasst, sofern entsprechende ADS-B-Daten verfügbar sind.
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-target="_blank">Goch</a>
+target="_blank">
+Goch
+</a>
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-target="_blank">Kreis Kleve</a>
+target="_blank">
+Kreis Kleve
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-target="_blank">Rees</a>
+target="_blank">
+Rees
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-target="_blank">Kevelaer</a>
+target="_blank">
+Kevelaer
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-target="_blank">Geldern</a>
+target="_blank">
+Geldern
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-target="_blank">Kalkar</a>
+target="_blank">
+Kalkar
+</a>
 
 </div>
 
@@ -364,28 +404,40 @@ const GOCH={
   lon:6.159
 };
 
+
 const rotorTypes=[
-  "EC35","EC45","H135","H145",
-  "EC135","EC145","BK17",
-  "B06","B407","AS50","AS55",
+  "EC35","EC45",
+  "H135","H145",
+  "EC135","EC145",
+  "BK17",
+  "B06","B407",
+  "AS50","AS55",
   "R22","R44","R66",
   "AW09","AW109","AW139","AW169",
   "S76","S92"
 ];
 
+
 const rotorWords=[
-  "HELI","ROTOR","CHRISTOPH",
-  "LIFELINER","LIFELN",
-  "POLICE","POLIZEI","SAR"
+  "HELI",
+  "ROTOR",
+  "CHRISTOPH",
+  "LIFELINER",
+  "LIFELN",
+  "POLICE",
+  "POLIZEI",
+  "SAR"
 ];
 
 
 /* ---------- KARTE ---------- */
 
-const map=L.map("map").setView(
-  [GOCH.lat,GOCH.lon],
-  10
-);
+const map=
+  L.map("map").setView(
+    [GOCH.lat,GOCH.lon],
+    10
+  );
+
 
 L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -407,7 +459,9 @@ L.circleMarker(
   }
 )
 .addTo(map)
-.bindPopup("<b>Goch</b><br>Mittelpunkt der Überwachung");
+.bindPopup(
+  "<b>Goch</b><br>Mittelpunkt der Überwachung"
+);
 
 
 /* 30-km-Kreis */
@@ -425,6 +479,7 @@ L.circle(
 const historyLayer=
   L.layerGroup().addTo(map);
 
+
 const liveLayer=
   L.layerGroup().addTo(map);
 
@@ -435,12 +490,16 @@ function rad(x){
   return x*Math.PI/180;
 }
 
+
 function distanceKm(lat1,lon1,lat2,lon2){
 
   const R=6371;
 
-  const dLat=rad(lat2-lat1);
-  const dLon=rad(lon2-lon1);
+  const dLat=
+    rad(lat2-lat1);
+
+  const dLon=
+    rad(lon2-lon1);
 
   const a=
     Math.sin(dLat/2)**2+
@@ -476,30 +535,48 @@ function isRotor(a){
     .trim()
     .toUpperCase();
 
+
   if(category==="A7"){
     return true;
   }
 
+
   const text=[
-    a.flight,a.callsign,
-    a.r,a.registration,
-    a.t,a.type,
-    a.desc,a.category
+    a.flight,
+    a.callsign,
+    a.r,
+    a.registration,
+    a.t,
+    a.type,
+    a.desc,
+    a.category
   ]
   .filter(Boolean)
   .join(" ")
   .toUpperCase();
 
-  if(rotorWords.some(word=>text.includes(word))){
+
+  if(
+    rotorWords.some(
+      word=>text.includes(word)
+    )
+  ){
     return true;
   }
 
+
   const type=
-    String(a.t||a.type||"")
+    String(
+      a.t||
+      a.type||
+      ""
+    )
     .toUpperCase();
 
+
   return rotorTypes.some(
-    rotorType=>type.includes(rotorType)
+    rotorType=>
+      type.includes(rotorType)
   );
 }
 
@@ -515,6 +592,7 @@ function displayName(a){
     .trim()
     .toUpperCase();
 
+
   const callsign=
     String(
       a.flight||
@@ -524,6 +602,8 @@ function displayName(a){
     .trim()
     .toUpperCase();
 
+
+  /* Lifeliner 3 */
 
   if(
     registration==="PH-DOC" ||
@@ -535,6 +615,8 @@ function displayName(a){
   }
 
 
+  /* Christoph 9 */
+
   if(
     callsign.includes("CHRISTOPH9") ||
     callsign.includes("CHRISTOPH 9")
@@ -543,7 +625,9 @@ function displayName(a){
   }
 
 
-  if(callsign.includes("CHRISTOPH")){
+  if(
+    callsign.includes("CHRISTOPH")
+  ){
     return callsign;
   }
 
@@ -557,10 +641,10 @@ function displayName(a){
 
 
   return callsign
-      ||registration
-      ||a.t
-      ||a.type
-      ||"Hubschrauber";
+      || registration
+      || a.t
+      || a.type
+      || "Hubschrauber";
 }
 
 
@@ -570,9 +654,12 @@ function formatTime(dateString){
     return "unbekannt";
   }
 
+
   try{
 
-    return new Date(dateString)
+    return new Date(
+      dateString
+    )
     .toLocaleTimeString(
       "de-DE",
       {
@@ -596,9 +683,12 @@ function formatDateTime(dateString){
     return "Zeit unbekannt";
   }
 
+
   try{
 
-    return new Date(dateString)
+    return new Date(
+      dateString
+    )
     .toLocaleString(
       "de-DE",
       {
@@ -650,17 +740,23 @@ async function loadLive(){
         {cache:"no-store"}
       );
 
+
     if(!response.ok){
-      throw new Error("HTTP "+response.status);
+      throw new Error(
+        "HTTP "+response.status
+      );
     }
+
 
     const data=
       await response.json();
+
 
     const all=
       Array.isArray(data.ac)
       ? data.ac
       : [];
+
 
     const rotor=
       all.filter(isRotor);
@@ -697,15 +793,46 @@ async function loadLive(){
             }
           );
 
+
         marker.bindPopup(
-          "<b>"+displayName(a)+"</b><br>"+
-          "Kennzeichen: "+value(a,"r")+"<br>"+
-          "Callsign: "+value(a,"flight")+"<br>"+
-          "Typ: "+value(a,"t")+"<br>"+
-          "Höhe: "+value(a,"alt_baro")+" ft"
+
+          "<b>"+
+          displayName(a)+
+          "</b><br>"+
+
+          "Kennzeichen: "+
+          value(a,"r")+
+          "<br>"+
+
+          "Callsign: "+
+          value(a,"flight")+
+          "<br>"+
+
+          "Typ: "+
+          value(a,"t")+
+          "<br>"+
+
+          "Höhe: "+
+          value(a,"alt_baro")+
+          " ft"
+
         );
 
-        marker.addTo(liveLayer);
+
+        marker.bindTooltip(
+          displayName(a),
+          {
+            permanent:true,
+            direction:"right",
+            offset:[18,0],
+            className:"heliLabel"
+          }
+        );
+
+
+        marker.addTo(
+          liveLayer
+        );
 
       }
 
@@ -714,10 +841,12 @@ async function loadLive(){
 
     if(rotor.length===0){
 
-      dot.className="dot warn";
+      dot.className=
+        "dot warn";
 
       status.textContent=
         "Derzeit kein Hubschrauber erkannt";
+
 
       box.innerHTML=
         '<div class="muted">'+
@@ -728,12 +857,15 @@ async function loadLive(){
     }
 
 
-    dot.className="dot live";
+    dot.className=
+      "dot live";
+
 
     status.textContent=
       rotor.length===1
       ? "1 Hubschrauber erkannt"
-      : rotor.length+" Hubschrauber erkannt";
+      : rotor.length+
+        " Hubschrauber erkannt";
 
 
     box.innerHTML="";
@@ -743,23 +875,28 @@ async function loadLive(){
 
       let dist=null;
 
+
       if(
         typeof a.lat==="number" &&
         typeof a.lon==="number"
       ){
 
-        dist=distanceKm(
-          GOCH.lat,
-          GOCH.lon,
-          a.lat,
-          a.lon
-        );
+        dist=
+          distanceKm(
+            GOCH.lat,
+            GOCH.lon,
+            a.lat,
+            a.lon
+          );
 
       }
 
 
       const row=
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className=
         "row alert";
@@ -789,7 +926,8 @@ async function loadLive(){
           '<span class="tag">Entfernung: '+
           dist.toFixed(1)+
           ' km</span>'
-          :""
+          :
+          ''
         )+
 
         '<span class="tag">Höhe: '+
@@ -808,14 +946,18 @@ async function loadLive(){
 
   }catch(error){
 
-    dot.className="dot err";
+    dot.className=
+      "dot err";
+
 
     status.textContent=
       "Flugdaten derzeit nicht erreichbar";
 
+
     info.textContent=
       "aircraft.json konnte nicht geladen werden: "+
       error.message;
+
 
     box.innerHTML=
       '<div class="muted">'+
@@ -827,15 +969,20 @@ async function loadLive(){
 }
 
 
-/* ---------- HISTORIE + FLUGSPUREN ---------- */
+/* ---------- HISTORIE + 24-STUNDEN-KARTE ---------- */
 
 async function loadHistory(){
 
   const box=
-    document.getElementById("history");
+    document.getElementById(
+      "history"
+    );
+
 
   const counter=
-    document.getElementById("historyCounter");
+    document.getElementById(
+      "historyCounter"
+    );
 
 
   try{
@@ -846,29 +993,51 @@ async function loadHistory(){
         {cache:"no-store"}
       );
 
+
     if(!response.ok){
-      throw new Error("HTTP "+response.status);
+      throw new Error(
+        "HTTP "+response.status
+      );
     }
+
 
     const history=
       await response.json();
 
+
     if(!Array.isArray(history)){
-      throw new Error("Ungültiges Datenformat");
+      throw new Error(
+        "Ungültiges Datenformat"
+      );
     }
 
 
-    const now=Date.now();
+    const now=
+      Date.now();
+
+
     const fourteenDays=
       14*24*60*60*1000;
 
 
-    const recent=
+    const twentyFourHours=
+      24*60*60*1000;
+
+
+    /*
+      14-TAGE-DATEN
+      nur für die Historienliste
+    */
+
+    const recent14=
       history
       .filter(item=>{
 
         const timestamp=
-          new Date(item.timestamp).getTime();
+          new Date(
+            item.timestamp
+          ).getTime();
+
 
         return(
           Number.isFinite(timestamp) &&
@@ -878,13 +1047,37 @@ async function loadHistory(){
       })
       .sort(
         (a,b)=>
-        new Date(b.timestamp)-
-        new Date(a.timestamp)
+          new Date(b.timestamp)-
+          new Date(a.timestamp)
       );
 
 
     counter.textContent=
-      recent.length;
+      recent14.length;
+
+
+    /*
+      24-STUNDEN-DATEN
+      ausschließlich für die Karte
+    */
+
+    const recent24=
+      recent14.filter(
+        item=>{
+
+          const timestamp=
+            new Date(
+              item.timestamp
+            ).getTime();
+
+
+          return(
+            Number.isFinite(timestamp) &&
+            now-timestamp<=twentyFourHours
+          );
+
+        }
+      );
 
 
     /* Karte neu zeichnen */
@@ -895,119 +1088,192 @@ async function loadHistory(){
     const groups={};
 
 
-    recent.forEach(item=>{
+    recent24.forEach(
+      item=>{
 
-      if(
-        typeof item.lat!=="number" ||
-        typeof item.lon!=="number"
-      ){
-        return;
-      }
-
-
-      const identity=
-        item.identity ||
-        item.hex ||
-        item.registration ||
-        item.callsign ||
-        "unknown";
+        if(
+          typeof item.lat!=="number" ||
+          typeof item.lon!=="number"
+        ){
+          return;
+        }
 
 
-      if(!groups[identity]){
-        groups[identity]=[];
-      }
+        const identity=
+          item.identity ||
+          item.hex ||
+          item.registration ||
+          item.callsign ||
+          "unknown";
 
 
-      groups[identity].push(item);
+        if(!groups[identity]){
+          groups[identity]=[];
+        }
 
 
-      const marker=
-        L.circleMarker(
-          [item.lat,item.lon],
-          {
-            radius:5,
-            weight:2,
-            fillOpacity:0.8
-          }
+        groups[identity].push(
+          item
         );
 
 
-      marker.bindPopup(
+        /*
+          Jeder gespeicherte Punkt
+          bleibt anklickbar.
+        */
 
-        "<b>"+
-        displayName(item)+
-        "</b><br>"+
-
-        formatDateTime(
-          item.timestamp
-        )+
-        "<br>"+
-
-        "Kennzeichen: "+
-        (item.registration||"–")+
-        "<br>"+
-
-        "Callsign: "+
-        (item.callsign||"–")+
-        "<br>"+
-
-        "Typ: "+
-        (item.type||"–")+
-        "<br>"+
-
-        "Höhe: "+
-        (
-          item.altitude_ft ??
-          "–"
-        )+
-        " ft"
-
-      );
+        const marker=
+          L.circleMarker(
+            [
+              item.lat,
+              item.lon
+            ],
+            {
+              radius:5,
+              weight:2,
+              fillOpacity:0.8
+            }
+          );
 
 
-      marker.addTo(historyLayer);
+        marker.bindPopup(
 
-    });
+          "<b>"+
+          displayName(item)+
+          "</b><br>"+
+
+          formatDateTime(
+            item.timestamp
+          )+
+          "<br>"+
+
+          "Kennzeichen: "+
+          (
+            item.registration||
+            "–"
+          )+
+          "<br>"+
+
+          "Callsign: "+
+          (
+            item.callsign||
+            "–"
+          )+
+          "<br>"+
+
+          "Typ: "+
+          (
+            item.type||
+            "–"
+          )+
+          "<br>"+
+
+          "Höhe: "+
+          (
+            item.altitude_ft ??
+            "–"
+          )+
+          " ft"
+
+        );
 
 
-    /* Fluglinien */
+        marker.addTo(
+          historyLayer
+        );
+
+      }
+    );
+
+
+    /*
+      FLUGSPUREN + NAMEN
+    */
 
     Object.values(groups)
     .forEach(points=>{
 
       points.sort(
         (a,b)=>
-        new Date(a.timestamp)-
-        new Date(b.timestamp)
+          new Date(a.timestamp)-
+          new Date(b.timestamp)
       );
 
 
-      if(points.length<2){
-        return;
+      /*
+        Fluglinie nur bei mindestens
+        zwei gespeicherten Punkten
+      */
+
+      if(points.length>=2){
+
+        const coordinates=
+          points.map(
+            item=>[
+              item.lat,
+              item.lon
+            ]
+          );
+
+
+        L.polyline(
+          coordinates,
+          {
+            weight:3,
+            opacity:0.75
+          }
+        )
+        .addTo(
+          historyLayer
+        );
+
       }
 
 
-      const coordinates=
-        points.map(
-          item=>[
-            item.lat,
-            item.lon
-          ]
+      /*
+        Neuester Punkt:
+        dauerhafte Namensbeschriftung
+      */
+
+      const latest=
+        points[
+          points.length-1
+        ];
+
+
+      const labelMarker=
+        L.marker(
+          [
+            latest.lat,
+            latest.lon
+          ],
+          {
+            interactive:false,
+            icon:L.divIcon({
+              className:"",
+              html:
+                '<div class="heliLabel">'+
+                displayName(latest)+
+                '</div>',
+              iconSize:null,
+              iconAnchor:[-8,15]
+            })
+          }
         );
 
 
-      L.polyline(
-        coordinates,
-        {
-          weight:3,
-          opacity:0.75
-        }
-      ).addTo(historyLayer);
+      labelMarker.addTo(
+        historyLayer
+      );
 
     });
 
 
-    if(recent.length===0){
+    /*
+      14-TAGE-HISTORIENLISTE
+    */
+
+    if(recent14.length===0){
 
       box.innerHTML=
         '<div class="muted">'+
@@ -1021,82 +1287,95 @@ async function loadHistory(){
     box.innerHTML="";
 
 
-    recent.forEach(item=>{
+    recent14.forEach(
+      item=>{
 
-      const row=
-        document.createElement("div");
-
-      row.className=
-        "historyRow";
-
-
-      const registration=
-        item.registration||
-        item.r||
-        "–";
-
-      const callsign=
-        item.callsign||
-        item.flight||
-        "–";
-
-      const type=
-        item.type||
-        item.t||
-        "–";
+        const row=
+          document.createElement(
+            "div"
+          );
 
 
-      row.innerHTML=
+        row.className=
+          "historyRow";
 
-        '<div class="historyTime">'+
-        formatDateTime(
-          item.timestamp
-        )+
-        '</div>'+
 
-        '<div class="historyName">'+
-        displayName(item)+
-        '</div>'+
+        const registration=
+          item.registration||
+          item.r||
+          "–";
 
-        '<span class="tag">Kennzeichen: '+
-        registration+
-        '</span>'+
 
-        '<span class="tag">Callsign: '+
-        callsign+
-        '</span>'+
+        const callsign=
+          item.callsign||
+          item.flight||
+          "–";
 
-        '<span class="tag">Typ: '+
-        type+
-        '</span>'+
 
-        (
-          item.distance_km!=null
-          ?
-          '<span class="tag">Entfernung: '+
-          item.distance_km+
-          ' km</span>'
-          :""
-        )+
+        const type=
+          item.type||
+          item.t||
+          "–";
 
-        (
-          item.altitude_ft!=null
-          ?
-          '<span class="tag">Höhe: '+
-          item.altitude_ft+
-          ' ft</span>'
-          :""
+
+        row.innerHTML=
+
+          '<div class="historyTime">'+
+          formatDateTime(
+            item.timestamp
+          )+
+          '</div>'+
+
+          '<div class="historyName">'+
+          displayName(item)+
+          '</div>'+
+
+          '<span class="tag">Kennzeichen: '+
+          registration+
+          '</span>'+
+
+          '<span class="tag">Callsign: '+
+          callsign+
+          '</span>'+
+
+          '<span class="tag">Typ: '+
+          type+
+          '</span>'+
+
+          (
+            item.distance_km!=null
+            ?
+            '<span class="tag">Entfernung: '+
+            item.distance_km+
+            ' km</span>'
+            :
+            ''
+          )+
+
+          (
+            item.altitude_ft!=null
+            ?
+            '<span class="tag">Höhe: '+
+            item.altitude_ft+
+            ' ft</span>'
+            :
+            ''
+          );
+
+
+        box.appendChild(
+          row
         );
 
-
-      box.appendChild(row);
-
-    });
+      }
+    );
 
 
   }catch(error){
 
-    counter.textContent="–";
+    counter.textContent=
+      "–";
+
 
     box.innerHTML=
       '<div class="muted">'+
