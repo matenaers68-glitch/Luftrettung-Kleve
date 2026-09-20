@@ -194,8 +194,7 @@ jobs:
                   "km"
               )
           PY
-
-      - name: Neue Daten speichern
+            - name: Neue Daten speichern
         shell: bash
         run: |
           git config user.name "Luftrettung-Kleve Bot"
@@ -207,5 +206,7 @@ jobs:
             echo "Keine Änderung vorhanden."
           else
             git commit -m "Flugdaten und Historie automatisch aktualisiert"
-            git push
+
+            git pull --rebase origin main
+            git push origin main
           fi
