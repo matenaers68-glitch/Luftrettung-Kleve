@@ -1,0 +1,13 @@
+{
+  "updated_at": null,
+  "source": "ADSB.lol",
+  "center": {
+    "name": "Goch",
+    "lat": 51.678,
+    "lon": 6.159,
+    "radius_nm": 16.2,
+    "radius_km_approx": 30
+  },
+  "total_aircraft": 0,
+  "helicopters": []
+}
