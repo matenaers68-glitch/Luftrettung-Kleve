@@ -4,18 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Luftrettung Kleve">
+<meta name="apple-mobile-web-app-title" content="Luftrettung KLE">
 <meta name="theme-color" content="#0b1117">
+
 <link rel="apple-touch-icon" href="F3FB6DCC-CFEA-4364-9AA3-C1D64EBEF4A6.png">
-<title>Luftrettung Goch & Kreis Kleve – V3.3</title>
+
+<title>Luftrettung Goch & Kreis Kleve – V3.4</title>
 
 <style>
 :root{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
   color-scheme:dark
 }
+
 *{box-sizing:border-box}
-body{margin:0;background:#0b1117;color:#fff}
+
+body{
+  margin:0;
+  background:#0b1117;
+  color:#fff
+}
+
 header{
   padding:calc(18px + env(safe-area-inset-top)) 18px 16px;
   background:#101820;
@@ -23,39 +32,72 @@ header{
   top:0;
   z-index:5
 }
-h1{margin:0 0 5px;font-size:25px}
-.sub,.muted{color:#aeb9c4}
-.sub{font-size:14px}
-main{max-width:950px;margin:auto;padding:14px}
+
+h1{
+  margin:0 0 5px;
+  font-size:25px
+}
+
+.sub,.muted{
+  color:#aeb9c4
+}
+
+.sub{
+  font-size:14px
+}
+
+main{
+  max-width:950px;
+  margin:auto;
+  padding:14px
+}
+
 .card{
   background:#151e27;
   border-radius:18px;
   padding:15px;
   margin-bottom:14px
 }
-h2{font-size:19px;margin:2px 0 12px}
+
+h2{
+  font-size:19px;
+  margin:2px 0 12px
+}
+
 .status{
   display:flex;
   align-items:center;
   gap:9px;
   margin-bottom:10px
 }
+
 .dot{
   width:12px;
   height:12px;
   border-radius:50%;
   background:#77818a
 }
+
 .dot.live{background:#43c76f}
 .dot.warn{background:#e5b64b}
 .dot.err{background:#e15b64}
-.big{font-size:23px;font-weight:750}
-.small{font-size:12px;color:#9eabb6}
+
+.big{
+  font-size:23px;
+  font-weight:750
+}
+
+.small{
+  font-size:12px;
+  color:#9eabb6
+}
+
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:9px
 }
+
 .btn{
   display:block;
   text-decoration:none;
@@ -69,13 +111,25 @@ h2{font-size:19px;margin:2px 0 12px}
   width:100%;
   cursor:pointer
 }
-.primary{background:#304c65}
+
+.primary{
+  background:#304c65
+}
+
 .row{
   padding:12px 0;
   border-top:1px solid #2a3744
 }
-.row:first-child{border-top:0}
-.name{font-size:18px;font-weight:700}
+
+.row:first-child{
+  border-top:0
+}
+
+.name{
+  font-size:18px;
+  font-weight:700
+}
+
 .tag{
   display:inline-block;
   padding:3px 8px;
@@ -84,13 +138,49 @@ h2{font-size:19px;margin:2px 0 12px}
   margin:4px 5px 0 0;
   font-size:12px
 }
+
 .alert{
   border-left:4px solid #43c76f;
   padding-left:12px
 }
+
+.historyRow{
+  padding:13px 0;
+  border-top:1px solid #2a3744
+}
+
+.historyRow:first-child{
+  border-top:0
+}
+
+.historyTime{
+  color:#9eabb6;
+  font-size:13px;
+  margin-bottom:4px
+}
+
+.historyName{
+  font-size:18px;
+  font-weight:750
+}
+
+.counter{
+  display:inline-block;
+  background:#29425a;
+  border-radius:999px;
+  padding:4px 9px;
+  font-size:12px;
+  margin-left:5px
+}
+
 @media(max-width:650px){
-  .grid{grid-template-columns:1fr 1fr}
-  .big{font-size:21px}
+  .grid{
+    grid-template-columns:1fr 1fr
+  }
+
+  .big{
+    font-size:21px
+  }
 }
 </style>
 </head>
@@ -99,17 +189,22 @@ h2{font-size:19px;margin:2px 0 12px}
 
 <header>
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
-<div class="sub">Version 3.3 · GitHub-Luftraumüberwachung + NotfallRadar</div>
+<div class="sub">
+Version 3.4 · Live-Erfassung + 14-Tage-Historie
+</div>
 </header>
 
 <main>
 
 <section class="card">
+
 <h2>LIVE – 30 km um Goch</h2>
 
 <div class="status">
 <div id="dot" class="dot"></div>
-<div id="status" class="big">Daten werden geladen …</div>
+<div id="status" class="big">
+Daten werden geladen …
+</div>
 </div>
 
 <div id="info" class="muted">
@@ -118,74 +213,118 @@ aircraft.json wird abgerufen.
 
 <br>
 
-<button class="btn primary" onclick="loadData()">
-Jetzt aktualisieren
+<button class="btn primary" onclick="loadAll()">
+Daten neu laden
 </button>
 
 <p class="small">
 Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
-Der Datenstand wird regelmäßig aktualisiert.
 </p>
+
 </section>
 
 
 <section class="card">
-<h2>Erkannte Hubschrauber / Rotorcraft</h2>
+
+<h2>Aktuell erkannte Hubschrauber</h2>
+
 <div id="aircraft">
-<div class="muted">Noch keine Daten geladen.</div>
+<div class="muted">
+Noch keine Daten geladen.
 </div>
+</div>
+
 </section>
 
 
 <section class="card">
+
+<h2>
+Hubschrauber – letzte 14 Tage
+<span id="historyCounter" class="counter">0</span>
+</h2>
+
+<div id="history">
+<div class="muted">
+Historie wird geladen …
+</div>
+</div>
+
+<p class="small">
+Gespeichert werden alle von unserem System erkannten Rotorcraft
+im überwachten 30-km-Bereich.
+</p>
+
+</section>
+
+
+<section class="card">
+
 <h2>Unsere beobachteten Maschinen</h2>
 
 <div class="grid">
+
 <div class="btn">Christoph 9</div>
 <div class="btn">Lifeliner 3</div>
 <div class="btn">Christoph 8</div>
 <div class="btn">Christoph Westfalen</div>
 <div class="btn">Christoph Dortmund</div>
 <div class="btn">Polizeihubschrauber</div>
+
 </div>
 
 <p class="small">
-Die Erkennung berücksichtigt Callsign, Kennzeichen,
-ICAO-Daten und bekannte Hubschraubertypen.
+Auch andere Rettungs-, Polizei- und sonstige Hubschrauber
+werden erfasst, sofern entsprechende ADS-B-Daten verfügbar sind.
 </p>
+
 </section>
 
 
 <section class="card">
+
 <h2>NotfallRadar – Kreis Kleve</h2>
 
 <div class="grid">
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-target="_blank">Goch</a>
+target="_blank">
+Goch
+</a>
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-target="_blank">Kreis Kleve</a>
+target="_blank">
+Kreis Kleve
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-target="_blank">Rees</a>
+target="_blank">
+Rees
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-target="_blank">Kevelaer</a>
+target="_blank">
+Kevelaer
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-target="_blank">Geldern</a>
+target="_blank">
+Geldern
+</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-target="_blank">Kalkar</a>
+target="_blank">
+Kalkar
+</a>
 
 </div>
+
 </section>
 
 </main>
@@ -193,18 +332,20 @@ target="_blank">Kalkar</a>
 
 <script>
 
-const GOCH = {
+const GOCH={
   lat:51.678,
   lon:6.159
 };
 
 
-/* bekannte Rotorcraft-Typen */
+/* Bekannte Hubschraubertypen */
 
-const rotorTypes = [
-  "EC35","EC45","H135","H145",
+const rotorTypes=[
+  "EC35","EC45",
+  "H135","H145",
   "EC135","EC145",
-  "BK17","B06","B407",
+  "BK17",
+  "B06","B407",
   "AS50","AS55",
   "R22","R44","R66",
   "AW09","AW109","AW139","AW169",
@@ -212,13 +353,12 @@ const rotorTypes = [
 ];
 
 
-/* Begriffe, die auf Hubschrauber/Rettung hinweisen */
-
-const rotorWords = [
+const rotorWords=[
   "HELI",
   "ROTOR",
   "CHRISTOPH",
   "LIFELINER",
+  "LIFELN",
   "POLICE",
   "POLIZEI",
   "SAR"
@@ -243,25 +383,48 @@ function distanceKm(lat1,lon1,lat2,lon2){
     Math.cos(rad(lat2))*
     Math.sin(dLon/2)**2;
 
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return R*2*Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(1-a)
+  );
 }
 
 
 function value(a,key){
 
-  if(a[key]===undefined || a[key]===null || a[key]==="")
+  if(
+    a[key]===undefined ||
+    a[key]===null ||
+    a[key]===""
+  ){
     return "–";
+  }
 
   return a[key];
 }
 
 
+/* Einheitliche Rotorcraft-Erkennung */
+
 function isRotor(a){
+
+  const category=
+    String(a.category||"")
+    .trim()
+    .toUpperCase();
+
+  if(category==="A7"){
+    return true;
+  }
+
 
   const text=[
     a.flight,
+    a.callsign,
     a.r,
+    a.registration,
     a.t,
+    a.type,
     a.desc,
     a.category
   ]
@@ -270,48 +433,114 @@ function isRotor(a){
   .toUpperCase();
 
 
-  if(rotorWords.some(x=>text.includes(x)))
+  if(
+    rotorWords.some(
+      word=>text.includes(word)
+    )
+  ){
     return true;
+  }
 
 
-  const type=(a.t||"").toUpperCase();
+  const type=
+    String(a.t||a.type||"")
+    .toUpperCase();
 
-  if(rotorTypes.some(x=>type.includes(x)))
+
+  if(
+    rotorTypes.some(
+      rotorType=>type.includes(rotorType)
+    )
+  ){
     return true;
+  }
 
 
   return false;
 }
 
 
-function aircraftName(a){
+/* Namen schöner darstellen */
 
-  const text=(a.flight||"").trim().toUpperCase();
+function displayName(a){
 
-  if(text.includes("LIFELINER"))
-    return "Lifeliner";
+  const registration=
+    String(
+      a.r ||
+      a.registration ||
+      ""
+    )
+    .trim()
+    .toUpperCase();
 
-  if(text.includes("CHRISTOPH"))
-    return text;
+  const callsign=
+    String(
+      a.flight ||
+      a.callsign ||
+      ""
+    )
+    .trim()
+    .toUpperCase();
 
-  if(text.includes("POLICE") || text.includes("POLIZEI"))
+
+  /* Lifeliner 3 */
+
+  if(
+    registration==="PH-DOC" ||
+    callsign.includes("LIFELN3") ||
+    callsign.includes("LIFELINER3") ||
+    callsign.includes("LIFELINER 3")
+  ){
+    return "Lifeliner 3";
+  }
+
+
+  /*
+   Christoph 9:
+   Wenn wir die jeweils eingesetzten Kennzeichen
+   verifiziert haben, können sie hier ergänzt werden.
+  */
+
+  if(
+    callsign.includes("CHRISTOPH9") ||
+    callsign.includes("CHRISTOPH 9")
+  ){
+    return "Christoph 9";
+  }
+
+
+  if(callsign.includes("CHRISTOPH")){
+    return callsign;
+  }
+
+
+  if(
+    callsign.includes("POLICE") ||
+    callsign.includes("POLIZEI")
+  ){
     return "Polizeihubschrauber";
+  }
 
-  return (a.flight||"").trim()
-      || a.r
+
+  return callsign
+      || registration
       || a.t
+      || a.type
       || "Hubschrauber";
 }
 
 
 function formatTime(dateString){
 
-  if(!dateString)
+  if(!dateString){
     return "unbekannt";
+  }
 
   try{
 
-    return new Date(dateString).toLocaleTimeString(
+    return new Date(
+      dateString
+    ).toLocaleTimeString(
       "de-DE",
       {
         hour:"2-digit",
@@ -328,33 +557,87 @@ function formatTime(dateString){
 }
 
 
-async function loadData(){
+function formatDateTime(dateString){
 
-  const dot=document.getElementById("dot");
-  const status=document.getElementById("status");
-  const info=document.getElementById("info");
-  const box=document.getElementById("aircraft");
-
-  dot.className="dot";
-  status.textContent="Daten werden geladen …";
+  if(!dateString){
+    return "Zeit unbekannt";
+  }
 
   try{
 
-    const response=await fetch(
-      "aircraft.json?time="+Date.now(),
-      {cache:"no-store"}
+    return new Date(
+      dateString
+    ).toLocaleString(
+      "de-DE",
+      {
+        weekday:"short",
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+      }
     );
 
-    if(!response.ok)
-      throw new Error("HTTP "+response.status);
+  }catch(e){
 
-    const data=await response.json();
+    return dateString;
 
-    const all=Array.isArray(data.ac)
+  }
+}
+
+
+/* LIVE-DATEN */
+
+async function loadLive(){
+
+  const dot=
+    document.getElementById("dot");
+
+  const status=
+    document.getElementById("status");
+
+  const info=
+    document.getElementById("info");
+
+  const box=
+    document.getElementById("aircraft");
+
+
+  dot.className="dot";
+
+  status.textContent=
+    "Daten werden geladen …";
+
+
+  try{
+
+    const response=
+      await fetch(
+        "aircraft.json?time="+Date.now(),
+        {cache:"no-store"}
+      );
+
+
+    if(!response.ok){
+      throw new Error(
+        "HTTP "+response.status
+      );
+    }
+
+
+    const data=
+      await response.json();
+
+
+    const all=
+      Array.isArray(data.ac)
       ? data.ac
       : [];
 
-    const rotor=all.filter(isRotor);
+
+    const rotor=
+      all.filter(isRotor);
 
 
     info.innerHTML=
@@ -370,11 +653,12 @@ async function loadData(){
       dot.className="dot warn";
 
       status.textContent=
-        "Datenquelle erreichbar – derzeit kein Rotorcraft erkannt";
+        "Derzeit kein Hubschrauber erkannt";
+
 
       box.innerHTML=
         '<div class="muted">'+
-        'Im aktuellen Datenstand wurde kein Hubschrauber sicher erkannt.'+
+        'Im aktuellen Datenstand befindet sich kein sicher erkannter Hubschrauber im überwachten Gebiet.'+
         '</div>';
 
       return;
@@ -384,10 +668,10 @@ async function loadData(){
     dot.className="dot live";
 
     status.textContent=
-      rotor.length+
-      (rotor.length===1
-        ?" Hubschrauber erkannt"
-        :" Hubschrauber erkannt");
+      rotor.length===1
+      ? "1 Hubschrauber erkannt"
+      : rotor.length+
+        " Hubschrauber erkannt";
 
 
     box.innerHTML="";
@@ -396,6 +680,7 @@ async function loadData(){
     rotor.forEach(a=>{
 
       let dist=null;
+
 
       if(
         typeof a.lat==="number" &&
@@ -412,27 +697,30 @@ async function loadData(){
       }
 
 
-      const row=document.createElement("div");
+      const row=
+        document.createElement("div");
 
-      row.className="row alert";
+
+      row.className=
+        "row alert";
 
 
       row.innerHTML=
 
         '<div class="name">'+
-        aircraftName(a)+
+        displayName(a)+
         '</div>'+
 
         '<span class="tag">Kennzeichen: '+
         value(a,"r")+
         '</span>'+
 
-        '<span class="tag">Typ: '+
-        value(a,"t")+
+        '<span class="tag">Callsign: '+
+        value(a,"flight")+
         '</span>'+
 
-        '<span class="tag">ICAO: '+
-        value(a,"hex")+
+        '<span class="tag">Typ: '+
+        value(a,"t")+
         '</span>'+
 
         (
@@ -461,14 +749,17 @@ async function loadData(){
 
   }catch(error){
 
-    dot.className="dot err";
+    dot.className=
+      "dot err";
 
     status.textContent=
       "Flugdaten derzeit nicht erreichbar";
 
+
     info.textContent=
       "aircraft.json konnte nicht geladen werden: "+
       error.message;
+
 
     box.innerHTML=
       '<div class="muted">'+
@@ -480,12 +771,216 @@ async function loadData(){
 }
 
 
-loadData();
+/* 14-TAGE-HISTORIE */
+
+async function loadHistory(){
+
+  const box=
+    document.getElementById("history");
+
+  const counter=
+    document.getElementById(
+      "historyCounter"
+    );
 
 
-/* Seite alle 60 Sekunden neu aus aircraft.json einlesen */
+  try{
 
-setInterval(loadData,60000);
+    const response=
+      await fetch(
+        "history.json?time="+Date.now(),
+        {cache:"no-store"}
+      );
+
+
+    if(!response.ok){
+      throw new Error(
+        "HTTP "+response.status
+      );
+    }
+
+
+    const history=
+      await response.json();
+
+
+    if(!Array.isArray(history)){
+      throw new Error(
+        "Ungültiges Datenformat"
+      );
+    }
+
+
+    const now=
+      Date.now();
+
+
+    const fourteenDays=
+      14*24*60*60*1000;
+
+
+    const recent=
+      history
+      .filter(item=>{
+
+        const timestamp=
+          new Date(
+            item.timestamp
+          ).getTime();
+
+
+        return(
+          Number.isFinite(timestamp) &&
+          now-timestamp<=fourteenDays
+        );
+
+      })
+      .sort((a,b)=>
+        new Date(b.timestamp)-
+        new Date(a.timestamp)
+      );
+
+
+    counter.textContent=
+      recent.length;
+
+
+    if(recent.length===0){
+
+      box.innerHTML=
+        '<div class="muted">'+
+        'In den letzten 14 Tagen wurden noch keine Hubschrauber gespeichert.'+
+        '</div>';
+
+      return;
+    }
+
+
+    box.innerHTML="";
+
+
+    recent.forEach(item=>{
+
+      const row=
+        document.createElement("div");
+
+
+      row.className=
+        "historyRow";
+
+
+      const registration=
+        item.registration ||
+        item.r ||
+        "–";
+
+
+      const callsign=
+        item.callsign ||
+        item.flight ||
+        "–";
+
+
+      const type=
+        item.type ||
+        item.t ||
+        "–";
+
+
+      const distance=
+        item.distance_km;
+
+
+      const altitude=
+        item.altitude_ft;
+
+
+      row.innerHTML=
+
+        '<div class="historyTime">'+
+        formatDateTime(
+          item.timestamp
+        )+
+        '</div>'+
+
+        '<div class="historyName">'+
+        displayName(item)+
+        '</div>'+
+
+        '<span class="tag">Kennzeichen: '+
+        registration+
+        '</span>'+
+
+        '<span class="tag">Callsign: '+
+        callsign+
+        '</span>'+
+
+        '<span class="tag">Typ: '+
+        type+
+        '</span>'+
+
+        (
+          distance!==undefined &&
+          distance!==null
+          ?
+          '<span class="tag">Entfernung: '+
+          distance+
+          ' km</span>'
+          :
+          ''
+        )+
+
+        (
+          altitude!==undefined &&
+          altitude!==null
+          ?
+          '<span class="tag">Höhe: '+
+          altitude+
+          ' ft</span>'
+          :
+          ''
+        );
+
+
+      box.appendChild(row);
+
+    });
+
+
+  }catch(error){
+
+    counter.textContent="–";
+
+    box.innerHTML=
+      '<div class="muted">'+
+      'Historie konnte nicht geladen werden: '+
+      error.message+
+      '</div>';
+
+  }
+
+}
+
+
+async function loadAll(){
+
+  await Promise.all([
+    loadLive(),
+    loadHistory()
+  ]);
+
+}
+
+
+loadAll();
+
+
+/* Anzeige jede Minute aktualisieren */
+
+setInterval(
+  loadAll,
+  60000
+);
 
 </script>
 
