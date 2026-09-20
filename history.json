@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "timestamp": "2026-09-20T17:53:41.586857+00:00",
+    "identity": "485e49",
+    "hex": "485e49",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.862198,
+    "lon": 5.872192,
+    "distance_km": 28.4,
+    "altitude_ft": 500,
+    "ground_speed": 117.2
+  }
+]
