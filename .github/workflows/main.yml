@@ -24,7 +24,7 @@ jobs:
           import urllib.request
           import math
           import os
-          from datetime import datetime, timezone
+          from datetime import datetime, timezone, timedelta
 
           # Mittelpunkt Goch
           lat = 51.678
@@ -34,6 +34,8 @@ jobs:
           radius_nm = 16.2
 
           url = f"https://api.adsb.lol/v2/lat/{lat}/lon/{lon}/dist/{radius_nm}"
+
+          now = datetime.now(timezone.utc)
 
           try:
               req = urllib.request.Request(
@@ -47,7 +49,7 @@ jobs:
               aircraft = source.get("ac", [])
 
               output = {
-                  "updated": datetime.now(timezone.utc).isoformat(),
+                  "updated": now.isoformat(),
                   "source": "ADSB.lol",
                   "center": {
                       "name": "Goch",
@@ -61,7 +63,7 @@ jobs:
 
           except Exception as e:
               output = {
-                  "updated": datetime.now(timezone.utc).isoformat(),
+                  "updated": now.isoformat(),
                   "source": "ADSB.lol",
                   "error": str(e),
                   "total": 0,
@@ -92,6 +94,14 @@ jobs:
 
               return 2 * r * math.asin(math.sqrt(a))
 
+          def parse_time(value):
+              try:
+                  return datetime.fromisoformat(
+                      value.replace("Z", "+00:00")
+                  )
+              except Exception:
+                  return None
+
           history_file = "history.json"
 
           if os.path.exists(history_file):
@@ -106,10 +116,45 @@ jobs:
           if not isinstance(history, list):
               history = []
 
-          now = datetime.now(timezone.utc)
-          detected = []
+          # -------------------------------------------------
+          # Nur die letzten 14 Tage behalten
+          # -------------------------------------------------
+
+          cutoff = now - timedelta(days=14)
+
+          cleaned_history = []
+
+          for old in history:
+              old_time = parse_time(old.get("timestamp", ""))
+
+              if old_time is not None and old_time >= cutoff:
+                  cleaned_history.append(old)
+
+          history = cleaned_history
+
+          # -------------------------------------------------
+          # Letzte Push-Meldungen laden
+          # -------------------------------------------------
+
+          push_file = "push_state.json"
+
+          if os.path.exists(push_file):
+              try:
+                  with open(push_file, "r", encoding="utf-8") as f:
+                      push_state = json.load(f)
+              except Exception:
+                  push_state = {}
+          else:
+              push_state = {}
+
+          if not isinstance(push_state, dict):
+              push_state = {}
+
+          detected_for_push = []
+          stored_positions = []
 
           for ac in output.get("ac", []):
+
               ac_type = str(ac.get("t") or "").strip().upper()
               category = str(ac.get("category") or "").strip().upper()
 
@@ -142,29 +187,33 @@ jobs:
               if not identity:
                   continue
 
-              # Dieselbe Maschine innerhalb von 60 Minuten
-              # nur einmal melden.
-              duplicate = False
+              # Für eine Flugspur brauchen wir eine Position.
+              if not (
+                  isinstance(alat, (int, float))
+                  and isinstance(alon, (int, float))
+              ):
+                  continue
 
-              for old in reversed(history[-300:]):
+              # -------------------------------------------------
+              # HISTORIE:
+              # ungefähr alle 5 Minuten einen Positionspunkt
+              # -------------------------------------------------
+
+              save_position = True
+
+              for old in reversed(history):
                   if old.get("identity") != identity:
                       continue
 
-                  try:
-                      old_time = datetime.fromisoformat(
-                          old["timestamp"].replace("Z", "+00:00")
-                      )
+                  old_time = parse_time(old.get("timestamp", ""))
 
-                      if (now - old_time).total_seconds() < 3600:
-                          duplicate = True
-
-                  except Exception:
-                      pass
+                  if old_time is not None:
+                      # Schutz gegen doppelte Runs innerhalb
+                      # weniger Minuten
+                      if (now - old_time).total_seconds() < 240:
+                          save_position = False
 
                   break
-
-              if duplicate:
-                  continue
 
               entry = {
                   "timestamp": now.isoformat(),
@@ -178,30 +227,63 @@ jobs:
                   "lon": alon,
                   "distance_km": dist,
                   "altitude_ft": ac.get("alt_baro"),
-                  "ground_speed": ac.get("gs")
+                  "ground_speed": ac.get("gs"),
+                  "track": ac.get("track")
               }
 
-              history.append(entry)
-              detected.append(entry)
+              if save_position:
+                  history.append(entry)
+                  stored_positions.append(entry)
 
-          history = history[-2000:]
+              # -------------------------------------------------
+              # PUSH:
+              # dieselbe Maschine höchstens einmal pro 60 Minuten
+              # -------------------------------------------------
+
+              send_push = True
+
+              last_push = push_state.get(identity)
+
+              if last_push:
+                  last_push_time = parse_time(last_push)
+
+                  if last_push_time is not None:
+                      if (now - last_push_time).total_seconds() < 3600:
+                          send_push = False
+
+              if send_push:
+                  detected_for_push.append(entry)
+                  push_state[identity] = now.isoformat()
+
+          # Noch einmal chronologisch sortieren
+          history.sort(
+              key=lambda x: x.get("timestamp", "")
+          )
 
           with open(history_file, "w", encoding="utf-8") as f:
               json.dump(history, f, ensure_ascii=False, indent=2)
 
-          # Neue Erkennungen für den Push-Schritt speichern
+          with open(push_file, "w", encoding="utf-8") as f:
+              json.dump(push_state, f, ensure_ascii=False, indent=2)
+
           with open("detected.json", "w", encoding="utf-8") as f:
-              json.dump(detected, f, ensure_ascii=False, indent=2)
+              json.dump(
+                  detected_for_push,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
 
           print("aircraft.json aktualisiert")
           print("Luftfahrzeuge im Suchgebiet:", output.get("total", 0))
-          print("Neue Rotorcraft-Historieneinträge:", len(detected))
+          print("Neue Positionspunkte:", len(stored_positions))
+          print("Neue Push-Meldungen:", len(detected_for_push))
 
-          for item in detected:
+          for item in stored_positions:
               print(
+                  "POSITION:",
                   item.get("registration"),
                   item.get("callsign"),
-                  item.get("type"),
                   item.get("distance_km"),
                   "km"
               )
@@ -223,10 +305,11 @@ jobs:
               detected = []
 
           if not detected:
-              print("Keine neue Hubschrauber-Erkennung – kein Push.")
+              print("Keine neue Push-Erkennung.")
               raise SystemExit(0)
 
           for item in detected:
+
               registration = item.get("registration") or "unbekannt"
               callsign = item.get("callsign") or "unbekannt"
               ac_type = item.get("type") or "unbekannt"
@@ -250,21 +333,29 @@ jobs:
                   data=message.encode("utf-8"),
                   method="POST",
                   headers={
-                      "Title": "Luftrettung Goch",
+                      "Title": "Luftrettung KLE",
                       "Priority": "high",
                       "Tags": "helicopter"
                   }
               )
 
               try:
-                  with urllib.request.urlopen(req, timeout=20) as response:
+                  with urllib.request.urlopen(
+                      req,
+                      timeout=20
+                  ) as response:
+
                       print(
                           "Push gesendet:",
                           registration,
                           response.status
                       )
+
               except Exception as e:
-                  print("Push konnte nicht gesendet werden:", e)
+                  print(
+                      "Push konnte nicht gesendet werden:",
+                      e
+                  )
           PY
 
       - name: Neue Daten speichern
@@ -273,12 +364,12 @@ jobs:
           git config user.name "Luftrettung-Kleve Bot"
           git config user.email "actions@github.com"
 
-          git add aircraft.json history.json
+          git add aircraft.json history.json push_state.json
 
           if git diff --cached --quiet; then
             echo "Keine Änderung vorhanden."
           else
-            git commit -m "Flugdaten und Historie automatisch aktualisiert"
+            git commit -m "Flugdaten und Flugspuren aktualisiert"
             git pull --rebase origin main
             git push origin main
           fi
