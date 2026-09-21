@@ -56,5 +56,20 @@
     "altitude_ft": 625,
     "ground_speed": 94.4,
     "track": 155.61
+  },
+  {
+    "timestamp": "2026-09-21T09:54:02.931269+00:00",
+    "identity": "485ea6",
+    "hex": "485ea6",
+    "registration": "PH-ANK",
+    "callsign": "PHANK",
+    "type": "R44",
+    "category": "A7",
+    "lat": 51.446554,
+    "lon": 6.052399,
+    "distance_km": 26.8,
+    "altitude_ft": 700,
+    "ground_speed": 93.3,
+    "track": 199.41
   }
 ]
