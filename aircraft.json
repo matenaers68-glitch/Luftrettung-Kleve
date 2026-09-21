@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-21T03:18:07.207543+00:00",
+  "updated": "2026-09-21T03:32:11.449020+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,61 +7,6 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 1,
-  "ac": [
-    {
-      "hex": "780560",
-      "type": "mlat",
-      "flight": "CES553  ",
-      "r": "B-2002",
-      "t": "B77W",
-      "alt_baro": 34000,
-      "gs": 526.0,
-      "ias": 284,
-      "tas": 478,
-      "mach": 0.816,
-      "wd": 338,
-      "ws": 103,
-      "oat": -47,
-      "tat": -17,
-      "track": 215.16,
-      "roll": -0.18,
-      "mag_heading": 222.36,
-      "true_heading": 225.7,
-      "baro_rate": 0,
-      "geom_rate": 0,
-      "squawk": "3510",
-      "emergency": "none",
-      "category": "A5",
-      "nav_qnh": 1012.8,
-      "nav_altitude_mcp": 34016,
-      "lat": 51.845479,
-      "lon": 5.948524,
-      "nic": 0,
-      "rc": 0,
-      "seen_pos": 2.632,
-      "version": 2,
-      "nic_baro": 1,
-      "nac_p": 0,
-      "nac_v": 0,
-      "sil": 0,
-      "sil_type": "persample",
-      "gva": 0,
-      "sda": 2,
-      "alert": 0,
-      "spi": 0,
-      "mlat": [
-        "lat",
-        "lon",
-        "nic",
-        "rc"
-      ],
-      "tisb": [],
-      "messages": 253758,
-      "seen": 0.0,
-      "rssi": -21.9,
-      "dst": 12.737,
-      "dir": 322.2
-    }
-  ]
+  "total": 0,
+  "ac": []
 }
