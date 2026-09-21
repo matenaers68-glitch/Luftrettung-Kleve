@@ -131,5 +131,20 @@
     "altitude_ft": 850,
     "ground_speed": 49.2,
     "track": 296.57
+  },
+  {
+    "timestamp": "2026-09-21T19:57:53.228147+00:00",
+    "identity": "3e0a45",
+    "hex": "3e0a45",
+    "registration": "D-HVBX",
+    "callsign": "BPO160",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.821274,
+    "lon": 6.271263,
+    "distance_km": 17.7,
+    "altitude_ft": -225,
+    "ground_speed": 69.5,
+    "track": 157.13
   }
 ]
