@@ -236,5 +236,35 @@
     "altitude_ft": 625,
     "ground_speed": 118.9,
     "track": 22.25
+  },
+  {
+    "timestamp": "2026-09-22T19:12:18.829997+00:00",
+    "identity": "485e49",
+    "hex": "485e49",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.693653,
+    "lon": 5.740814,
+    "distance_km": 28.9,
+    "altitude_ft": 400,
+    "ground_speed": 121.0,
+    "track": 32.51
+  },
+  {
+    "timestamp": "2026-09-22T19:12:18.829997+00:00",
+    "identity": "484ac0",
+    "hex": "484ac0",
+    "registration": "PH-PXZ",
+    "callsign": "ZXP26",
+    "type": "A139",
+    "category": "A7",
+    "lat": 51.822882,
+    "lon": 5.849304,
+    "distance_km": 26.7,
+    "altitude_ft": 1300,
+    "ground_speed": 73.1,
+    "track": 343.3
   }
 ]
