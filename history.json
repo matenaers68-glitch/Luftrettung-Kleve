@@ -191,5 +191,20 @@
     "altitude_ft": 825,
     "ground_speed": 130.0,
     "track": 194.25
+  },
+  {
+    "timestamp": "2026-09-22T13:40:32.294273+00:00",
+    "identity": "3e167d",
+    "hex": "3e167d",
+    "registration": "D-HZSF",
+    "callsign": "CHX9",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.83601,
+    "lon": 6.253433,
+    "distance_km": 18.7,
+    "altitude_ft": -350,
+    "ground_speed": 18.1,
+    "track": 276.34
   }
 ]
