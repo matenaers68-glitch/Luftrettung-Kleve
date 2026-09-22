@@ -221,5 +221,20 @@
     "altitude_ft": 450,
     "ground_speed": 119.4,
     "track": 117.42
+  },
+  {
+    "timestamp": "2026-09-22T15:00:21.049442+00:00",
+    "identity": "485e49",
+    "hex": "485e49",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.720048,
+    "lon": 5.745087,
+    "distance_km": 28.9,
+    "altitude_ft": 625,
+    "ground_speed": 118.9,
+    "track": 22.25
   }
 ]
