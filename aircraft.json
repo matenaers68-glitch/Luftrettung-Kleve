@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T18:40:08.997940+00:00",
+  "updated": "2026-09-23T18:51:18.260788+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,6 +7,35 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 0,
-  "ac": []
+  "total": 1,
+  "ac": [
+    {
+      "hex": "4cadc2",
+      "type": "adsb_icao",
+      "r": "EI-IGE",
+      "t": "B38M",
+      "alt_baro": "ground",
+      "gs": 23.5,
+      "true_heading": 90.0,
+      "category": "A3",
+      "lat": 51.600816,
+      "lon": 6.129436,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 35.534,
+      "version": 2,
+      "nac_p": 11,
+      "nac_v": 2,
+      "sil": 3,
+      "sil_type": "perhour",
+      "sda": 2,
+      "mlat": [],
+      "tisb": [],
+      "messages": 178570,
+      "seen": 35.5,
+      "rssi": -30.8,
+      "dst": 4.768,
+      "dir": 193.4
+    }
+  ]
 }
