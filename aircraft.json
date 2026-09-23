@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-23T03:40:10.397283+00:00",
+  "updated": "2026-09-23T03:50:06.311045+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,63 +7,6 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 1,
-  "ac": [
-    {
-      "hex": "7811a2",
-      "type": "adsb_icao",
-      "flight": "CCA907  ",
-      "r": "B-1466",
-      "t": "B789",
-      "alt_baro": 35975,
-      "alt_geom": 37425,
-      "gs": 466.7,
-      "ias": 281,
-      "tas": 486,
-      "mach": 0.84,
-      "wd": 290,
-      "ws": 42,
-      "oat": -53,
-      "tat": -22,
-      "track": 224.48,
-      "track_rate": 0.0,
-      "roll": 0.0,
-      "mag_heading": 225.88,
-      "true_heading": 229.1,
-      "baro_rate": 64,
-      "geom_rate": 0,
-      "squawk": "1000",
-      "category": "A5",
-      "nav_qnh": 1012.8,
-      "nav_altitude_mcp": 36000,
-      "nav_modes": [
-        "autopilot",
-        "vnav",
-        "lnav",
-        "tcas"
-      ],
-      "lat": 51.614227,
-      "lon": 6.577322,
-      "nic": 8,
-      "rc": 186,
-      "seen_pos": 0.408,
-      "version": 2,
-      "nic_baro": 1,
-      "nac_p": 9,
-      "nac_v": 2,
-      "sil": 3,
-      "sil_type": "perhour",
-      "gva": 2,
-      "sda": 2,
-      "alert": 0,
-      "spi": 0,
-      "mlat": [],
-      "tisb": [],
-      "messages": 230233,
-      "seen": 0.2,
-      "rssi": -17.2,
-      "dst": 16.016,
-      "dir": 103.6
-    }
-  ]
+  "total": 0,
+  "ac": []
 }
