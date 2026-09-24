@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-24T01:53:52.610202+00:00",
+  "updated": "2026-09-24T02:01:01.456003+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,6 +7,63 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 0,
-  "ac": []
+  "total": 1,
+  "ac": [
+    {
+      "hex": "440bc1",
+      "type": "adsb_icao",
+      "flight": "BCS2211 ",
+      "r": "OE-LND",
+      "t": "B752",
+      "alt_baro": 39000,
+      "alt_geom": 39925,
+      "gs": 486.5,
+      "ias": 249,
+      "tas": 464,
+      "mach": 0.804,
+      "wd": 338,
+      "ws": 90,
+      "oat": -54,
+      "tat": -25,
+      "track": 87.53,
+      "track_rate": -0.03,
+      "roll": -0.35,
+      "mag_heading": 73.83,
+      "true_heading": 76.97,
+      "baro_rate": 0,
+      "geom_rate": -32,
+      "squawk": "2014",
+      "emergency": "none",
+      "category": "A4",
+      "nav_qnh": 1013.6,
+      "nav_altitude_mcp": 39008,
+      "nav_heading": 73.12,
+      "nav_modes": [
+        "althold",
+        "tcas"
+      ],
+      "lat": 51.48761,
+      "lon": 6.347871,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 0.036,
+      "version": 2,
+      "nic_baro": 1,
+      "nac_p": 9,
+      "nac_v": 1,
+      "sil": 3,
+      "sil_type": "perhour",
+      "gva": 2,
+      "sda": 2,
+      "alert": 0,
+      "spi": 0,
+      "mlat": [],
+      "tisb": [],
+      "messages": 49542,
+      "seen": 0.0,
+      "rssi": -23.9,
+      "dst": 13.431,
+      "dir": 148.3
+    }
+  ]
 }
