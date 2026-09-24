@@ -311,5 +311,20 @@
     "altitude_ft": 450,
     "ground_speed": 122.4,
     "track": 200.06
+  },
+  {
+    "timestamp": "2026-09-24T16:58:13.184504+00:00",
+    "identity": "3e1678",
+    "hex": "3e1678",
+    "registration": "D-HZSA",
+    "callsign": "CHX3",
+    "type": "EC35",
+    "category": "A7",
+    "lat": 51.477139,
+    "lon": 6.395111,
+    "distance_km": 27.7,
+    "altitude_ft": 625,
+    "ground_speed": 113.2,
+    "track": 321.81
   }
 ]
