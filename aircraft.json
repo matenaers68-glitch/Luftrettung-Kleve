@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-24T22:58:44.571371+00:00",
+  "updated": "2026-09-24T23:10:35.866865+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,6 +7,60 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 0,
-  "ac": []
+  "total": 1,
+  "ac": [
+    {
+      "hex": "4bb208",
+      "type": "mlat",
+      "flight": "THY7QN  ",
+      "r": "TC-LPH",
+      "t": "A21N",
+      "alt_baro": 33025,
+      "gs": 476.0,
+      "ias": 269,
+      "tas": 447,
+      "mach": 0.76,
+      "wd": 342,
+      "ws": 41,
+      "oat": -45,
+      "tat": -19,
+      "track": 117.95,
+      "track_rate": 0.0,
+      "roll": -0.18,
+      "mag_heading": 112.5,
+      "true_heading": 114.26,
+      "baro_rate": 0,
+      "geom_rate": -32,
+      "squawk": "1154",
+      "emergency": "none",
+      "category": "A3",
+      "nav_qnh": 1012.8,
+      "nav_altitude_mcp": 32992,
+      "lat": 51.497758,
+      "lon": 6.1676,
+      "nic": 0,
+      "rc": 0,
+      "seen_pos": 1.725,
+      "version": 2,
+      "nic_baro": 1,
+      "nac_p": 0,
+      "nac_v": 0,
+      "sil": 0,
+      "sil_type": "unknown",
+      "alert": 0,
+      "spi": 0,
+      "mlat": [
+        "lat",
+        "lon",
+        "nic",
+        "rc"
+      ],
+      "tisb": [],
+      "messages": 178713,
+      "seen": 0.0,
+      "rssi": -18.8,
+      "dst": 10.839,
+      "dir": 178.3
+    }
+  ]
 }
