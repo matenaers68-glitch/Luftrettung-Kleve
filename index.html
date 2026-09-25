@@ -320,4 +320,133 @@ Hubschrauber – letzte 14 Tage
 
 <p class="small">
 Die Liste enthält die gespeicherten Hubschrauber-Erfassungen
-der letzten 14 Tage. Zusammengehörige Messpunkte werden als
+der letzten 14 Tage. Zusammengehörige Messpunkte werden als Flug zusammengefasst.
+</p>
+
+</section>
+
+
+<section class="card">
+
+<h2>Unsere beobachteten Maschinen</h2>
+
+<div class="grid">
+<div class="btn">Christoph 9</div>
+<div class="btn">Lifeliner 3</div>
+<div class="btn">Christoph 8</div>
+<div class="btn">Christoph Westfalen</div>
+<div class="btn">Christoph Dortmund</div>
+<div class="btn">Polizeihubschrauber</div>
+</div>
+
+<p class="small">
+Auch fremde Rettungs-, Polizei- und sonstige Hubschrauber
+werden erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
+</p>
+
+</section>
+
+
+<section class="card">
+
+<h2>NotfallRadar – Kreis Kleve</h2>
+
+<div class="grid">
+
+<a class="btn primary"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
+target="_blank">Goch</a>
+
+<a class="btn primary"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
+target="_blank">Kreis Kleve</a>
+
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
+target="_blank">Rees</a>
+
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
+target="_blank">Kevelaer</a>
+
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
+target="_blank">Geldern</a>
+
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
+target="_blank">Kalkar</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   GRUNDEINSTELLUNGEN
+   ========================================================= */
+
+const GOCH={
+  lat:51.678,
+  lon:6.159
+};
+
+
+/*
+  Nach diesem Zeitabstand wird dieselbe Maschine
+  als neuer Flug behandelt.
+*/
+const FLIGHT_GAP_MINUTES=20;
+
+
+/*
+  Bekannte Rettungshubschrauber.
+
+  Wichtig:
+  Wir ordnen Christoph-Rufnamen nicht dauerhaft einem
+  Kennzeichen zu, weil die eingesetzte Maschine wechseln kann.
+*/
+const knownCallsigns=[
+
+  {
+    terms:["CHRISTOPH3","CHRISTOPH 3"],
+    name:"Christoph 3",
+    role:"Rettungshubschrauber",
+    station:"Köln"
+  },
+
+  {
+    terms:["CHRISTOPH9","CHRISTOPH 9"],
+    name:"Christoph 9",
+    role:"Rettungshubschrauber",
+    station:"Duisburg-Buchholz"
+  },
+
+  {
+    terms:["CHRISTOPH8","CHRISTOPH 8"],
+    name:"Christoph 8",
+    role:"Rettungshubschrauber",
+    station:"Lünen"
+  },
+
+  {
+    terms:["CHRISTOPH WESTFALEN"],
+    name:"Christoph Westfalen",
+    role:"Intensivtransporthubschrauber",
+    station:"Greven"
+  },
+
+  {
+    terms:["CHRISTOPH DORTMUND"],
+    name:"Christoph Dortmund",
+    role:"Intensivtransporthubschrauber",
+    station:"Dortmund"
+  },
+
+  {
+    terms:["LIFELN3","LIFELINER3","LIFELINER 3"],
+   
