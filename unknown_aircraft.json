@@ -304,5 +304,23 @@
     "minimum_distance_km": 47.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "486a30": {
+    "identity": "486a30",
+    "hex": "486a30",
+    "registration": "",
+    "callsign": "LIFELN4",
+    "type": "",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-25T17:44:56.811270+00:00",
+    "last_seen": "2026-09-25T17:44:56.811270+00:00",
+    "last_lat": 52.337331,
+    "last_lon": 6.282767,
+    "last_distance_km": 73.8,
+    "minimum_distance_km": 73.8,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
