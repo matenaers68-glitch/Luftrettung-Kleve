@@ -16,7 +16,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<title>Luftrettung Goch & Kreis Kleve – V4.0</title>
+<title>Luftrettung Goch & Kreis Kleve – V4.2</title>
 
 <style>
 
@@ -109,7 +109,6 @@ h2{
 .small{
   font-size:12px;
   color:#9eabb6;
-  line-height:1.45;
 }
 
 .grid{
@@ -184,35 +183,12 @@ h2{
 
 .flightInfo{
   margin-top:8px;
-  padding:9px 10px;
+  padding:8px 10px;
   background:#101820;
   border-radius:10px;
   color:#c8d2db;
   font-size:13px;
-  line-height:1.5;
-}
-
-.routeBox{
-  margin-top:8px;
-  padding:9px 10px;
-  background:#182735;
-  border-radius:10px;
-  font-size:13px;
-  line-height:1.5;
-}
-
-.routeTitle{
-  font-weight:700;
-  margin-bottom:3px;
-}
-
-.stopTag{
-  display:inline-block;
-  margin:3px 3px 0 0;
-  padding:3px 7px;
-  border-radius:7px;
-  background:#35495c;
-  font-size:12px;
+  line-height:1.45;
 }
 
 
@@ -263,16 +239,6 @@ h2{
   display:none;
 }
 
-.stopLabel{
-  background:#243241;
-  color:#fff;
-  border:1px solid #9babb9;
-  border-radius:7px;
-  padding:3px 6px;
-  font-size:11px;
-  white-space:nowrap;
-}
-
 .popupTitle{
   font-size:15px;
   font-weight:750;
@@ -310,7 +276,7 @@ h2{
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
 
 <div class="sub">
-Version 4.0 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
+Version 4.2 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
 </div>
 
 </header>
@@ -338,7 +304,7 @@ Daten werden geladen …
 </div>
 
 <div id="info" class="muted">
-aircraft.json wird abgerufen.
+Einsatzdaten werden abgerufen.
 </div>
 
 <br>
@@ -349,6 +315,7 @@ Daten neu laden
 
 <p class="small">
 Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
+Private und nicht klassifizierte Hubschrauber werden nicht angezeigt.
 </p>
 
 </section>
@@ -367,11 +334,12 @@ Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
 <div class="mapLegend">
 
 Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
-Positionspunkte derselben Maschine werden zu einzelnen Flügen
-zusammengefasst. V4.0 versucht zusätzlich, niedrige bzw. langsame
-Flugphasen als mögliche Zwischenlandungen zu erkennen und den
-nächstgelegenen bekannten Ort zuzuordnen. Diese Angaben sind
-automatisch abgeleitet und deshalb nicht immer eine bestätigte Landung.
+Positionspunkte derselben Maschine werden zu einzelnen Flügen zusammengefasst.
+Niedrige bzw. langsame Flugphasen können als mögliche Zwischenlandungen
+erkannt werden. Angezeigt werden ausschließlich klassifizierte
+Rettungs-, Polizei- und Militärhubschrauber.
+Start, Landung und Zwischenlandungen werden automatisch aus den
+vorhandenen Flugdaten abgeleitet und sind daher nicht immer bestätigt.
 
 </div>
 
@@ -384,7 +352,7 @@ automatisch abgeleitet und deshalb nicht immer eine bestätigte Landung.
 
 <section class="card">
 
-<h2>Aktuell erkannte Hubschrauber</h2>
+<h2>Aktuell erkannte Einsatzhubschrauber</h2>
 
 <div id="aircraft">
 
@@ -404,7 +372,7 @@ Noch keine Daten geladen.
 <section class="card">
 
 <h2>
-Hubschrauber – letzte 14 Tage
+Einsatzhubschrauber – letzte 14 Tage
 <span id="historyCounter" class="counter">0</span>
 </h2>
 
@@ -417,9 +385,9 @@ Historie wird geladen …
 </div>
 
 <p class="small">
-Die Zahl zeigt die erkannten Flüge, nicht die Zahl der einzelnen
-Positionsmeldungen. Mögliche Zwischenlandungen werden innerhalb
-eines Fluges zusammengefasst.
+Angezeigt werden nur klassifizierte Rettungs-, Polizei- und
+Militärhubschrauber. Private und noch unbekannte Maschinen bleiben
+in der sichtbaren Historie ausgeblendet.
 </p>
 
 </section>
@@ -436,17 +404,23 @@ eines Fluges zusammengefasst.
 <div class="grid">
 
 <div class="btn">Christoph 9</div>
+
 <div class="btn">Lifeliner 3</div>
+
 <div class="btn">Christoph 8</div>
+
 <div class="btn">Christoph Westfalen</div>
+
 <div class="btn">Christoph Dortmund</div>
+
 <div class="btn">Polizeihubschrauber</div>
 
 </div>
 
 <p class="small">
-Auch fremde Rettungs-, Polizei- und sonstige Hubschrauber werden
-erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
+Im Hintergrund können weitere Hubschrauber erkannt werden.
+Sie erscheinen hier erst, wenn sie als relevante Einsatzmaschine
+klassifiziert wurden.
 </p>
 
 </section>
@@ -462,39 +436,51 @@ erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
 
 <div class="grid">
 
-<a class="btn primary"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-target="_blank">
+<a
+  class="btn primary"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
+  target="_blank"
+>
 Goch
 </a>
 
-<a class="btn primary"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-target="_blank">
+<a
+  class="btn primary"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
+  target="_blank"
+>
 Kreis Kleve
 </a>
 
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-target="_blank">
+<a
+  class="btn"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
+  target="_blank"
+>
 Rees
 </a>
 
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-target="_blank">
+<a
+  class="btn"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
+  target="_blank"
+>
 Kevelaer
 </a>
 
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-target="_blank">
+<a
+  class="btn"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
+  target="_blank"
+>
 Geldern
 </a>
 
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-target="_blank">
+<a
+  class="btn"
+  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
+  target="_blank"
+>
 Kalkar
 </a>
 
@@ -516,30 +502,7 @@ const GOCH={
   lon:6.159
 };
 
-
-/*
-  Größere Unterbrechung = neuer Flug.
-*/
-
 const FLIGHT_GAP_MINUTES=20;
-
-
-/*
-  Maximale Entfernung eines Messpunkts zu einem bekannten Ort,
-  damit wir den Ortsnamen automatisch verwenden.
-
-  Für Städte bewusst relativ großzügig.
-*/
-
-const PLACE_MATCH_KM=5;
-
-
-/*
-  Für spezielle Punkte wie Kliniken oder Flugplätze
-  benutzen wir einen kleineren Radius.
-*/
-
-const POI_MATCH_KM=2.5;
 
 
 /* =========================================================
@@ -573,7 +536,7 @@ const knownCallsigns=[
     terms:["CHRISTOPH WESTFALEN"],
     name:"Christoph Westfalen",
     role:"Intensivtransporthubschrauber",
-    station:"Münster/Greven"
+    station:"Greven"
   },
 
   {
@@ -586,266 +549,9 @@ const knownCallsigns=[
   {
     terms:["LIFELN3","LIFELINER3","LIFELINER 3"],
     name:"Lifeliner 3",
-    role:"Heli-MMT Nijmegen",
-    station:"Vliegbasis Volkel"
+    role:"Traumahelikopter",
+    station:"Region Nijmegen"
   }
-
-];
-
-
-/* =========================================================
-   ORTSDATENBANK V4.0
-
-   Die Koordinaten dienen der groben Zuordnung.
-   Sie ersetzen keine bestätigten Einsatzdaten.
-   ========================================================= */
-
-const knownPlaces=[
-
-  /* ---------- Kreis Kleve ---------- */
-
-  {
-    name:"Goch",
-    lat:51.678,
-    lon:6.159,
-    kind:"Ort"
-  },
-
-  {
-    name:"Kleve",
-    lat:51.789,
-    lon:6.138,
-    kind:"Ort"
-  },
-
-  {
-    name:"Kevelaer",
-    lat:51.583,
-    lon:6.246,
-    kind:"Ort"
-  },
-
-  {
-    name:"Weeze",
-    lat:51.627,
-    lon:6.197,
-    kind:"Ort"
-  },
-
-  {
-    name:"Geldern",
-    lat:51.520,
-    lon:6.323,
-    kind:"Ort"
-  },
-
-  {
-    name:"Kalkar",
-    lat:51.739,
-    lon:6.292,
-    kind:"Ort"
-  },
-
-  {
-    name:"Bedburg-Hau",
-    lat:51.762,
-    lon:6.174,
-    kind:"Ort"
-  },
-
-  {
-    name:"Kranenburg",
-    lat:51.790,
-    lon:6.007,
-    kind:"Ort"
-  },
-
-  {
-    name:"Emmerich am Rhein",
-    lat:51.833,
-    lon:6.242,
-    kind:"Ort"
-  },
-
-  {
-    name:"Rees",
-    lat:51.762,
-    lon:6.397,
-    kind:"Ort"
-  },
-
-  {
-    name:"Straelen",
-    lat:51.441,
-    lon:6.266,
-    kind:"Ort"
-  },
-
-  {
-    name:"Kerken",
-    lat:51.456,
-    lon:6.373,
-    kind:"Ort"
-  },
-
-  {
-    name:"Issum",
-    lat:51.534,
-    lon:6.423,
-    kind:"Ort"
-  },
-
-  {
-    name:"Wachtendonk",
-    lat:51.409,
-    lon:6.338,
-    kind:"Ort"
-  },
-
-
-  /* ---------- Niederlande ---------- */
-
-  {
-    name:"Nijmegen",
-    lat:51.842,
-    lon:5.852,
-    kind:"Ort"
-  },
-
-  {
-    name:"Gennep",
-    lat:51.699,
-    lon:5.973,
-    kind:"Ort"
-  },
-
-  {
-    name:"Boxmeer",
-    lat:51.646,
-    lon:5.947,
-    kind:"Ort"
-  },
-
-  {
-    name:"Cuijk",
-    lat:51.730,
-    lon:5.879,
-    kind:"Ort"
-  },
-
-  {
-    name:"Groesbeek",
-    lat:51.776,
-    lon:5.936,
-    kind:"Ort"
-  },
-
-  {
-    name:"Venray",
-    lat:51.525,
-    lon:5.975,
-    kind:"Ort"
-  },
-
-  {
-    name:"Volkel",
-    lat:51.657,
-    lon:5.707,
-    kind:"Ort"
-  },
-
-
-  /* ---------- Kliniken ---------- */
-
-  {
-    name:"Klinikum Kleve",
-    lat:51.777,
-    lon:6.126,
-    kind:"Klinik",
-    radius:2.5
-  },
-
-  {
-    name:"Radboudumc Nijmegen",
-    lat:51.824,
-    lon:5.866,
-    kind:"Klinik",
-    radius:2.5
-  },
-
-
-  /* ---------- Flugplätze / Stationen ---------- */
-
-  {
-    name:"Airport Weeze",
-    lat:51.602,
-    lon:6.142,
-    kind:"Flugplatz",
-    radius:3
-  },
-
-  {
-    name:"Vliegbasis Volkel",
-    lat:51.657,
-    lon:5.708,
-    kind:"Hubschrauberstation",
-    radius:3
-  }
-
-];
-
-
-/* =========================================================
-   HUBSCHRAUBERTYPEN
-   ========================================================= */
-
-const rotorTypes=[
-
-  "EC35",
-  "EC45",
-
-  "H135",
-  "H145",
-
-  "EC135",
-  "EC145",
-
-  "BK17",
-
-  "B06",
-  "B407",
-
-  "AS50",
-  "AS55",
-
-  "R22",
-  "R44",
-  "R66",
-
-  "AW09",
-  "AW109",
-  "AW139",
-  "AW169",
-
-  "S76",
-  "S92"
-
-];
-
-
-const rotorWords=[
-
-  "HELI",
-  "ROTOR",
-  "CHRISTOPH",
-
-  "LIFELINER",
-  "LIFELN",
-
-  "POLICE",
-  "POLIZEI",
-
-  "SAR"
 
 ];
 
@@ -854,17 +560,15 @@ const rotorWords=[
    KARTE
    ========================================================= */
 
-const map=
-  L.map(
-    "map"
-  )
-  .setView(
-    [
-      GOCH.lat,
-      GOCH.lon
-    ],
-    10
-  );
+const map=L.map(
+  "map"
+).setView(
+  [
+    GOCH.lat,
+    GOCH.lon
+  ],
+  10
+);
 
 
 L.tileLayer(
@@ -875,8 +579,6 @@ L.tileLayer(
   }
 ).addTo(map);
 
-
-/* Goch */
 
 L.circleMarker(
   [
@@ -894,8 +596,6 @@ L.circleMarker(
   "<b>Goch</b><br>Mittelpunkt der Überwachung"
 );
 
-
-/* 30-km-Kreis */
 
 L.circle(
   [
@@ -923,18 +623,11 @@ const liveLayer=
    ========================================================= */
 
 function rad(x){
-
   return x*Math.PI/180;
-
 }
 
 
-function distanceKm(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-){
+function distanceKm(lat1,lon1,lat2,lon2){
 
   const R=6371;
 
@@ -950,46 +643,26 @@ function distanceKm(
     Math.cos(rad(lat2))*
     Math.sin(dLon/2)**2;
 
-
   return R*2*Math.atan2(
     Math.sqrt(a),
     Math.sqrt(1-a)
   );
-
-}
-
-
-function value(a,key){
-
-  if(
-    a[key]===undefined ||
-    a[key]===null ||
-    a[key]===""
-  ){
-    return "–";
-  }
-
-  return a[key];
-
 }
 
 
 function normalizedText(a){
 
   return [
-
+    a.name,
+    a.service,
     a.flight,
     a.callsign,
-
     a.r,
     a.registration,
-
     a.t,
     a.type,
-
     a.desc,
     a.category
-
   ]
   .filter(Boolean)
   .join(" ")
@@ -999,51 +672,75 @@ function normalizedText(a){
 
 
 /* =========================================================
-   HUBSCHRAUBER ERKENNEN
+   RELEVANZFILTER V4.2
    ========================================================= */
 
-function isRotor(a){
+function isRelevantAircraft(item){
 
-  const category=
+  const service=
     String(
-      a.category||""
+      item.service||""
     )
     .trim()
     .toUpperCase();
 
-
-  if(category==="A7"){
-    return true;
-  }
-
+  const name=
+    String(
+      item.name||""
+    )
+    .trim()
+    .toUpperCase();
 
   const text=
-    normalizedText(a);
+    normalizedText(item);
 
+
+  /* Rettungsdienst */
 
   if(
-    rotorWords.some(
-      word=>text.includes(word)
-    )
+    service.includes("RETTUNG") ||
+    service.includes("TRAUMA") ||
+    service.includes("INTENSIV")
   ){
     return true;
   }
 
 
-  const type=
-    String(
-      a.t||
-      a.type||
-      ""
-    )
-    .toUpperCase();
+  /* Polizei */
+
+  if(
+    service.includes("POLIZEI") ||
+    service.includes("POLICE")
+  ){
+    return true;
+  }
 
 
-  return rotorTypes.some(
-    rotorType=>
-      type.includes(rotorType)
-  );
+  /* Militär */
 
+  if(
+    service.includes("MILITÄR") ||
+    service.includes("MILITAER") ||
+    service.includes("MILITARY") ||
+    service.includes("BUNDESWEHR")
+  ){
+    return true;
+  }
+
+
+  /* bekannte Einsatzrufnamen */
+
+  if(
+    name.includes("CHRISTOPH") ||
+    name.includes("LIFELINER") ||
+    text.includes("CHRISTOPH") ||
+    text.includes("LIFELINER")
+  ){
+    return true;
+  }
+
+
+  return false;
 }
 
 
@@ -1052,6 +749,27 @@ function isRotor(a){
    ========================================================= */
 
 function knownInfo(a){
+
+  /*
+    Wenn der Workflow bereits eine Klassifizierung
+    geliefert hat, verwenden wir diese zuerst.
+  */
+
+  if(
+    a.name &&
+    a.service
+  ){
+
+    return {
+      name:a.name,
+      role:a.service,
+      station:
+        a.station ||
+        "nicht automatisch bestimmbar"
+    };
+
+  }
+
 
   const text=
     normalizedText(a);
@@ -1067,17 +785,12 @@ function knownInfo(a){
     .toUpperCase();
 
 
-  /*
-    PH-DOC ist als zusätzliche Erkennung enthalten.
-    Primär soll aber der Rufname verwendet werden.
-  */
-
   if(registration==="PH-DOC"){
 
     return {
       name:"Lifeliner 3",
-      role:"Heli-MMT Nijmegen",
-      station:"Vliegbasis Volkel"
+      role:"Traumahelikopter",
+      station:"Region Nijmegen"
     };
 
   }
@@ -1106,7 +819,7 @@ function knownInfo(a){
 
     return {
       name:"Polizeihubschrauber",
-      role:"Polizeihubschrauber",
+      role:"Polizei",
       station:"nicht automatisch bestimmbar"
     };
 
@@ -1114,7 +827,6 @@ function knownInfo(a){
 
 
   return null;
-
 }
 
 
@@ -1127,38 +839,20 @@ function displayName(a){
   const known=
     knownInfo(a);
 
-
   if(known){
     return known.name;
   }
 
-
-  const callsign=
-    String(
-      a.flight||
-      a.callsign||
-      ""
-    )
-    .trim();
-
-
-  const registration=
-    String(
-      a.r||
-      a.registration||
-      ""
-    )
-    .trim();
-
-
   return (
-    callsign ||
-    registration ||
-    a.t ||
+    a.name ||
+    a.callsign ||
+    a.flight ||
+    a.registration ||
+    a.r ||
     a.type ||
-    "Hubschrauber"
+    a.t ||
+    "Einsatzhubschrauber"
   );
-
 }
 
 
@@ -1167,14 +861,14 @@ function aircraftRole(a){
   const known=
     knownInfo(a);
 
-
   if(known){
     return known.role;
   }
 
-
-  return "Hubschrauber";
-
+  return (
+    a.service ||
+    "Einsatzhubschrauber"
+  );
 }
 
 
@@ -1183,14 +877,14 @@ function aircraftStation(a){
   const known=
     knownInfo(a);
 
-
   if(known){
     return known.station;
   }
 
-
-  return "nicht automatisch bestimmbar";
-
+  return (
+    a.station ||
+    "nicht automatisch bestimmbar"
+  );
 }
 
 
@@ -1203,7 +897,6 @@ function formatTime(dateString){
   if(!dateString){
     return "unbekannt";
   }
-
 
   try{
 
@@ -1224,7 +917,6 @@ function formatTime(dateString){
     return dateString;
 
   }
-
 }
 
 
@@ -1233,7 +925,6 @@ function formatDateTime(dateString){
   if(!dateString){
     return "Zeit unbekannt";
   }
-
 
   try{
 
@@ -1257,79 +948,11 @@ function formatDateTime(dateString){
     return dateString;
 
   }
-
 }
 
 
 /* =========================================================
-   ORTSERKENNUNG
-   ========================================================= */
-
-function nearestPlace(
-  lat,
-  lon
-){
-
-  if(
-    typeof lat!=="number" ||
-    typeof lon!=="number"
-  ){
-    return null;
-  }
-
-
-  let best=null;
-
-
-  knownPlaces.forEach(place=>{
-
-    const dist=
-      distanceKm(
-        lat,
-        lon,
-        place.lat,
-        place.lon
-      );
-
-
-    const maxDistance=
-      place.radius ??
-      (
-        place.kind==="Ort"
-        ?
-        PLACE_MATCH_KM
-        :
-        POI_MATCH_KM
-      );
-
-
-    if(dist>maxDistance){
-      return;
-    }
-
-
-    if(
-      best===null ||
-      dist<best.distance
-    ){
-
-      best={
-        ...place,
-        distance:dist
-      };
-
-    }
-
-  });
-
-
-  return best;
-
-}
-
-
-/* =========================================================
-   BODENERKENNUNG
+   BODEN / LANDUNG
    ========================================================= */
 
 function looksGrounded(item){
@@ -1337,7 +960,6 @@ function looksGrounded(item){
   const altitude=
     item.altitude_ft ??
     item.alt_baro;
-
 
   const speed=
     item.ground_speed ??
@@ -1361,52 +983,6 @@ function looksGrounded(item){
 
 
   return false;
-
-}
-
-
-/*
-  Eine "langsame Phase" ist bewusst etwas großzügiger
-  als eine sichere Bodenerkennung.
-
-  Dadurch können wir mögliche Zwischenlandungen erkennen,
-  ohne sie als bestätigt darzustellen.
-*/
-
-function looksLikeLandingPhase(item){
-
-  const speed=
-    item.ground_speed ??
-    item.gs;
-
-
-  const altitude=
-    item.altitude_ft ??
-    item.alt_baro;
-
-
-  if(looksGrounded(item)){
-    return true;
-  }
-
-
-  if(
-    typeof speed==="number" &&
-    speed<35
-  ){
-
-    if(
-      typeof altitude==="number" &&
-      altitude<1500
-    ){
-      return true;
-    }
-
-  }
-
-
-  return false;
-
 }
 
 
@@ -1470,19 +1046,13 @@ function splitIntoFlights(points){
       gapMinutes>FLIGHT_GAP_MINUTES
     ){
 
-      flights.push(
-        current
-      );
+      flights.push(current);
 
-      current=[
-        point
-      ];
+      current=[point];
 
     }else{
 
-      current.push(
-        point
-      );
+      current.push(point);
 
     }
 
@@ -1491,184 +1061,17 @@ function splitIntoFlights(points){
 
   if(current.length){
 
-    flights.push(
-      current
-    );
+    flights.push(current);
 
   }
 
 
   return flights;
-
 }
 
 
 /* =========================================================
-   ZWISCHENLANDUNGEN
-   ========================================================= */
-
-function detectStops(flight){
-
-  if(
-    !flight ||
-    flight.length<2
-  ){
-    return [];
-  }
-
-
-  const candidates=[];
-
-
-  flight.forEach(
-    (point,index)=>{
-
-      if(
-        index===0 ||
-        index===flight.length-1
-      ){
-        return;
-      }
-
-
-      if(
-        !looksLikeLandingPhase(point)
-      ){
-        return;
-      }
-
-
-      const place=
-        nearestPlace(
-          point.lat,
-          point.lon
-        );
-
-
-      candidates.push({
-
-        point,
-        index,
-        place
-
-      });
-
-    }
-  );
-
-
-  /*
-    Benachbarte langsame Punkte zu einem Stopp zusammenfassen.
-  */
-
-  const stops=[];
-
-
-  candidates.forEach(candidate=>{
-
-    const previousStop=
-      stops[
-        stops.length-1
-      ];
-
-
-    if(!previousStop){
-
-      stops.push({
-
-        first:candidate.point,
-        last:candidate.point,
-        point:candidate.point,
-        place:candidate.place,
-        count:1
-
-      });
-
-      return;
-
-    }
-
-
-    const gap=
-      (
-        new Date(
-          candidate.point.timestamp
-        )-
-        new Date(
-          previousStop.last.timestamp
-        )
-      )/
-      60000;
-
-
-    const samePlace=
-
-      (
-        candidate.place &&
-        previousStop.place &&
-        candidate.place.name===
-        previousStop.place.name
-      );
-
-
-    const nearby=
-
-      distanceKm(
-        candidate.point.lat,
-        candidate.point.lon,
-        previousStop.last.lat,
-        previousStop.last.lon
-      )<3;
-
-
-    if(
-      gap<=15 &&
-      (
-        samePlace ||
-        nearby
-      )
-    ){
-
-      previousStop.last=
-        candidate.point;
-
-      previousStop.point=
-        candidate.point;
-
-      previousStop.count++;
-
-      if(
-        !previousStop.place &&
-        candidate.place
-      ){
-        previousStop.place=
-          candidate.place;
-      }
-
-    }else{
-
-      stops.push({
-
-        first:candidate.point,
-        last:candidate.point,
-        point:candidate.point,
-        place:candidate.place,
-        count:1
-
-      });
-
-    }
-
-  });
-
-
-  return stops;
-
-}
-
-
-/* =========================================================
-   FLUGZUSAMMENFASSUNG
+   FLUGINFORMATION
    ========================================================= */
 
 function flightSummary(flight){
@@ -1680,11 +1083,7 @@ function flightSummary(flight){
 
     return {
       start:"–",
-      end:"–",
-      startPlace:null,
-      endPlace:null,
-      stops:[],
-      route:"–"
+      end:"–"
     };
 
   }
@@ -1698,26 +1097,6 @@ function flightSummary(flight){
     flight[
       flight.length-1
     ];
-
-
-  const startPlace=
-    nearestPlace(
-      first.lat,
-      first.lon
-    );
-
-
-  const endPlace=
-    nearestPlace(
-      last.lat,
-      last.lon
-    );
-
-
-  const stops=
-    detectStops(
-      flight
-    );
 
 
   let start=
@@ -1734,35 +1113,10 @@ function flightSummary(flight){
     );
 
 
-  if(startPlace){
-
-    start+=
-      " bei "+
-      startPlace.name;
-
-  }
-
-
-  if(endPlace){
-
-    end+=
-      " bei "+
-      endPlace.name;
-
-  }
-
-
   if(looksGrounded(first)){
 
     start=
       "Möglicher Start: "+
-      (
-        startPlace
-        ?
-        startPlace.name+" · "
-        :
-        ""
-      )+
       formatDateTime(
         first.timestamp
       );
@@ -1774,13 +1128,6 @@ function flightSummary(flight){
 
     end=
       "Mögliche Landung: "+
-      (
-        endPlace
-        ?
-        endPlace.name+" · "
-        :
-        ""
-      )+
       formatDateTime(
         last.timestamp
       );
@@ -1788,91 +1135,10 @@ function flightSummary(flight){
   }
 
 
-  /*
-    Flugkette erstellen.
-  */
-
-  const routeParts=[];
-
-
-  if(startPlace){
-
-    routeParts.push(
-      startPlace.name
-    );
-
-  }else{
-
-    routeParts.push(
-      "erste Erfassung"
-    );
-
-  }
-
-
-  stops.forEach(stop=>{
-
-    const name=
-      stop.place
-      ?
-      stop.place.name
-      :
-      "mögliche Zwischenlandung";
-
-
-    if(
-      routeParts[
-        routeParts.length-1
-      ]!==name
-    ){
-
-      routeParts.push(
-        name
-      );
-
-    }
-
-  });
-
-
-  const finalName=
-    endPlace
-    ?
-    endPlace.name
-    :
-    "letzte Erfassung";
-
-
-  if(
-    routeParts[
-      routeParts.length-1
-    ]!==finalName
-  ){
-
-    routeParts.push(
-      finalName
-    );
-
-  }
-
-
   return {
-
     start,
-    end,
-
-    startPlace,
-    endPlace,
-
-    stops,
-
-    route:
-      routeParts.join(
-        " → "
-      )
-
+    end
   };
-
 }
 
 
@@ -1880,45 +1146,10 @@ function flightSummary(flight){
    POPUP
    ========================================================= */
 
-function flightPopup(
-  point,
-  flight
-){
+function flightPopup(point,flight){
 
   const summary=
-    flightSummary(
-      flight
-    );
-
-
-  let stopsHtml="";
-
-
-  if(summary.stops.length){
-
-    stopsHtml=
-      '<br><br><b>Mögliche Zwischenlandungen:</b><br>';
-
-
-    summary.stops.forEach(stop=>{
-
-      stopsHtml+=
-        (
-          stop.place
-          ?
-          stop.place.name
-          :
-          "Ort nicht bestimmt"
-        )+
-        " · "+
-        formatDateTime(
-          stop.first.timestamp
-        )+
-        "<br>";
-
-    });
-
-  }
+    flightSummary(flight);
 
 
   return (
@@ -1931,7 +1162,7 @@ function flightPopup(
     aircraftRole(point)+
     '</div>'+
 
-    '<b>Heimatstation:</b> '+
+    '<b>Station:</b> '+
     aircraftStation(point)+
     '<br>'+
 
@@ -1959,20 +1190,15 @@ function flightPopup(
     )+
     '<br><br>'+
 
-    '<b>Flugkette:</b><br>'+
-    summary.route+
-    '<br><br>'+
-
+    '<b>'+
     summary.start+
-    '<br>'+
+    '</b><br>'+
 
+    '<b>'+
     summary.end+
+    '</b><br><br>'+
 
-    stopsHtml+
-
-    '<br><br>'+
-
-    '<b>Gewählte Position:</b><br>'+
+    'Position: '+
     formatDateTime(
       point.timestamp
     )+
@@ -1995,42 +1221,29 @@ function flightPopup(
     ' kt'
 
   );
-
 }
 
 
 /* =========================================================
-   LIVE
+   LIVE V4.2
    ========================================================= */
 
 async function loadLive(){
 
   const dot=
-    document.getElementById(
-      "dot"
-    );
-
+    document.getElementById("dot");
 
   const status=
-    document.getElementById(
-      "status"
-    );
-
+    document.getElementById("status");
 
   const info=
-    document.getElementById(
-      "info"
-    );
-
+    document.getElementById("info");
 
   const box=
-    document.getElementById(
-      "aircraft"
-    );
+    document.getElementById("aircraft");
 
 
   dot.className="dot";
-
 
   status.textContent=
     "Daten werden geladen …";
@@ -2038,9 +1251,17 @@ async function loadLive(){
 
   try{
 
+    /*
+      Ab V4.2 wird NICHT aircraft.json verwendet.
+
+      current_rotorcraft.json soll ausschließlich
+      die vom Workflow freigegebenen Einsatzmaschinen
+      enthalten.
+    */
+
     const response=
       await fetch(
-        "aircraft.json?time="+Date.now(),
+        "current_rotorcraft.json?time="+Date.now(),
         {
           cache:"no-store"
         }
@@ -2060,30 +1281,33 @@ async function loadLive(){
       await response.json();
 
 
-    const all=
-      Array.isArray(
-        data.ac
-      )
+    const supplied=
+      Array.isArray(data.aircraft)
       ?
-      data.ac
+      data.aircraft
       :
       [];
 
 
+    /*
+      Zweite Sicherheitsstufe im Browser:
+      Auch wenn versehentlich ein unbekannter oder privater
+      Hubschrauber in der JSON-Datei landet, wird er hier
+      nicht angezeigt.
+    */
+
     const rotor=
-      all.filter(
-        isRotor
+      supplied.filter(
+        isRelevantAircraft
       );
 
 
     info.innerHTML=
 
       "Letzte Server-Aktualisierung: <b>"+
-      formatTime(
-        data.updated
-      )+
-      "</b> · Luftfahrzeuge im Suchbereich: <b>"+
-      all.length+
+      formatTime(data.updated)+
+      "</b> · Relevante Einsatzhubschrauber im 30-km-Bereich: <b>"+
+      rotor.length+
       "</b>";
 
 
@@ -2100,11 +1324,22 @@ async function loadLive(){
       }
 
 
-      const place=
-        nearestPlace(
+      /*
+        Zusätzliche 30-km-Sicherung.
+      */
+
+      const dist=
+        distanceKm(
+          GOCH.lat,
+          GOCH.lon,
           a.lat,
           a.lon
         );
+
+
+      if(dist>30){
+        return;
+      }
 
 
       const marker=
@@ -2134,38 +1369,52 @@ async function loadLive(){
         aircraftRole(a)+
         '</div>'+
 
-        '<b>Heimatstation:</b> '+
+        '<b>Station:</b> '+
         aircraftStation(a)+
         '<br>'+
 
-        (
-          place
-          ?
-          '<b>Aktuell nahe:</b> '+
-          place.name+
-          '<br>'
-          :
-          ''
-        )+
-
         '<b>Kennzeichen:</b> '+
-        value(a,"r")+
+        (
+          a.registration||
+          a.r||
+          "–"
+        )+
         '<br>'+
 
         '<b>Callsign:</b> '+
-        value(a,"flight")+
+        (
+          a.callsign||
+          a.flight||
+          "–"
+        )+
         '<br>'+
 
         '<b>Typ:</b> '+
-        value(a,"t")+
+        (
+          a.type||
+          a.t||
+          "–"
+        )+
         '<br>'+
 
+        '<b>Entfernung:</b> '+
+        dist.toFixed(1)+
+        ' km<br>'+
+
         '<b>Höhe:</b> '+
-        value(a,"alt_baro")+
+        (
+          a.altitude_ft ??
+          a.alt_baro ??
+          "–"
+        )+
         ' ft<br>'+
 
         '<b>Geschwindigkeit:</b> '+
-        value(a,"gs")+
+        (
+          a.ground_speed ??
+          a.gs ??
+          "–"
+        )+
         ' kt'
 
       );
@@ -2189,20 +1438,45 @@ async function loadLive(){
     });
 
 
-    if(rotor.length===0){
+    /*
+      Für die Textliste ebenfalls nur Maschinen
+      innerhalb der 30 km verwenden.
+    */
+
+    const visibleRotor=
+      rotor.filter(a=>{
+
+        if(
+          typeof a.lat!=="number" ||
+          typeof a.lon!=="number"
+        ){
+          return false;
+        }
+
+        return distanceKm(
+          GOCH.lat,
+          GOCH.lon,
+          a.lat,
+          a.lon
+        )<=30;
+
+      });
+
+
+    if(visibleRotor.length===0){
 
       dot.className=
         "dot warn";
 
 
       status.textContent=
-        "Derzeit kein Hubschrauber erkannt";
+        "Derzeit kein Einsatzhubschrauber im 30-km-Bereich";
 
 
       box.innerHTML=
 
         '<div class="muted">'+
-        'Im aktuellen Datenstand befindet sich kein sicher erkannter Hubschrauber im überwachten Gebiet.'+
+        'Derzeit wurde kein klassifizierter Rettungs-, Polizei- oder Militärhubschrauber im überwachten Gebiet erkannt.'+
         '</div>';
 
 
@@ -2217,40 +1491,23 @@ async function loadLive(){
 
     status.textContent=
 
-      rotor.length===1
+      visibleRotor.length===1
       ?
-      "1 Hubschrauber erkannt"
+      "1 Einsatzhubschrauber erkannt"
       :
-      rotor.length+
-      " Hubschrauber erkannt";
+      visibleRotor.length+
+      " Einsatzhubschrauber erkannt";
 
 
     box.innerHTML="";
 
 
-    rotor.forEach(a=>{
+    visibleRotor.forEach(a=>{
 
-      let dist=null;
-
-
-      if(
-        typeof a.lat==="number" &&
-        typeof a.lon==="number"
-      ){
-
-        dist=
-          distanceKm(
-            GOCH.lat,
-            GOCH.lon,
-            a.lat,
-            a.lon
-          );
-
-      }
-
-
-      const place=
-        nearestPlace(
+      const dist=
+        distanceKm(
+          GOCH.lat,
+          GOCH.lon,
           a.lat,
           a.lon
         );
@@ -2274,49 +1531,52 @@ async function loadLive(){
 
         '<div class="muted">'+
         aircraftRole(a)+
-        ' · Heimatstation: '+
+        ' · Station: '+
         aircraftStation(a)+
         '</div>'+
 
-        (
-          place
-          ?
-          '<div class="flightInfo">'+
-          'Aktuelle Position: nahe <b>'+
-          place.name+
-          '</b></div>'
-          :
-          ''
-        )+
-
         '<span class="tag">Kennzeichen: '+
-        value(a,"r")+
+        (
+          a.registration||
+          a.r||
+          "–"
+        )+
         '</span>'+
 
         '<span class="tag">Callsign: '+
-        value(a,"flight")+
+        (
+          a.callsign||
+          a.flight||
+          "–"
+        )+
         '</span>'+
 
         '<span class="tag">Typ: '+
-        value(a,"t")+
+        (
+          a.type||
+          a.t||
+          "–"
+        )+
         '</span>'+
 
-        (
-          dist!==null
-          ?
-          '<span class="tag">Entfernung: '+
-          dist.toFixed(1)+
-          ' km</span>'
-          :
-          ''
-        )+
+        '<span class="tag">Entfernung: '+
+        dist.toFixed(1)+
+        ' km</span>'+
 
         '<span class="tag">Höhe: '+
-        value(a,"alt_baro")+
+        (
+          a.altitude_ft ??
+          a.alt_baro ??
+          "–"
+        )+
         ' ft</span>'+
 
         '<span class="tag">Geschwindigkeit: '+
-        value(a,"gs")+
+        (
+          a.ground_speed ??
+          a.gs ??
+          "–"
+        )+
         ' kt</span>';
 
 
@@ -2338,7 +1598,7 @@ async function loadLive(){
 
 
     info.textContent=
-      "aircraft.json konnte nicht geladen werden: "+
+      "current_rotorcraft.json konnte nicht geladen werden: "+
       error.message;
 
 
@@ -2350,7 +1610,7 @@ async function loadLive(){
 
 
     console.error(
-      "Fehler beim Laden von aircraft.json:",
+      "Fehler beim Laden von current_rotorcraft.json:",
       error
     );
 
@@ -2360,7 +1620,7 @@ async function loadLive(){
 
 
 /* =========================================================
-   HISTORIE
+   HISTORIE V4.2
    ========================================================= */
 
 async function loadHistory(){
@@ -2422,12 +1682,17 @@ async function loadHistory(){
       24*60*60*1000;
 
 
-    /* =====================================================
-       LETZTE 14 TAGE
-       ===================================================== */
+    /*
+      V4.2:
+      Private und unbekannte Hubschrauber werden
+      aus der sichtbaren Historie herausgefiltert.
+    */
 
     const recent14=
       history
+      .filter(
+        isRelevantAircraft
+      )
       .filter(item=>{
 
         const timestamp=
@@ -2449,10 +1714,6 @@ async function loadHistory(){
       );
 
 
-    /* =====================================================
-       LETZTE 24 STUNDEN
-       ===================================================== */
-
     const recent24=
       recent14.filter(item=>{
 
@@ -2472,10 +1733,6 @@ async function loadHistory(){
 
     historyLayer.clearLayers();
 
-
-    /* =====================================================
-       24H NACH MASCHINE GRUPPIEREN
-       ===================================================== */
 
     const aircraftGroups={};
 
@@ -2514,7 +1771,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       FLÜGE AUF KARTE
+       FLÜGE AUF DER KARTE
        ===================================================== */
 
     Object.values(
@@ -2529,14 +1786,6 @@ async function loadHistory(){
 
 
       flights.forEach(flight=>{
-
-        const summary=
-          flightSummary(
-            flight
-          );
-
-
-        /* ---------- Positionspunkte ---------- */
 
         flight.forEach(point=>{
 
@@ -2568,8 +1817,6 @@ async function loadHistory(){
 
         });
 
-
-        /* ---------- Fluglinie ---------- */
 
         if(flight.length>=2){
 
@@ -2609,110 +1856,6 @@ async function loadHistory(){
         }
 
 
-        /* ---------- Zwischenlandungen ---------- */
-
-        summary.stops.forEach(
-          stop=>{
-
-            const stopMarker=
-              L.circleMarker(
-                [
-                  stop.point.lat,
-                  stop.point.lon
-                ],
-                {
-                  radius:8,
-                  weight:3,
-                  fillOpacity:0.9
-                }
-              );
-
-
-            const placeName=
-              stop.place
-              ?
-              stop.place.name
-              :
-              "Ort nicht bestimmt";
-
-
-            stopMarker.bindPopup(
-
-              '<div class="popupTitle">'+
-              'Mögliche Zwischenlandung'+
-              '</div>'+
-
-              '<b>'+
-              placeName+
-              '</b><br>'+
-
-              'Hubschrauber: '+
-              displayName(
-                stop.point
-              )+
-              '<br>'+
-
-              'Erste langsame Position: '+
-              formatDateTime(
-                stop.first.timestamp
-              )+
-              '<br>'+
-
-              'Letzte langsame Position: '+
-              formatDateTime(
-                stop.last.timestamp
-              )
-
-            );
-
-
-            stopMarker.addTo(
-              historyLayer
-            );
-
-
-            /*
-              Kleine Beschriftung nur dann,
-              wenn ein Ort bestimmt wurde.
-            */
-
-            if(stop.place){
-
-              const stopLabel=
-                L.marker(
-                  [
-                    stop.point.lat,
-                    stop.point.lon
-                  ],
-                  {
-                    interactive:false,
-
-                    icon:L.divIcon({
-                      className:"",
-                      html:
-                        '<div class="stopLabel">'+
-                        'Zwischenlandung? '+
-                        stop.place.name+
-                        '</div>',
-                      iconSize:null,
-                      iconAnchor:[-10,30]
-                    })
-                  }
-                );
-
-
-              stopLabel.addTo(
-                historyLayer
-              );
-
-            }
-
-          }
-        );
-
-
-        /* ---------- Hubschraubername ---------- */
-
         const latest=
           flight[
             flight.length-1
@@ -2751,7 +1894,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       14 TAGE NACH MASCHINE
+       14-TAGE-LISTE
        ===================================================== */
 
     const allGroups={};
@@ -2798,13 +1941,14 @@ async function loadHistory(){
 
       flights.forEach(flight=>{
 
-        if(flight.length){
-
-          allFlights.push(
-            flight
-          );
-
+        if(!flight.length){
+          return;
         }
+
+
+        allFlights.push(
+          flight
+        );
 
       });
 
@@ -2830,16 +1974,12 @@ async function loadHistory(){
       allFlights.length;
 
 
-    /* =====================================================
-       KEINE HISTORIE
-       ===================================================== */
-
     if(allFlights.length===0){
 
       box.innerHTML=
 
         '<div class="muted">'+
-        'In den letzten 14 Tagen wurden noch keine Hubschrauber gespeichert.'+
+        'In den letzten 14 Tagen wurden keine klassifizierten Einsatzhubschrauber gespeichert.'+
         '</div>';
 
 
@@ -2847,10 +1987,6 @@ async function loadHistory(){
 
     }
 
-
-    /* =====================================================
-       HISTORIENLISTE
-       ===================================================== */
 
     box.innerHTML="";
 
@@ -2900,44 +2036,6 @@ async function loadHistory(){
         "–";
 
 
-      let stopsHtml="";
-
-
-      if(summary.stops.length){
-
-        stopsHtml=
-          '<div class="flightInfo">'+
-          '<b>Mögliche Zwischenlandungen</b><br>';
-
-
-        summary.stops.forEach(
-          stop=>{
-
-            stopsHtml+=
-              '<span class="stopTag">'+
-              (
-                stop.place
-                ?
-                stop.place.name
-                :
-                "Ort nicht bestimmt"
-              )+
-              ' · '+
-              formatTime(
-                stop.first.timestamp
-              )+
-              '</span>';
-
-          }
-        );
-
-
-        stopsHtml+=
-          '</div>';
-
-      }
-
-
       const row=
         document.createElement(
           "div"
@@ -2962,7 +2060,7 @@ async function loadHistory(){
 
         '<div class="muted">'+
         aircraftRole(last)+
-        ' · Heimatstation: '+
+        ' · Station: '+
         aircraftStation(last)+
         '</div>'+
 
@@ -2998,11 +2096,6 @@ async function loadHistory(){
           ''
         )+
 
-        '<div class="routeBox">'+
-        '<div class="routeTitle">Flugkette</div>'+
-        summary.route+
-        '</div>'+
-
         '<div class="flightInfo">'+
         summary.start+
         '<br>'+
@@ -3010,9 +2103,7 @@ async function loadHistory(){
         '<br>'+
         'Gespeicherte Positionspunkte: '+
         flight.length+
-        '</div>'+
-
-        stopsHtml;
+        '</div>';
 
 
       box.appendChild(
@@ -3075,19 +2166,11 @@ async function loadAll(){
 loadAll();
 
 
-/*
-  Browser-Anzeige jede Minute aktualisieren.
-*/
-
 setInterval(
   loadAll,
   60000
 );
 
-
-/*
-  Leaflet-Korrektur für Safari / iPad.
-*/
 
 window.addEventListener(
   "load",
