@@ -16,7 +16,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
-<title>Luftrettung Goch & Kreis Kleve – V3.6</title>
+<title>Luftrettung Goch & Kreis Kleve – V3.7</title>
 
 <style>
 :root{
@@ -41,7 +41,6 @@ header{
 }
 
 h1{margin:0 0 5px;font-size:25px}
-
 .sub,.muted{color:#aeb9c4}
 .sub{font-size:14px}
 
@@ -113,16 +112,27 @@ h2{
 
 .primary{background:#304c65}
 
-.row{
+.row,
+.historyRow{
   padding:12px 0;
   border-top:1px solid #2a3744
 }
 
-.row:first-child{border-top:0}
+.row:first-child,
+.historyRow:first-child{
+  border-top:0
+}
 
-.name{
+.name,
+.historyName{
   font-size:18px;
   font-weight:700
+}
+
+.historyTime{
+  color:#9eabb6;
+  font-size:13px;
+  margin-bottom:4px
 }
 
 .tag{
@@ -139,24 +149,6 @@ h2{
   padding-left:12px
 }
 
-.historyRow{
-  padding:13px 0;
-  border-top:1px solid #2a3744
-}
-
-.historyRow:first-child{border-top:0}
-
-.historyTime{
-  color:#9eabb6;
-  font-size:13px;
-  margin-bottom:4px
-}
-
-.historyName{
-  font-size:18px;
-  font-weight:750
-}
-
 .counter{
   display:inline-block;
   background:#29425a;
@@ -171,7 +163,7 @@ h2{
 
 #map{
   width:100%;
-  height:480px;
+  height:500px;
   border-radius:14px;
   overflow:hidden;
   background:#243241
@@ -180,7 +172,8 @@ h2{
 .mapLegend{
   margin-top:10px;
   font-size:12px;
-  color:#9eabb6
+  color:#9eabb6;
+  line-height:1.5
 }
 
 .leaflet-popup-content-wrapper,
@@ -195,9 +188,6 @@ h2{
   line-height:30px
 }
 
-
-/* Beschriftung des neuesten Punktes */
-
 .heliLabel{
   background:#101820;
   color:#fff;
@@ -211,12 +201,21 @@ h2{
 }
 
 .heliLabel:before{
-  display:none;
+  display:none
 }
 
+.popupTitle{
+  font-size:15px;
+  font-weight:750;
+  margin-bottom:5px
+}
+
+.popupSub{
+  color:#b7c2cc;
+  margin-bottom:6px
+}
 
 @media(max-width:650px){
-
   .grid{
     grid-template-columns:1fr 1fr
   }
@@ -226,26 +225,22 @@ h2{
   }
 
   #map{
-    height:390px
+    height:420px
   }
 }
 </style>
 </head>
 
-
 <body>
 
 <header>
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
-
 <div class="sub">
-Version 3.6 · Live · 24-h-Flugspuren · 14-Tage-Historie
+Version 3.7 · Live · einzelne Flüge · 24-h-Karte · 14-Tage-Historie
 </div>
 </header>
 
-
 <main>
-
 
 <section class="card">
 
@@ -253,10 +248,7 @@ Version 3.6 · Live · 24-h-Flugspuren · 14-Tage-Historie
 
 <div class="status">
 <div id="dot" class="dot"></div>
-
-<div id="status" class="big">
-Daten werden geladen …
-</div>
+<div id="status" class="big">Daten werden geladen …</div>
 </div>
 
 <div id="info" class="muted">
@@ -284,8 +276,10 @@ Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
 
 <div class="mapLegend">
 Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
-Die Flugspuren und Positionspunkte bleiben 24 Stunden sichtbar.
-Der jeweils neueste Punkt einer Maschine ist mit ihrem Namen beschriftet.
+Zusammengehörige Positionspunkte werden zu einzelnen Flugspuren verbunden.
+Nach einer längeren Unterbrechung beginnt eine neue Flugspur.
+Start und Landung werden nur angezeigt, wenn sie aus den vorhandenen
+Daten plausibel ableitbar sind.
 </div>
 
 </section>
@@ -296,9 +290,7 @@ Der jeweils neueste Punkt einer Maschine ist mit ihrem Namen beschriftet.
 <h2>Aktuell erkannte Hubschrauber</h2>
 
 <div id="aircraft">
-<div class="muted">
-Noch keine Daten geladen.
-</div>
+<div class="muted">Noch keine Daten geladen.</div>
 </div>
 
 </section>
@@ -312,9 +304,7 @@ Hubschrauber – letzte 14 Tage
 </h2>
 
 <div id="history">
-<div class="muted">
-Historie wird geladen …
-</div>
+<div class="muted">Historie wird geladen …</div>
 </div>
 
 <p class="small">
@@ -330,19 +320,17 @@ der letzten 14 Tage.
 <h2>Unsere beobachteten Maschinen</h2>
 
 <div class="grid">
-
 <div class="btn">Christoph 9</div>
 <div class="btn">Lifeliner 3</div>
 <div class="btn">Christoph 8</div>
 <div class="btn">Christoph Westfalen</div>
 <div class="btn">Christoph Dortmund</div>
 <div class="btn">Polizeihubschrauber</div>
-
 </div>
 
 <p class="small">
-Auch andere Rettungs-, Polizei- und sonstige Hubschrauber
-werden erfasst, sofern entsprechende ADS-B-Daten verfügbar sind.
+Auch fremde Rettungs-, Polizei- und sonstige Hubschrauber
+werden erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
 </p>
 
 </section>
@@ -356,39 +344,27 @@ werden erfasst, sofern entsprechende ADS-B-Daten verfügbar sind.
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-target="_blank">
-Goch
-</a>
+target="_blank">Goch</a>
 
 <a class="btn primary"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-target="_blank">
-Kreis Kleve
-</a>
+target="_blank">Kreis Kleve</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-target="_blank">
-Rees
-</a>
+target="_blank">Rees</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-target="_blank">
-Kevelaer
-</a>
+target="_blank">Kevelaer</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-target="_blank">
-Geldern
-</a>
+target="_blank">Geldern</a>
 
 <a class="btn"
 href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-target="_blank">
-Kalkar
-</a>
+target="_blank">Kalkar</a>
 
 </div>
 
@@ -403,6 +379,59 @@ const GOCH={
   lat:51.678,
   lon:6.159
 };
+
+
+/*
+  Nach diesem Zeitabstand wird dieselbe Maschine
+  als neuer Flug behandelt.
+*/
+const FLIGHT_GAP_MINUTES=20;
+
+
+/*
+  Kleine lokale Datenbank bekannter Rufnamen.
+  Sie dient nur zur Anzeige der Heimatstation.
+  Kennzeichen werden NICHT fest einem Christoph-Rufnamen
+  zugeordnetnet, da Einsatzmaschinen wechseln können.
+*/
+const knownCallsigns=[
+  {
+    terms:["CHRISTOPH3","CHRISTOPH 3"],
+    name:"Christoph 3",
+    role:"Rettungshubschrauber",
+    station:"Köln"
+  },
+  {
+    terms:["CHRISTOPH9","CHRISTOPH 9"],
+    name:"Christoph 9",
+    role:"Rettungshubschrauber",
+    station:"Duisburg-Buchholz"
+  },
+  {
+    terms:["CHRISTOPH8","CHRISTOPH 8"],
+    name:"Christoph 8",
+    role:"Rettungshubschrauber",
+    station:"Lünen"
+  },
+  {
+    terms:["CHRISTOPH WESTFALEN"],
+    name:"Christoph Westfalen",
+    role:"Intensivtransporthubschrauber",
+    station:"Greven"
+  },
+  {
+    terms:["CHRISTOPH DORTMUND"],
+    name:"Christoph Dortmund",
+    role:"Intensivtransporthubschrauber",
+    station:"Dortmund"
+  },
+  {
+    terms:["LIFELN3","LIFELINER3","LIFELINER 3"],
+    name:"Lifeliner 3",
+    role:"Traumahubschrauber",
+    station:"Nijmegen"
+  }
+];
 
 
 const rotorTypes=[
@@ -448,8 +477,6 @@ L.tileLayer(
 ).addTo(map);
 
 
-/* Mittelpunkt Goch */
-
 L.circleMarker(
   [GOCH.lat,GOCH.lon],
   {
@@ -464,8 +491,6 @@ L.circleMarker(
 );
 
 
-/* 30-km-Kreis */
-
 L.circle(
   [GOCH.lat,GOCH.lon],
   {
@@ -478,7 +503,6 @@ L.circle(
 
 const historyLayer=
   L.layerGroup().addTo(map);
-
 
 const liveLayer=
   L.layerGroup().addTo(map);
@@ -495,11 +519,8 @@ function distanceKm(lat1,lon1,lat2,lon2){
 
   const R=6371;
 
-  const dLat=
-    rad(lat2-lat1);
-
-  const dLon=
-    rad(lon2-lon1);
+  const dLat=rad(lat2-lat1);
+  const dLon=rad(lon2-lon1);
 
   const a=
     Math.sin(dLat/2)**2+
@@ -528,6 +549,24 @@ function value(a,key){
 }
 
 
+function normalizedText(a){
+
+  return [
+    a.flight,
+    a.callsign,
+    a.r,
+    a.registration,
+    a.t,
+    a.type,
+    a.desc,
+    a.category
+  ]
+  .filter(Boolean)
+  .join(" ")
+  .toUpperCase();
+}
+
+
 function isRotor(a){
 
   const category=
@@ -541,19 +580,8 @@ function isRotor(a){
   }
 
 
-  const text=[
-    a.flight,
-    a.callsign,
-    a.r,
-    a.registration,
-    a.t,
-    a.type,
-    a.desc,
-    a.category
-  ]
-  .filter(Boolean)
-  .join(" ")
-  .toUpperCase();
+  const text=
+    normalizedText(a);
 
 
   if(
@@ -581,7 +609,18 @@ function isRotor(a){
 }
 
 
-function displayName(a){
+/* ---------- HUBSCHRAUBER-INFORMATION ---------- */
+
+function knownInfo(a){
+
+  const text=
+    normalizedText(a);
+
+
+  /*
+    PH-DOC kann zusätzlich Lifeliner 3
+    identifizieren.
+  */
 
   const registration=
     String(
@@ -593,51 +632,76 @@ function displayName(a){
     .toUpperCase();
 
 
+  if(registration==="PH-DOC"){
+
+    return {
+      name:"Lifeliner 3",
+      role:"Traumahubschrauber",
+      station:"Nijmegen"
+    };
+
+  }
+
+
+  for(const entry of knownCallsigns){
+
+    if(
+      entry.terms.some(
+        term=>text.includes(term)
+      )
+    ){
+      return entry;
+    }
+
+  }
+
+
+  if(
+    text.includes("POLICE") ||
+    text.includes("POLIZEI") ||
+    text.includes("BPO")
+  ){
+
+    return {
+      name:"Polizeihubschrauber",
+      role:"Polizeihubschrauber",
+      station:"nicht automatisch bestimmbar"
+    };
+
+  }
+
+
+  return null;
+}
+
+
+function displayName(a){
+
+  const known=
+    knownInfo(a);
+
+
+  if(known){
+    return known.name;
+  }
+
+
   const callsign=
     String(
       a.flight||
       a.callsign||
       ""
     )
-    .trim()
-    .toUpperCase();
+    .trim();
 
 
-  /* Lifeliner 3 */
-
-  if(
-    registration==="PH-DOC" ||
-    callsign.includes("LIFELN3") ||
-    callsign.includes("LIFELINER3") ||
-    callsign.includes("LIFELINER 3")
-  ){
-    return "Lifeliner 3";
-  }
-
-
-  /* Christoph 9 */
-
-  if(
-    callsign.includes("CHRISTOPH9") ||
-    callsign.includes("CHRISTOPH 9")
-  ){
-    return "Christoph 9";
-  }
-
-
-  if(
-    callsign.includes("CHRISTOPH")
-  ){
-    return callsign;
-  }
-
-
-  if(
-    callsign.includes("POLICE") ||
-    callsign.includes("POLIZEI")
-  ){
-    return "Polizeihubschrauber";
-  }
+  const registration=
+    String(
+      a.r||
+      a.registration||
+      ""
+    )
+    .trim();
 
 
   return callsign
@@ -648,18 +712,41 @@ function displayName(a){
 }
 
 
+function aircraftRole(a){
+
+  const known=
+    knownInfo(a);
+
+  if(known){
+    return known.role;
+  }
+
+  return "Hubschrauber";
+}
+
+
+function aircraftStation(a){
+
+  const known=
+    knownInfo(a);
+
+  if(known){
+    return known.station;
+  }
+
+  return "nicht automatisch bestimmbar";
+}
+
+
 function formatTime(dateString){
 
   if(!dateString){
     return "unbekannt";
   }
 
-
   try{
 
-    return new Date(
-      dateString
-    )
+    return new Date(dateString)
     .toLocaleTimeString(
       "de-DE",
       {
@@ -683,12 +770,9 @@ function formatDateTime(dateString){
     return "Zeit unbekannt";
   }
 
-
   try{
 
-    return new Date(
-      dateString
-    )
+    return new Date(dateString)
     .toLocaleString(
       "de-DE",
       {
@@ -706,6 +790,246 @@ function formatDateTime(dateString){
     return dateString;
 
   }
+}
+
+
+/*
+  Grobe Boden-Erkennung.
+
+  alt_baro kann bei ADS-B auch "ground" sein.
+  Zusätzlich behandeln wir sehr geringe Geschwindigkeit
+  als Hinweis, aber nicht als sicheren Beweis.
+*/
+
+function looksGrounded(item){
+
+  const altitude=
+    item.altitude_ft ??
+    item.alt_baro;
+
+  const speed=
+    item.ground_speed ??
+    item.gs;
+
+
+  if(
+    String(altitude)
+    .toLowerCase()==="ground"
+  ){
+    return true;
+  }
+
+
+  if(
+    typeof speed==="number" &&
+    speed<8
+  ){
+    return true;
+  }
+
+
+  return false;
+}
+
+
+/* ---------- EINZELNE FLÜGE BILDEN ---------- */
+
+function splitIntoFlights(points){
+
+  const sorted=
+    [...points].sort(
+      (a,b)=>
+        new Date(a.timestamp)-
+        new Date(b.timestamp)
+    );
+
+
+  const flights=[];
+
+  let current=[];
+
+
+  sorted.forEach(point=>{
+
+    if(current.length===0){
+
+      current.push(point);
+      return;
+
+    }
+
+
+    const previous=
+      current[
+        current.length-1
+      ];
+
+
+    const previousTime=
+      new Date(
+        previous.timestamp
+      ).getTime();
+
+
+    const currentTime=
+      new Date(
+        point.timestamp
+      ).getTime();
+
+
+    const gapMinutes=
+      (
+        currentTime-
+        previousTime
+      )/
+      60000;
+
+
+    if(
+      !Number.isFinite(gapMinutes) ||
+      gapMinutes>FLIGHT_GAP_MINUTES
+    ){
+
+      flights.push(current);
+      current=[point];
+
+    }else{
+
+      current.push(point);
+
+    }
+
+  });
+
+
+  if(current.length){
+    flights.push(current);
+  }
+
+
+  return flights;
+}
+
+
+/* ---------- POPUP FÜR EINEN FLUG ---------- */
+
+function flightPopup(
+  point,
+  flight
+){
+
+  const first=
+    flight[0];
+
+  const last=
+    flight[
+      flight.length-1
+    ];
+
+
+  let startText=
+    "Erste Erfassung: "+
+    formatDateTime(
+      first.timestamp
+    );
+
+
+  let endText=
+    "Letzte Erfassung: "+
+    formatDateTime(
+      last.timestamp
+    );
+
+
+  if(looksGrounded(first)){
+
+    startText=
+      "Möglicher Start: "+
+      formatDateTime(
+        first.timestamp
+      );
+
+  }
+
+
+  if(looksGrounded(last)){
+
+    endText=
+      "Mögliche Landung: "+
+      formatDateTime(
+        last.timestamp
+      );
+
+  }
+
+
+  return (
+
+    '<div class="popupTitle">'+
+    displayName(point)+
+    '</div>'+
+
+    '<div class="popupSub">'+
+    aircraftRole(point)+
+    '</div>'+
+
+    '<b>Station:</b> '+
+    aircraftStation(point)+
+    '<br>'+
+
+    '<b>Kennzeichen:</b> '+
+    (
+      point.registration||
+      point.r||
+      "–"
+    )+
+    '<br>'+
+
+    '<b>Callsign:</b> '+
+    (
+      point.callsign||
+      point.flight||
+      "–"
+    )+
+    '<br>'+
+
+    '<b>Typ:</b> '+
+    (
+      point.type||
+      point.t||
+      "–"
+    )+
+    '<br><br>'+
+
+    '<b>'+startText+'</b>'+
+    '<br>'+
+
+    '<b>'+endText+'</b>'+
+    '<br><br>'+
+
+    'Position: '+
+    formatDateTime(
+      point.timestamp
+    )+
+    '<br>'+
+
+    'Höhe: '+
+    (
+      point.altitude_ft ??
+      point.alt_baro ??
+      "–"
+    )+
+    ' ft<br>'+
+
+    'Geschwindigkeit: '+
+    (
+      point.ground_speed ??
+      point.gs ??
+      "–"
+    )+
+    ' kt'
+
+  );
 }
 
 
@@ -776,73 +1100,85 @@ async function loadLive(){
     rotor.forEach(a=>{
 
       if(
-        typeof a.lat==="number" &&
-        typeof a.lon==="number"
+        typeof a.lat!=="number" ||
+        typeof a.lon!=="number"
       ){
-
-        const marker=
-          L.marker(
-            [a.lat,a.lon],
-            {
-              icon:L.divIcon({
-                className:"heliIcon",
-                html:"🚁",
-                iconSize:[32,32],
-                iconAnchor:[16,16]
-              })
-            }
-          );
+        return;
+      }
 
 
-        marker.bindPopup(
-
-          "<b>"+
-          displayName(a)+
-          "</b><br>"+
-
-          "Kennzeichen: "+
-          value(a,"r")+
-          "<br>"+
-
-          "Callsign: "+
-          value(a,"flight")+
-          "<br>"+
-
-          "Typ: "+
-          value(a,"t")+
-          "<br>"+
-
-          "Höhe: "+
-          value(a,"alt_baro")+
-          " ft"
-
-        );
-
-
-        marker.bindTooltip(
-          displayName(a),
+      const marker=
+        L.marker(
+          [a.lat,a.lon],
           {
-            permanent:true,
-            direction:"right",
-            offset:[18,0],
-            className:"heliLabel"
+            icon:L.divIcon({
+              className:"heliIcon",
+              html:"🚁",
+              iconSize:[32,32],
+              iconAnchor:[16,16]
+            })
           }
         );
 
 
-        marker.addTo(
-          liveLayer
-        );
+      marker.bindPopup(
 
-      }
+        '<div class="popupTitle">'+
+        displayName(a)+
+        '</div>'+
+
+        '<div class="popupSub">'+
+        aircraftRole(a)+
+        '</div>'+
+
+        '<b>Station:</b> '+
+        aircraftStation(a)+
+        '<br>'+
+
+        '<b>Kennzeichen:</b> '+
+        value(a,"r")+
+        '<br>'+
+
+        '<b>Callsign:</b> '+
+        value(a,"flight")+
+        '<br>'+
+
+        '<b>Typ:</b> '+
+        value(a,"t")+
+        '<br>'+
+
+        '<b>Höhe:</b> '+
+        value(a,"alt_baro")+
+        ' ft<br>'+
+
+        '<b>Geschwindigkeit:</b> '+
+        value(a,"gs")+
+        ' kt'
+
+      );
+
+
+      marker.bindTooltip(
+        displayName(a),
+        {
+          permanent:true,
+          direction:"right",
+          offset:[18,0],
+          className:"heliLabel"
+        }
+      );
+
+
+      marker.addTo(
+        liveLayer
+      );
 
     });
 
 
     if(rotor.length===0){
 
-      dot.className=
-        "dot warn";
+      dot.className="dot warn";
 
       status.textContent=
         "Derzeit kein Hubschrauber erkannt";
@@ -857,8 +1193,7 @@ async function loadLive(){
     }
 
 
-    dot.className=
-      "dot live";
+    dot.className="dot live";
 
 
     status.textContent=
@@ -908,6 +1243,12 @@ async function loadLive(){
         displayName(a)+
         '</div>'+
 
+        '<div class="muted">'+
+        aircraftRole(a)+
+        ' · Station: '+
+        aircraftStation(a)+
+        '</div>'+
+
         '<span class="tag">Kennzeichen: '+
         value(a,"r")+
         '</span>'+
@@ -946,9 +1287,7 @@ async function loadLive(){
 
   }catch(error){
 
-    dot.className=
-      "dot err";
-
+    dot.className="dot err";
 
     status.textContent=
       "Flugdaten derzeit nicht erreichbar";
@@ -969,7 +1308,7 @@ async function loadLive(){
 }
 
 
-/* ---------- HISTORIE + 24-STUNDEN-KARTE ---------- */
+/* ---------- HISTORIE + KARTE ---------- */
 
 async function loadHistory(){
 
@@ -1024,11 +1363,6 @@ async function loadHistory(){
       24*60*60*1000;
 
 
-    /*
-      14-TAGE-DATEN
-      nur für die Historienliste
-    */
-
     const recent14=
       history
       .filter(item=>{
@@ -1056,11 +1390,6 @@ async function loadHistory(){
       recent14.length;
 
 
-    /*
-      24-STUNDEN-DATEN
-      ausschließlich für die Karte
-    */
-
     const recent24=
       recent14.filter(
         item=>{
@@ -1080,198 +1409,182 @@ async function loadHistory(){
       );
 
 
-    /* Karte neu zeichnen */
-
     historyLayer.clearLayers();
 
 
-    const groups={};
-
-
-    recent24.forEach(
-      item=>{
-
-        if(
-          typeof item.lat!=="number" ||
-          typeof item.lon!=="number"
-        ){
-          return;
-        }
-
-
-        const identity=
-          item.identity ||
-          item.hex ||
-          item.registration ||
-          item.callsign ||
-          "unknown";
-
-
-        if(!groups[identity]){
-          groups[identity]=[];
-        }
-
-
-        groups[identity].push(
-          item
-        );
-
-
-        /*
-          Jeder gespeicherte Punkt
-          bleibt anklickbar.
-        */
-
-        const marker=
-          L.circleMarker(
-            [
-              item.lat,
-              item.lon
-            ],
-            {
-              radius:5,
-              weight:2,
-              fillOpacity:0.8
-            }
-          );
-
-
-        marker.bindPopup(
-
-          "<b>"+
-          displayName(item)+
-          "</b><br>"+
-
-          formatDateTime(
-            item.timestamp
-          )+
-          "<br>"+
-
-          "Kennzeichen: "+
-          (
-            item.registration||
-            "–"
-          )+
-          "<br>"+
-
-          "Callsign: "+
-          (
-            item.callsign||
-            "–"
-          )+
-          "<br>"+
-
-          "Typ: "+
-          (
-            item.type||
-            "–"
-          )+
-          "<br>"+
-
-          "Höhe: "+
-          (
-            item.altitude_ft ??
-            "–"
-          )+
-          " ft"
-
-        );
-
-
-        marker.addTo(
-          historyLayer
-        );
-
-      }
-    );
-
-
     /*
-      FLUGSPUREN + NAMEN
+      Zuerst nach Maschine gruppieren.
     */
 
-    Object.values(groups)
-    .forEach(points=>{
-
-      points.sort(
-        (a,b)=>
-          new Date(a.timestamp)-
-          new Date(b.timestamp)
-      );
+    const aircraftGroups={};
 
 
-      /*
-        Fluglinie nur bei mindestens
-        zwei gespeicherten Punkten
-      */
+    recent24.forEach(item=>{
 
-      if(points.length>=2){
-
-        const coordinates=
-          points.map(
-            item=>[
-              item.lat,
-              item.lon
-            ]
-          );
-
-
-        L.polyline(
-          coordinates,
-          {
-            weight:3,
-            opacity:0.75
-          }
-        )
-        .addTo(
-          historyLayer
-        );
-
+      if(
+        typeof item.lat!=="number" ||
+        typeof item.lon!=="number"
+      ){
+        return;
       }
 
 
-      /*
-        Neuester Punkt:
-        dauerhafte Namensbeschriftung
-      */
-
-      const latest=
-        points[
-          points.length-1
-        ];
+      const identity=
+        item.identity ||
+        item.hex ||
+        item.registration ||
+        item.callsign ||
+        "unknown";
 
 
-      const labelMarker=
-        L.marker(
-          [
-            latest.lat,
-            latest.lon
-          ],
-          {
-            interactive:false,
-            icon:L.divIcon({
-              className:"",
-              html:
-                '<div class="heliLabel">'+
-                displayName(latest)+
-                '</div>',
-              iconSize:null,
-              iconAnchor:[-8,15]
-            })
-          }
-        );
+      if(!aircraftGroups[identity]){
+        aircraftGroups[identity]=[];
+      }
 
 
-      labelMarker.addTo(
-        historyLayer
-      );
+      aircraftGroups[identity]
+      .push(item);
 
     });
 
 
     /*
-      14-TAGE-HISTORIENLISTE
+      Jede Maschine anschließend
+      in einzelne Flüge aufteilen.
     */
+
+    Object.values(
+      aircraftGroups
+    )
+    .forEach(points=>{
+
+      const flights=
+        splitIntoFlights(points);
+
+
+      flights.forEach(flight=>{
+
+        /*
+          Einzelne Positionspunkte
+        */
+
+        flight.forEach(point=>{
+
+          const marker=
+            L.circleMarker(
+              [
+                point.lat,
+                point.lon
+              ],
+              {
+                radius:5,
+                weight:2,
+                fillOpacity:0.8
+              }
+            );
+
+
+          marker.bindPopup(
+            flightPopup(
+              point,
+              flight
+            )
+          );
+
+
+          marker.addTo(
+            historyLayer
+          );
+
+        });
+
+
+        /*
+          Linie NUR innerhalb
+          dieses konkreten Fluges.
+        */
+
+        if(flight.length>=2){
+
+          const coordinates=
+            flight.map(
+              point=>[
+                point.lat,
+                point.lon
+              ]
+            );
+
+
+          const line=
+            L.polyline(
+              coordinates,
+              {
+                weight:3,
+                opacity:0.8
+              }
+            );
+
+
+          line.bindPopup(
+            flightPopup(
+              flight[
+                flight.length-1
+              ],
+              flight
+            )
+          );
+
+
+          line.addTo(
+            historyLayer
+          );
+
+        }
+
+
+        /*
+          Beschriftung am neuesten
+          Punkt dieses Fluges.
+        */
+
+        const latest=
+          flight[
+            flight.length-1
+          ];
+
+
+        const labelMarker=
+          L.marker(
+            [
+              latest.lat,
+              latest.lon
+            ],
+            {
+              interactive:false,
+
+              icon:L.divIcon({
+                className:"",
+                html:
+                  '<div class="heliLabel">'+
+                  displayName(latest)+
+                  '</div>',
+                iconSize:null,
+                iconAnchor:[-8,15]
+              })
+            }
+          );
+
+
+        labelMarker.addTo(
+          historyLayer
+        );
+
+      });
+
+    });
+
+
+    /* ---------- 14-TAGE-LISTE ---------- */
 
     if(recent14.length===0){
 
@@ -1287,94 +1600,97 @@ async function loadHistory(){
     box.innerHTML="";
 
 
-    recent14.forEach(
-      item=>{
+    recent14.forEach(item=>{
 
-        const row=
-          document.createElement(
-            "div"
-          );
-
-
-        row.className=
-          "historyRow";
-
-
-        const registration=
-          item.registration||
-          item.r||
-          "–";
-
-
-        const callsign=
-          item.callsign||
-          item.flight||
-          "–";
-
-
-        const type=
-          item.type||
-          item.t||
-          "–";
-
-
-        row.innerHTML=
-
-          '<div class="historyTime">'+
-          formatDateTime(
-            item.timestamp
-          )+
-          '</div>'+
-
-          '<div class="historyName">'+
-          displayName(item)+
-          '</div>'+
-
-          '<span class="tag">Kennzeichen: '+
-          registration+
-          '</span>'+
-
-          '<span class="tag">Callsign: '+
-          callsign+
-          '</span>'+
-
-          '<span class="tag">Typ: '+
-          type+
-          '</span>'+
-
-          (
-            item.distance_km!=null
-            ?
-            '<span class="tag">Entfernung: '+
-            item.distance_km+
-            ' km</span>'
-            :
-            ''
-          )+
-
-          (
-            item.altitude_ft!=null
-            ?
-            '<span class="tag">Höhe: '+
-            item.altitude_ft+
-            ' ft</span>'
-            :
-            ''
-          );
-
-
-        box.appendChild(
-          row
+      const row=
+        document.createElement(
+          "div"
         );
 
-      }
-    );
+
+      row.className=
+        "historyRow";
+
+
+      const registration=
+        item.registration||
+        item.r||
+        "–";
+
+
+      const callsign=
+        item.callsign||
+        item.flight||
+        "–";
+
+
+      const type=
+        item.type||
+        item.t||
+        "–";
+
+
+      row.innerHTML=
+
+        '<div class="historyTime">'+
+        formatDateTime(
+          item.timestamp
+        )+
+        '</div>'+
+
+        '<div class="historyName">'+
+        displayName(item)+
+        '</div>'+
+
+        '<div class="muted">'+
+        aircraftRole(item)+
+        ' · Station: '+
+        aircraftStation(item)+
+        '</div>'+
+
+        '<span class="tag">Kennzeichen: '+
+        registration+
+        '</span>'+
+
+        '<span class="tag">Callsign: '+
+        callsign+
+        '</span>'+
+
+        '<span class="tag">Typ: '+
+        type+
+        '</span>'+
+
+        (
+          item.distance_km!=null
+          ?
+          '<span class="tag">Entfernung: '+
+          item.distance_km+
+          ' km</span>'
+          :
+          ''
+        )+
+
+        (
+          item.altitude_ft!=null
+          ?
+          '<span class="tag">Höhe: '+
+          item.altitude_ft+
+          ' ft</span>'
+          :
+          ''
+        );
+
+
+      box.appendChild(
+        row
+      );
+
+    });
 
 
   }catch(error){
 
-    counter.textContent=
-      "–";
+    counter.textContent="–";
 
 
     box.innerHTML=
@@ -1402,8 +1718,6 @@ async function loadAll(){
 
 loadAll();
 
-
-/* Anzeige jede Minute aktualisieren */
 
 setInterval(
   loadAll,
