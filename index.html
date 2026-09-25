@@ -16,7 +16,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<title>Luftrettung Goch & Kreis Kleve – V4.2</title>
+<title>Luftrettung Goch & Kreis Kleve – V4.3</title>
 
 <style>
 
@@ -276,7 +276,7 @@ h2{
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
 
 <div class="sub">
-Version 4.2 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
+Version 4.3 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
 </div>
 
 </header>
@@ -336,7 +336,7 @@ Private und nicht klassifizierte Hubschrauber werden nicht angezeigt.
 Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
 Positionspunkte derselben Maschine werden zu einzelnen Flügen zusammengefasst.
 Niedrige bzw. langsame Flugphasen können als mögliche Zwischenlandungen
-erkannt werden. Angezeigt werden ausschließlich klassifizierte
+erkannt werden. Angezeigt werden ausschließlich bekannte bzw. klassifizierte
 Rettungs-, Polizei- und Militärhubschrauber.
 Start, Landung und Zwischenlandungen werden automatisch aus den
 vorhandenen Flugdaten abgeleitet und sind daher nicht immer bestätigt.
@@ -385,9 +385,9 @@ Historie wird geladen …
 </div>
 
 <p class="small">
-Angezeigt werden nur klassifizierte Rettungs-, Polizei- und
-Militärhubschrauber. Private und noch unbekannte Maschinen bleiben
-in der sichtbaren Historie ausgeblendet.
+Bekannte ältere Datensätze werden anhand von Rufname, Kennzeichen
+und vorhandener Klassifizierung nachträglich erkannt.
+Private und weiterhin unbekannte Maschinen bleiben ausgeblendet.
 </p>
 
 </section>
@@ -506,54 +506,101 @@ const FLIGHT_GAP_MINUTES=20;
 
 
 /* =========================================================
-   BEKANNTE RETTUNGSHUBSCHRAUBER
+   BEKANNTE EINSATZHUBSCHRAUBER
    ========================================================= */
 
 const knownCallsigns=[
 
   {
-    terms:["CHRISTOPH3","CHRISTOPH 3"],
+    terms:[
+      "CHRISTOPH3",
+      "CHRISTOPH 3"
+    ],
     name:"Christoph 3",
     role:"Rettungshubschrauber",
-    station:"Köln"
+    station:"Köln/Bonn"
   },
 
   {
-    terms:["CHRISTOPH9","CHRISTOPH 9"],
+    terms:[
+      "CHRISTOPH9",
+      "CHRISTOPH 9"
+    ],
     name:"Christoph 9",
     role:"Rettungshubschrauber",
     station:"Duisburg-Buchholz"
   },
 
   {
-    terms:["CHRISTOPH8","CHRISTOPH 8"],
+    terms:[
+      "CHRISTOPH8",
+      "CHRISTOPH 8"
+    ],
     name:"Christoph 8",
     role:"Rettungshubschrauber",
     station:"Lünen"
   },
 
   {
-    terms:["CHRISTOPH WESTFALEN"],
+    terms:[
+      "CHRISTOPH WESTFALEN",
+      "CHRISTOPHWESTFALEN"
+    ],
     name:"Christoph Westfalen",
     role:"Intensivtransporthubschrauber",
     station:"Greven"
   },
 
   {
-    terms:["CHRISTOPH DORTMUND"],
+    terms:[
+      "CHRISTOPH DORTMUND",
+      "CHRISTOPHDORTMUND"
+    ],
     name:"Christoph Dortmund",
     role:"Intensivtransporthubschrauber",
     station:"Dortmund"
   },
 
   {
-    terms:["LIFELN3","LIFELINER3","LIFELINER 3"],
+    terms:[
+      "LIFELN3",
+      "LIFELINER3",
+      "LIFELINER 3"
+    ],
     name:"Lifeliner 3",
     role:"Traumahelikopter",
     station:"Region Nijmegen"
   }
 
 ];
+
+
+/*
+  Bekannte Registrierungen.
+
+  Diese Liste ist besonders wichtig für alte history.json-
+  Datensätze, in denen möglicherweise kein service- oder
+  name-Feld vorhanden ist.
+
+  Die Zuordnung PH-DOC wird hier als bekannte Maschine
+  für Lifeliner 3 verwendet.
+*/
+
+const knownRegistrations={
+
+  "PH-DOC":{
+    name:"Lifeliner 3",
+    role:"Traumahelikopter",
+    station:"Region Nijmegen"
+  },
+
+  "D-HZSA":{
+    name:"Christoph 3",
+    role:"Rettungshubschrauber",
+    station:"Köln/Bonn"
+  }
+
+};
 
 
 /* =========================================================
@@ -623,11 +670,18 @@ const liveLayer=
    ========================================================= */
 
 function rad(x){
+
   return x*Math.PI/180;
+
 }
 
 
-function distanceKm(lat1,lon1,lat2,lon2){
+function distanceKm(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
 
   const R=6371;
 
@@ -647,22 +701,29 @@ function distanceKm(lat1,lon1,lat2,lon2){
     Math.sqrt(a),
     Math.sqrt(1-a)
   );
+
 }
 
 
 function normalizedText(a){
 
   return [
+
     a.name,
     a.service,
+
     a.flight,
     a.callsign,
+
     a.r,
     a.registration,
+
     a.t,
     a.type,
+
     a.desc,
     a.category
+
   ]
   .filter(Boolean)
   .join(" ")
@@ -671,145 +732,312 @@ function normalizedText(a){
 }
 
 
+function registrationOf(a){
+
+  return String(
+    a.registration ||
+    a.r ||
+    ""
+  )
+  .trim()
+  .toUpperCase();
+
+}
+
+
 /* =========================================================
-   RELEVANZFILTER V4.2
+   V4.3 – NACHKLASSIFIZIERUNG
    ========================================================= */
 
-function isRelevantAircraft(item){
+/*
+  Der wesentliche Unterschied zu V4.2:
 
-  const service=
-    String(
-      item.service||""
-    )
-    .trim()
-    .toUpperCase();
+  Wir fragen nicht zuerst:
+  "Hat der Datensatz bereits service?"
 
-  const name=
-    String(
-      item.name||""
-    )
-    .trim()
-    .toUpperCase();
+  Sondern:
+  "Können wir den Datensatz anhand aller vorhandenen
+   Informationen zuverlässig klassifizieren?"
+
+  Dadurch können auch ältere history.json-Einträge
+  wieder angezeigt werden.
+*/
+
+function classifyAircraft(item){
 
   const text=
     normalizedText(item);
 
 
-  /* Rettungsdienst */
-
-  if(
-    service.includes("RETTUNG") ||
-    service.includes("TRAUMA") ||
-    service.includes("INTENSIV")
-  ){
-    return true;
-  }
+  const registration=
+    registrationOf(item);
 
 
-  /* Polizei */
-
-  if(
-    service.includes("POLIZEI") ||
-    service.includes("POLICE")
-  ){
-    return true;
-  }
+  const service=
+    String(
+      item.service || ""
+    )
+    .trim();
 
 
-  /* Militär */
+  const serviceUpper=
+    service.toUpperCase();
 
-  if(
-    service.includes("MILITÄR") ||
-    service.includes("MILITAER") ||
-    service.includes("MILITARY") ||
-    service.includes("BUNDESWEHR")
-  ){
-    return true;
-  }
-
-
-  /* bekannte Einsatzrufnamen */
-
-  if(
-    name.includes("CHRISTOPH") ||
-    name.includes("LIFELINER") ||
-    text.includes("CHRISTOPH") ||
-    text.includes("LIFELINER")
-  ){
-    return true;
-  }
-
-
-  return false;
-}
-
-
-/* =========================================================
-   BEKANNTE MASCHINEN
-   ========================================================= */
-
-function knownInfo(a){
 
   /*
-    Wenn der Workflow bereits eine Klassifizierung
-    geliefert hat, verwenden wir diese zuerst.
+    1. Bereits vom Workflow klassifizierter
+       Rettungshubschrauber
   */
 
   if(
-    a.name &&
-    a.service
+    serviceUpper.includes("RETTUNG") ||
+    serviceUpper.includes("TRAUMA") ||
+    serviceUpper.includes("INTENSIV")
   ){
 
     return {
-      name:a.name,
-      role:a.service,
+
+      relevant:true,
+
+      name:
+        item.name ||
+        item.callsign ||
+        item.flight ||
+        registration ||
+        "Rettungshubschrauber",
+
+      role:service,
+
       station:
-        a.station ||
-        "nicht automatisch bestimmbar"
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"rescue"
+
     };
 
   }
 
 
-  const text=
-    normalizedText(a);
+  /*
+    2. Bereits klassifizierte Polizei
+  */
 
-
-  const registration=
-    String(
-      a.r||
-      a.registration||
-      ""
-    )
-    .trim()
-    .toUpperCase();
-
-
-  if(registration==="PH-DOC"){
+  if(
+    serviceUpper.includes("POLIZEI") ||
+    serviceUpper.includes("POLICE")
+  ){
 
     return {
-      name:"Lifeliner 3",
-      role:"Traumahelikopter",
-      station:"Region Nijmegen"
+
+      relevant:true,
+
+      name:
+        item.name ||
+        "Polizeihubschrauber",
+
+      role:
+        service ||
+        "Polizei",
+
+      station:
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"police"
+
     };
 
   }
 
 
-  for(const entry of knownCallsigns){
+  /*
+    3. Bereits klassifiziertes Militär
+  */
 
-    if(
+  if(
+    serviceUpper.includes("MILITÄR") ||
+    serviceUpper.includes("MILITAER") ||
+    serviceUpper.includes("MILITARY") ||
+    serviceUpper.includes("BUNDESWEHR")
+  ){
+
+    return {
+
+      relevant:true,
+
+      name:
+        item.name ||
+        item.callsign ||
+        item.flight ||
+        registration ||
+        "Militärhubschrauber",
+
+      role:
+        service ||
+        "Militärhubschrauber",
+
+      station:
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"military"
+
+    };
+
+  }
+
+
+  /*
+    4. Bekannte Registrierung
+
+       Damit holen wir auch alte Datensätze zurück.
+  */
+
+  if(
+    registration &&
+    knownRegistrations[registration]
+  ){
+
+    const known=
+      knownRegistrations[
+        registration
+      ];
+
+
+    return {
+
+      relevant:true,
+
+      name:known.name,
+
+      role:known.role,
+
+      station:known.station,
+
+      category:"known"
+
+    };
+
+  }
+
+
+  /*
+    5. Bekannte Einsatzrufnamen
+
+       Das ist absichtlich unabhängig vom Feld service.
+       Dadurch funktionieren auch alte history.json-Einträge.
+  */
+
+  for(
+    const entry
+    of knownCallsigns
+  ){
+
+    const found=
       entry.terms.some(
-        term=>text.includes(term)
-      )
-    ){
+        term=>
+          text.includes(
+            term.toUpperCase()
+          )
+      );
 
-      return entry;
+
+    if(found){
+
+      return {
+
+        relevant:true,
+
+        name:entry.name,
+
+        role:entry.role,
+
+        station:entry.station,
+
+        category:"known"
+
+      };
 
     }
 
   }
 
+
+  /*
+    6. Allgemeiner Christoph-Rufname
+
+       Auch ein Christoph, den wir noch nicht in unserer
+       Stationsliste haben, ist eindeutig ein relevanter
+       Einsatzhubschrauber.
+  */
+
+  if(
+    text.includes("CHRISTOPH")
+  ){
+
+    return {
+
+      relevant:true,
+
+      name:
+        item.name ||
+        item.callsign ||
+        item.flight ||
+        "Christoph",
+
+      role:
+        item.service ||
+        "Rettungs-/Intensivtransporthubschrauber",
+
+      station:
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"rescue"
+
+    };
+
+  }
+
+
+  /*
+    7. Lifeliner allgemein
+  */
+
+  if(
+    text.includes("LIFELINER") ||
+    text.includes("LIFELN")
+  ){
+
+    return {
+
+      relevant:true,
+
+      name:
+        item.name ||
+        item.callsign ||
+        item.flight ||
+        "Lifeliner",
+
+      role:
+        item.service ||
+        "Traumahelikopter",
+
+      station:
+        item.station ||
+        "Niederlande",
+
+      category:"rescue"
+
+    };
+
+  }
+
+
+  /*
+    8. Polizei anhand Rufname/Beschreibung
+  */
 
   if(
     text.includes("POLICE") ||
@@ -818,32 +1046,155 @@ function knownInfo(a){
   ){
 
     return {
-      name:"Polizeihubschrauber",
+
+      relevant:true,
+
+      name:
+        item.name ||
+        "Polizeihubschrauber",
+
       role:"Polizei",
-      station:"nicht automatisch bestimmbar"
+
+      station:
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"police"
+
+    };
+
+  }
+
+
+  /*
+    9. Militär anhand eindeutiger Begriffe
+  */
+
+  if(
+    text.includes("BUNDESWEHR") ||
+    text.includes("MILITARY") ||
+    text.includes("MILITAER") ||
+    text.includes("MILITÄR")
+  ){
+
+    return {
+
+      relevant:true,
+
+      name:
+        item.name ||
+        item.callsign ||
+        item.flight ||
+        registration ||
+        "Militärhubschrauber",
+
+      role:"Militärhubschrauber",
+
+      station:
+        item.station ||
+        "nicht automatisch bestimmbar",
+
+      category:"military"
+
+    };
+
+  }
+
+
+  /*
+    Nicht eindeutig klassifiziert.
+
+    Diese Maschine bleibt im Hintergrund
+    und erscheint nicht auf der Webseite.
+  */
+
+  return {
+
+    relevant:false,
+
+    name:
+      item.name ||
+      item.callsign ||
+      item.flight ||
+      registration ||
+      "Unbekannter Hubschrauber",
+
+    role:
+      item.service ||
+      "nicht klassifiziert",
+
+    station:
+      item.station ||
+      "nicht automatisch bestimmbar",
+
+    category:"unknown"
+
+  };
+
+}
+
+
+/* =========================================================
+   RELEVANZFILTER V4.3
+   ========================================================= */
+
+function isRelevantAircraft(item){
+
+  return classifyAircraft(
+    item
+  ).relevant;
+
+}
+
+
+/* =========================================================
+   ANZEIGEINFORMATIONEN
+   ========================================================= */
+
+function knownInfo(a){
+
+  const classification=
+    classifyAircraft(a);
+
+
+  if(
+    classification.relevant
+  ){
+
+    return {
+
+      name:
+        classification.name,
+
+      role:
+        classification.role,
+
+      station:
+        classification.station
+
     };
 
   }
 
 
   return null;
+
 }
 
-
-/* =========================================================
-   ANZEIGENAME
-   ========================================================= */
 
 function displayName(a){
 
   const known=
     knownInfo(a);
 
+
   if(known){
     return known.name;
   }
 
+
   return (
+
     a.name ||
     a.callsign ||
     a.flight ||
@@ -852,7 +1203,9 @@ function displayName(a){
     a.type ||
     a.t ||
     "Einsatzhubschrauber"
+
   );
+
 }
 
 
@@ -861,14 +1214,19 @@ function aircraftRole(a){
   const known=
     knownInfo(a);
 
+
   if(known){
     return known.role;
   }
 
+
   return (
+
     a.service ||
     "Einsatzhubschrauber"
+
   );
+
 }
 
 
@@ -877,14 +1235,19 @@ function aircraftStation(a){
   const known=
     knownInfo(a);
 
+
   if(known){
     return known.station;
   }
 
+
   return (
+
     a.station ||
     "nicht automatisch bestimmbar"
+
   );
+
 }
 
 
@@ -897,6 +1260,7 @@ function formatTime(dateString){
   if(!dateString){
     return "unbekannt";
   }
+
 
   try{
 
@@ -917,6 +1281,7 @@ function formatTime(dateString){
     return dateString;
 
   }
+
 }
 
 
@@ -925,6 +1290,7 @@ function formatDateTime(dateString){
   if(!dateString){
     return "Zeit unbekannt";
   }
+
 
   try{
 
@@ -948,6 +1314,7 @@ function formatDateTime(dateString){
     return dateString;
 
   }
+
 }
 
 
@@ -960,6 +1327,7 @@ function looksGrounded(item){
   const altitude=
     item.altitude_ft ??
     item.alt_baro;
+
 
   const speed=
     item.ground_speed ??
@@ -983,6 +1351,7 @@ function looksGrounded(item){
 
 
   return false;
+
 }
 
 
@@ -1007,9 +1376,14 @@ function splitIntoFlights(points){
 
   sorted.forEach(point=>{
 
-    if(current.length===0){
+    if(
+      current.length===0
+    ){
 
-      current.push(point);
+      current.push(
+        point
+      );
+
       return;
 
     }
@@ -1042,31 +1416,46 @@ function splitIntoFlights(points){
 
 
     if(
-      !Number.isFinite(gapMinutes) ||
-      gapMinutes>FLIGHT_GAP_MINUTES
+      !Number.isFinite(
+        gapMinutes
+      ) ||
+      gapMinutes>
+      FLIGHT_GAP_MINUTES
     ){
 
-      flights.push(current);
+      flights.push(
+        current
+      );
 
-      current=[point];
+
+      current=[
+        point
+      ];
 
     }else{
 
-      current.push(point);
+      current.push(
+        point
+      );
 
     }
 
   });
 
 
-  if(current.length){
+  if(
+    current.length
+  ){
 
-    flights.push(current);
+    flights.push(
+      current
+    );
 
   }
 
 
   return flights;
+
 }
 
 
@@ -1113,7 +1502,11 @@ function flightSummary(flight){
     );
 
 
-  if(looksGrounded(first)){
+  if(
+    looksGrounded(
+      first
+    )
+  ){
 
     start=
       "Möglicher Start: "+
@@ -1124,7 +1517,11 @@ function flightSummary(flight){
   }
 
 
-  if(looksGrounded(last)){
+  if(
+    looksGrounded(
+      last
+    )
+  ){
 
     end=
       "Mögliche Landung: "+
@@ -1139,6 +1536,7 @@ function flightSummary(flight){
     start,
     end
   };
+
 }
 
 
@@ -1146,10 +1544,15 @@ function flightSummary(flight){
    POPUP
    ========================================================= */
 
-function flightPopup(point,flight){
+function flightPopup(
+  point,
+  flight
+){
 
   const summary=
-    flightSummary(flight);
+    flightSummary(
+      flight
+    );
 
 
   return (
@@ -1221,29 +1624,43 @@ function flightPopup(point,flight){
     ' kt'
 
   );
+
 }
 
 
 /* =========================================================
-   LIVE V4.2
+   LIVE V4.3
    ========================================================= */
 
 async function loadLive(){
 
   const dot=
-    document.getElementById("dot");
+    document.getElementById(
+      "dot"
+    );
+
 
   const status=
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
+
 
   const info=
-    document.getElementById("info");
+    document.getElementById(
+      "info"
+    );
+
 
   const box=
-    document.getElementById("aircraft");
+    document.getElementById(
+      "aircraft"
+    );
 
 
-  dot.className="dot";
+  dot.className=
+    "dot";
+
 
   status.textContent=
     "Daten werden geladen …";
@@ -1252,26 +1669,32 @@ async function loadLive(){
   try{
 
     /*
-      Ab V4.2 wird NICHT aircraft.json verwendet.
+      Zunächst current_rotorcraft.json versuchen.
 
-      current_rotorcraft.json soll ausschließlich
-      die vom Workflow freigegebenen Einsatzmaschinen
-      enthalten.
+      Die Datei enthält die vom Workflow
+      aktuell erkannten Hubschrauber.
+
+      V4.3 klassifiziert die darin enthaltenen
+      Datensätze anschließend selbst noch einmal.
     */
 
     const response=
       await fetch(
-        "current_rotorcraft.json?time="+Date.now(),
+        "current_rotorcraft.json?time="+
+        Date.now(),
         {
           cache:"no-store"
         }
       );
 
 
-    if(!response.ok){
+    if(
+      !response.ok
+    ){
 
       throw new Error(
-        "HTTP "+response.status
+        "HTTP "+
+        response.status
       );
 
     }
@@ -1282,7 +1705,9 @@ async function loadLive(){
 
 
     const supplied=
-      Array.isArray(data.aircraft)
+      Array.isArray(
+        data.aircraft
+      )
       ?
       data.aircraft
       :
@@ -1290,10 +1715,7 @@ async function loadLive(){
 
 
     /*
-      Zweite Sicherheitsstufe im Browser:
-      Auch wenn versehentlich ein unbekannter oder privater
-      Hubschrauber in der JSON-Datei landet, wird er hier
-      nicht angezeigt.
+      Jetzt erst klassifizieren.
     */
 
     const rotor=
@@ -1302,31 +1724,54 @@ async function loadLive(){
       );
 
 
+    /*
+      30-km-Filter
+    */
+
+    const visibleRotor=
+      rotor.filter(a=>{
+
+        if(
+          typeof a.lat!=="number" ||
+          typeof a.lon!=="number"
+        ){
+
+          return false;
+
+        }
+
+
+        return (
+          distanceKm(
+            GOCH.lat,
+            GOCH.lon,
+            a.lat,
+            a.lon
+          )<=30
+        );
+
+      });
+
+
     info.innerHTML=
 
       "Letzte Server-Aktualisierung: <b>"+
-      formatTime(data.updated)+
+      formatTime(
+        data.updated
+      )+
       "</b> · Relevante Einsatzhubschrauber im 30-km-Bereich: <b>"+
-      rotor.length+
+      visibleRotor.length+
       "</b>";
 
 
     liveLayer.clearLayers();
 
 
-    rotor.forEach(a=>{
+    /* =====================================================
+       LIVE-MARKER
+       ===================================================== */
 
-      if(
-        typeof a.lat!=="number" ||
-        typeof a.lon!=="number"
-      ){
-        return;
-      }
-
-
-      /*
-        Zusätzliche 30-km-Sicherung.
-      */
+    visibleRotor.forEach(a=>{
 
       const dist=
         distanceKm(
@@ -1335,11 +1780,6 @@ async function loadLive(){
           a.lat,
           a.lon
         );
-
-
-      if(dist>30){
-        return;
-      }
 
 
       const marker=
@@ -1352,8 +1792,14 @@ async function loadLive(){
             icon:L.divIcon({
               className:"heliIcon",
               html:"🚁",
-              iconSize:[32,32],
-              iconAnchor:[16,16]
+              iconSize:[
+                32,
+                32
+              ],
+              iconAnchor:[
+                16,
+                16
+              ]
             })
           }
         );
@@ -1425,7 +1871,10 @@ async function loadLive(){
         {
           permanent:true,
           direction:"right",
-          offset:[18,0],
+          offset:[
+            18,
+            0
+          ],
           className:"heliLabel"
         }
       );
@@ -1438,32 +1887,13 @@ async function loadLive(){
     });
 
 
-    /*
-      Für die Textliste ebenfalls nur Maschinen
-      innerhalb der 30 km verwenden.
-    */
+    /* =====================================================
+       KEIN RELEVANTER HUBSCHRAUBER
+       ===================================================== */
 
-    const visibleRotor=
-      rotor.filter(a=>{
-
-        if(
-          typeof a.lat!=="number" ||
-          typeof a.lon!=="number"
-        ){
-          return false;
-        }
-
-        return distanceKm(
-          GOCH.lat,
-          GOCH.lon,
-          a.lat,
-          a.lon
-        )<=30;
-
-      });
-
-
-    if(visibleRotor.length===0){
+    if(
+      visibleRotor.length===0
+    ){
 
       dot.className=
         "dot warn";
@@ -1476,7 +1906,7 @@ async function loadLive(){
       box.innerHTML=
 
         '<div class="muted">'+
-        'Derzeit wurde kein klassifizierter Rettungs-, Polizei- oder Militärhubschrauber im überwachten Gebiet erkannt.'+
+        'Derzeit wurde kein eindeutig klassifizierter Rettungs-, Polizei- oder Militärhubschrauber im überwachten Gebiet erkannt.'+
         '</div>';
 
 
@@ -1484,6 +1914,10 @@ async function loadLive(){
 
     }
 
+
+    /* =====================================================
+       EINSATZHUBSCHRAUBER VORHANDEN
+       ===================================================== */
 
     dot.className=
       "dot live";
@@ -1620,7 +2054,7 @@ async function loadLive(){
 
 
 /* =========================================================
-   HISTORIE V4.2
+   HISTORIE V4.3
    ========================================================= */
 
 async function loadHistory(){
@@ -1641,17 +2075,21 @@ async function loadHistory(){
 
     const response=
       await fetch(
-        "history.json?time="+Date.now(),
+        "history.json?time="+
+        Date.now(),
         {
           cache:"no-store"
         }
       );
 
 
-    if(!response.ok){
+    if(
+      !response.ok
+    ){
 
       throw new Error(
-        "HTTP "+response.status
+        "HTTP "+
+        response.status
       );
 
     }
@@ -1661,7 +2099,11 @@ async function loadHistory(){
       await response.json();
 
 
-    if(!Array.isArray(history)){
+    if(
+      !Array.isArray(
+        history
+      )
+    ){
 
       throw new Error(
         "Ungültiges Datenformat"
@@ -1675,24 +2117,41 @@ async function loadHistory(){
 
 
     const fourteenDays=
-      14*24*60*60*1000;
+      14*
+      24*
+      60*
+      60*
+      1000;
 
 
     const twentyFourHours=
-      24*60*60*1000;
+      24*
+      60*
+      60*
+      1000;
 
 
-    /*
-      V4.2:
-      Private und unbekannte Hubschrauber werden
-      aus der sichtbaren Historie herausgefiltert.
-    */
+    /* =====================================================
+       V4.3:
+       ALTE DATENSÄTZE NACHKLASSIFIZIEREN
+       ===================================================== */
 
     const recent14=
       history
+
+      /*
+        Erst anhand aller vorhandenen Informationen
+        klassifizieren.
+      */
+
       .filter(
         isRelevantAircraft
       )
+
+      /*
+        Danach Zeitfilter.
+      */
+
       .filter(item=>{
 
         const timestamp=
@@ -1702,15 +2161,26 @@ async function loadHistory(){
 
 
         return(
-          Number.isFinite(timestamp) &&
-          now-timestamp<=fourteenDays
+
+          Number.isFinite(
+            timestamp
+          ) &&
+
+          now-timestamp<=
+          fourteenDays
+
         );
 
       })
+
       .sort(
         (a,b)=>
-          new Date(b.timestamp)-
-          new Date(a.timestamp)
+          new Date(
+            b.timestamp
+          )-
+          new Date(
+            a.timestamp
+          )
       );
 
 
@@ -1724,8 +2194,14 @@ async function loadHistory(){
 
 
         return(
-          Number.isFinite(timestamp) &&
-          now-timestamp<=twentyFourHours
+
+          Number.isFinite(
+            timestamp
+          ) &&
+
+          now-timestamp<=
+          twentyFourHours
+
         );
 
       });
@@ -1733,6 +2209,10 @@ async function loadHistory(){
 
     historyLayer.clearLayers();
 
+
+    /* =====================================================
+       NACH MASCHINE GRUPPIEREN
+       ===================================================== */
 
     const aircraftGroups={};
 
@@ -1743,29 +2223,47 @@ async function loadHistory(){
         typeof item.lat!=="number" ||
         typeof item.lon!=="number"
       ){
+
         return;
+
       }
 
 
       const identity=
 
         item.identity ||
+
         item.hex ||
+
         item.registration ||
+
+        item.r ||
+
         item.callsign ||
-        "unknown";
+
+        item.flight ||
+
+        displayName(item);
 
 
-      if(!aircraftGroups[identity]){
+      if(
+        !aircraftGroups[
+          identity
+        ]
+      ){
 
-        aircraftGroups[identity]=[];
+        aircraftGroups[
+          identity
+        ]=[];
 
       }
 
 
       aircraftGroups[
         identity
-      ].push(item);
+      ].push(
+        item
+      );
 
     });
 
@@ -1786,6 +2284,10 @@ async function loadHistory(){
 
 
       flights.forEach(flight=>{
+
+        /* -----------------------------------------
+           POSITIONSPUNKTE
+           ----------------------------------------- */
 
         flight.forEach(point=>{
 
@@ -1818,7 +2320,13 @@ async function loadHistory(){
         });
 
 
-        if(flight.length>=2){
+        /* -----------------------------------------
+           FLUGLINIE
+           ----------------------------------------- */
+
+        if(
+          flight.length>=2
+        ){
 
           const coordinates=
             flight.map(
@@ -1856,6 +2364,10 @@ async function loadHistory(){
         }
 
 
+        /* -----------------------------------------
+           BESCHRIFTUNG
+           ----------------------------------------- */
+
         const latest=
           flight[
             flight.length-1
@@ -1875,10 +2387,15 @@ async function loadHistory(){
                 className:"",
                 html:
                   '<div class="heliLabel">'+
-                  displayName(latest)+
+                  displayName(
+                    latest
+                  )+
                   '</div>',
                 iconSize:null,
-                iconAnchor:[-8,15]
+                iconAnchor:[
+                  -8,
+                  15
+                ]
               })
             }
           );
@@ -1894,7 +2411,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       14-TAGE-LISTE
+       14-TAGE-HISTORIE GRUPPIEREN
        ===================================================== */
 
     const allGroups={};
@@ -1905,22 +2422,38 @@ async function loadHistory(){
       const identity=
 
         item.identity ||
+
         item.hex ||
+
         item.registration ||
+
+        item.r ||
+
         item.callsign ||
-        "unknown";
+
+        item.flight ||
+
+        displayName(item);
 
 
-      if(!allGroups[identity]){
+      if(
+        !allGroups[
+          identity
+        ]
+      ){
 
-        allGroups[identity]=[];
+        allGroups[
+          identity
+        ]=[];
 
       }
 
 
       allGroups[
         identity
-      ].push(item);
+      ].push(
+        item
+      );
 
     });
 
@@ -1941,8 +2474,12 @@ async function loadHistory(){
 
       flights.forEach(flight=>{
 
-        if(!flight.length){
+        if(
+          !flight.length
+        ){
+
           return;
+
         }
 
 
@@ -1955,18 +2492,25 @@ async function loadHistory(){
     });
 
 
+    /* =====================================================
+       NEUESTE FLÜGE ZUERST
+       ===================================================== */
+
     allFlights.sort(
       (a,b)=>
+
         new Date(
           b[
             b.length-1
           ].timestamp
-        )-
+        )
+        -
         new Date(
           a[
             a.length-1
           ].timestamp
         )
+
     );
 
 
@@ -1974,12 +2518,18 @@ async function loadHistory(){
       allFlights.length;
 
 
-    if(allFlights.length===0){
+    /* =====================================================
+       KEINE HISTORIE
+       ===================================================== */
+
+    if(
+      allFlights.length===0
+    ){
 
       box.innerHTML=
 
         '<div class="muted">'+
-        'In den letzten 14 Tagen wurden keine klassifizierten Einsatzhubschrauber gespeichert.'+
+        'In den letzten 14 Tagen wurden keine eindeutig klassifizierten Einsatzhubschrauber gefunden.'+
         '</div>';
 
 
@@ -1987,6 +2537,10 @@ async function loadHistory(){
 
     }
 
+
+    /* =====================================================
+       HISTORIENLISTE
+       ===================================================== */
 
     box.innerHTML="";
 
@@ -2012,27 +2566,39 @@ async function loadHistory(){
       const registration=
 
         last.registration ||
+
         last.r ||
+
         first.registration ||
+
         first.r ||
+
         "–";
 
 
       const callsign=
 
         last.callsign ||
+
         last.flight ||
+
         first.callsign ||
+
         first.flight ||
+
         "–";
 
 
       const type=
 
         last.type ||
+
         last.t ||
+
         first.type ||
+
         first.t ||
+
         "–";
 
 
@@ -2055,13 +2621,19 @@ async function loadHistory(){
         '</div>'+
 
         '<div class="historyName">'+
-        displayName(last)+
+        displayName(
+          last
+        )+
         '</div>'+
 
         '<div class="muted">'+
-        aircraftRole(last)+
+        aircraftRole(
+          last
+        )+
         ' · Station: '+
-        aircraftStation(last)+
+        aircraftStation(
+          last
+        )+
         '</div>'+
 
         '<span class="tag">Kennzeichen: '+
