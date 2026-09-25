@@ -333,11 +333,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-25T19:06:30.898257+00:00",
-    "last_seen": "2026-09-25T19:06:30.898257+00:00",
-    "last_lat": 51.050446,
-    "last_lon": 6.521202,
-    "last_distance_km": 74.2,
-    "minimum_distance_km": 74.2,
+    "last_seen": "2026-09-25T19:39:42.417052+00:00",
+    "last_lat": 51.101624,
+    "last_lon": 6.563811,
+    "last_distance_km": 70.0,
+    "minimum_distance_km": 70.0,
     "inside_30km": false,
     "status": "needs_identification"
   }
