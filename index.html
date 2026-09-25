@@ -16,7 +16,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<title>Luftrettung Goch & Kreis Kleve – V3.9</title>
+<title>Luftrettung Goch & Kreis Kleve – V4.0</title>
 
 <style>
 
@@ -109,6 +109,7 @@ h2{
 .small{
   font-size:12px;
   color:#9eabb6;
+  line-height:1.45;
 }
 
 .grid{
@@ -183,12 +184,35 @@ h2{
 
 .flightInfo{
   margin-top:8px;
-  padding:8px 10px;
+  padding:9px 10px;
   background:#101820;
   border-radius:10px;
   color:#c8d2db;
   font-size:13px;
-  line-height:1.45;
+  line-height:1.5;
+}
+
+.routeBox{
+  margin-top:8px;
+  padding:9px 10px;
+  background:#182735;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.routeTitle{
+  font-weight:700;
+  margin-bottom:3px;
+}
+
+.stopTag{
+  display:inline-block;
+  margin:3px 3px 0 0;
+  padding:3px 7px;
+  border-radius:7px;
+  background:#35495c;
+  font-size:12px;
 }
 
 
@@ -239,6 +263,16 @@ h2{
   display:none;
 }
 
+.stopLabel{
+  background:#243241;
+  color:#fff;
+  border:1px solid #9babb9;
+  border-radius:7px;
+  padding:3px 6px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
 .popupTitle{
   font-size:15px;
   font-weight:750;
@@ -276,7 +310,7 @@ h2{
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
 
 <div class="sub">
-Version 3.9 · Live · einzelne Flüge · 24-h-Karte · 14-Tage-Historie
+Version 4.0 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
 </div>
 
 </header>
@@ -333,11 +367,11 @@ Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
 <div class="mapLegend">
 
 Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
-Zusammengehörige Positionspunkte werden zu einzelnen Flugspuren verbunden.
-Nach einer längeren Unterbrechung beginnt eine neue Flugspur.
-Bei bekannten Rettungshubschraubern wird zusätzlich die Heimatstation angezeigt.
-Start und Landung werden nur angezeigt, wenn sie aus den vorhandenen
-Daten plausibel ableitbar sind.
+Positionspunkte derselben Maschine werden zu einzelnen Flügen
+zusammengefasst. V4.0 versucht zusätzlich, niedrige bzw. langsame
+Flugphasen als mögliche Zwischenlandungen zu erkennen und den
+nächstgelegenen bekannten Ort zuzuordnen. Diese Angaben sind
+automatisch abgeleitet und deshalb nicht immer eine bestätigte Landung.
 
 </div>
 
@@ -383,8 +417,9 @@ Historie wird geladen …
 </div>
 
 <p class="small">
-Die Liste enthält die gespeicherten Hubschrauber-Erfassungen
-der letzten 14 Tage. Zusammengehörige Messpunkte werden als Flug zusammengefasst.
+Die Zahl zeigt die erkannten Flüge, nicht die Zahl der einzelnen
+Positionsmeldungen. Mögliche Zwischenlandungen werden innerhalb
+eines Fluges zusammengefasst.
 </p>
 
 </section>
@@ -401,24 +436,17 @@ der letzten 14 Tage. Zusammengehörige Messpunkte werden als Flug zusammengefass
 <div class="grid">
 
 <div class="btn">Christoph 9</div>
-
 <div class="btn">Lifeliner 3</div>
-
 <div class="btn">Christoph 8</div>
-
 <div class="btn">Christoph Westfalen</div>
-
 <div class="btn">Christoph Dortmund</div>
-
 <div class="btn">Polizeihubschrauber</div>
 
 </div>
 
 <p class="small">
-
-Auch fremde Rettungs-, Polizei- und sonstige Hubschrauber
-werden erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
-
+Auch fremde Rettungs-, Polizei- und sonstige Hubschrauber werden
+erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
 </p>
 
 </section>
@@ -434,51 +462,39 @@ werden erfasst, soweit entsprechende ADS-B-Daten verfügbar sind.
 
 <div class="grid">
 
-<a
-  class="btn primary"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-  target="_blank"
->
+<a class="btn primary"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
+target="_blank">
 Goch
 </a>
 
-<a
-  class="btn primary"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-  target="_blank"
->
+<a class="btn primary"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
+target="_blank">
 Kreis Kleve
 </a>
 
-<a
-  class="btn"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-  target="_blank"
->
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
+target="_blank">
 Rees
 </a>
 
-<a
-  class="btn"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-  target="_blank"
->
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
+target="_blank">
 Kevelaer
 </a>
 
-<a
-  class="btn"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-  target="_blank"
->
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
+target="_blank">
 Geldern
 </a>
 
-<a
-  class="btn"
-  href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-  target="_blank"
->
+<a class="btn"
+href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
+target="_blank">
 Kalkar
 </a>
 
@@ -500,7 +516,30 @@ const GOCH={
   lon:6.159
 };
 
+
+/*
+  Größere Unterbrechung = neuer Flug.
+*/
+
 const FLIGHT_GAP_MINUTES=20;
+
+
+/*
+  Maximale Entfernung eines Messpunkts zu einem bekannten Ort,
+  damit wir den Ortsnamen automatisch verwenden.
+
+  Für Städte bewusst relativ großzügig.
+*/
+
+const PLACE_MATCH_KM=5;
+
+
+/*
+  Für spezielle Punkte wie Kliniken oder Flugplätze
+  benutzen wir einen kleineren Radius.
+*/
+
+const POI_MATCH_KM=2.5;
 
 
 /* =========================================================
@@ -534,7 +573,7 @@ const knownCallsigns=[
     terms:["CHRISTOPH WESTFALEN"],
     name:"Christoph Westfalen",
     role:"Intensivtransporthubschrauber",
-    station:"Greven"
+    station:"Münster/Greven"
   },
 
   {
@@ -547,8 +586,210 @@ const knownCallsigns=[
   {
     terms:["LIFELN3","LIFELINER3","LIFELINER 3"],
     name:"Lifeliner 3",
-    role:"Traumahubschrauber",
-    station:"Nijmegen"
+    role:"Heli-MMT Nijmegen",
+    station:"Vliegbasis Volkel"
+  }
+
+];
+
+
+/* =========================================================
+   ORTSDATENBANK V4.0
+
+   Die Koordinaten dienen der groben Zuordnung.
+   Sie ersetzen keine bestätigten Einsatzdaten.
+   ========================================================= */
+
+const knownPlaces=[
+
+  /* ---------- Kreis Kleve ---------- */
+
+  {
+    name:"Goch",
+    lat:51.678,
+    lon:6.159,
+    kind:"Ort"
+  },
+
+  {
+    name:"Kleve",
+    lat:51.789,
+    lon:6.138,
+    kind:"Ort"
+  },
+
+  {
+    name:"Kevelaer",
+    lat:51.583,
+    lon:6.246,
+    kind:"Ort"
+  },
+
+  {
+    name:"Weeze",
+    lat:51.627,
+    lon:6.197,
+    kind:"Ort"
+  },
+
+  {
+    name:"Geldern",
+    lat:51.520,
+    lon:6.323,
+    kind:"Ort"
+  },
+
+  {
+    name:"Kalkar",
+    lat:51.739,
+    lon:6.292,
+    kind:"Ort"
+  },
+
+  {
+    name:"Bedburg-Hau",
+    lat:51.762,
+    lon:6.174,
+    kind:"Ort"
+  },
+
+  {
+    name:"Kranenburg",
+    lat:51.790,
+    lon:6.007,
+    kind:"Ort"
+  },
+
+  {
+    name:"Emmerich am Rhein",
+    lat:51.833,
+    lon:6.242,
+    kind:"Ort"
+  },
+
+  {
+    name:"Rees",
+    lat:51.762,
+    lon:6.397,
+    kind:"Ort"
+  },
+
+  {
+    name:"Straelen",
+    lat:51.441,
+    lon:6.266,
+    kind:"Ort"
+  },
+
+  {
+    name:"Kerken",
+    lat:51.456,
+    lon:6.373,
+    kind:"Ort"
+  },
+
+  {
+    name:"Issum",
+    lat:51.534,
+    lon:6.423,
+    kind:"Ort"
+  },
+
+  {
+    name:"Wachtendonk",
+    lat:51.409,
+    lon:6.338,
+    kind:"Ort"
+  },
+
+
+  /* ---------- Niederlande ---------- */
+
+  {
+    name:"Nijmegen",
+    lat:51.842,
+    lon:5.852,
+    kind:"Ort"
+  },
+
+  {
+    name:"Gennep",
+    lat:51.699,
+    lon:5.973,
+    kind:"Ort"
+  },
+
+  {
+    name:"Boxmeer",
+    lat:51.646,
+    lon:5.947,
+    kind:"Ort"
+  },
+
+  {
+    name:"Cuijk",
+    lat:51.730,
+    lon:5.879,
+    kind:"Ort"
+  },
+
+  {
+    name:"Groesbeek",
+    lat:51.776,
+    lon:5.936,
+    kind:"Ort"
+  },
+
+  {
+    name:"Venray",
+    lat:51.525,
+    lon:5.975,
+    kind:"Ort"
+  },
+
+  {
+    name:"Volkel",
+    lat:51.657,
+    lon:5.707,
+    kind:"Ort"
+  },
+
+
+  /* ---------- Kliniken ---------- */
+
+  {
+    name:"Klinikum Kleve",
+    lat:51.777,
+    lon:6.126,
+    kind:"Klinik",
+    radius:2.5
+  },
+
+  {
+    name:"Radboudumc Nijmegen",
+    lat:51.824,
+    lon:5.866,
+    kind:"Klinik",
+    radius:2.5
+  },
+
+
+  /* ---------- Flugplätze / Stationen ---------- */
+
+  {
+    name:"Airport Weeze",
+    lat:51.602,
+    lon:6.142,
+    kind:"Flugplatz",
+    radius:3
+  },
+
+  {
+    name:"Vliegbasis Volkel",
+    lat:51.657,
+    lon:5.708,
+    kind:"Hubschrauberstation",
+    radius:3
   }
 
 ];
@@ -610,18 +851,20 @@ const rotorWords=[
 
 
 /* =========================================================
-   KARTE ERZEUGEN
+   KARTE
    ========================================================= */
 
-const map=L.map(
-  "map"
-).setView(
-  [
-    GOCH.lat,
-    GOCH.lon
-  ],
-  10
-);
+const map=
+  L.map(
+    "map"
+  )
+  .setView(
+    [
+      GOCH.lat,
+      GOCH.lon
+    ],
+    10
+  );
 
 
 L.tileLayer(
@@ -633,7 +876,7 @@ L.tileLayer(
 ).addTo(map);
 
 
-/* Mittelpunkt Goch */
+/* Goch */
 
 L.circleMarker(
   [
@@ -707,6 +950,7 @@ function distanceKm(
     Math.cos(rad(lat2))*
     Math.sin(dLon/2)**2;
 
+
   return R*2*Math.atan2(
     Math.sqrt(a),
     Math.sqrt(1-a)
@@ -768,8 +1012,6 @@ function isRotor(a){
     .toUpperCase();
 
 
-  /* ADS-B Kategorie Rotorcraft */
-
   if(category==="A7"){
     return true;
   }
@@ -826,24 +1068,20 @@ function knownInfo(a){
 
 
   /*
-    PH-DOC:
-    bekannte Maschine des Lifeliner 3.
+    PH-DOC ist als zusätzliche Erkennung enthalten.
+    Primär soll aber der Rufname verwendet werden.
   */
 
   if(registration==="PH-DOC"){
 
     return {
       name:"Lifeliner 3",
-      role:"Traumahubschrauber",
-      station:"Nijmegen"
+      role:"Heli-MMT Nijmegen",
+      station:"Vliegbasis Volkel"
     };
 
   }
 
-
-  /*
-    Rufnamen durchsuchen.
-  */
 
   for(const entry of knownCallsigns){
 
@@ -859,10 +1097,6 @@ function knownInfo(a){
 
   }
 
-
-  /*
-    Polizei
-  */
 
   if(
     text.includes("POLICE") ||
@@ -961,7 +1195,7 @@ function aircraftStation(a){
 
 
 /* =========================================================
-   ZEITFORMATIERUNG
+   ZEIT
    ========================================================= */
 
 function formatTime(dateString){
@@ -1028,7 +1262,74 @@ function formatDateTime(dateString){
 
 
 /* =========================================================
-   BODEN / LANDUNG
+   ORTSERKENNUNG
+   ========================================================= */
+
+function nearestPlace(
+  lat,
+  lon
+){
+
+  if(
+    typeof lat!=="number" ||
+    typeof lon!=="number"
+  ){
+    return null;
+  }
+
+
+  let best=null;
+
+
+  knownPlaces.forEach(place=>{
+
+    const dist=
+      distanceKm(
+        lat,
+        lon,
+        place.lat,
+        place.lon
+      );
+
+
+    const maxDistance=
+      place.radius ??
+      (
+        place.kind==="Ort"
+        ?
+        PLACE_MATCH_KM
+        :
+        POI_MATCH_KM
+      );
+
+
+    if(dist>maxDistance){
+      return;
+    }
+
+
+    if(
+      best===null ||
+      dist<best.distance
+    ){
+
+      best={
+        ...place,
+        distance:dist
+      };
+
+    }
+
+  });
+
+
+  return best;
+
+}
+
+
+/* =========================================================
+   BODENERKENNUNG
    ========================================================= */
 
 function looksGrounded(item){
@@ -1056,6 +1357,51 @@ function looksGrounded(item){
     speed<8
   ){
     return true;
+  }
+
+
+  return false;
+
+}
+
+
+/*
+  Eine "langsame Phase" ist bewusst etwas großzügiger
+  als eine sichere Bodenerkennung.
+
+  Dadurch können wir mögliche Zwischenlandungen erkennen,
+  ohne sie als bestätigt darzustellen.
+*/
+
+function looksLikeLandingPhase(item){
+
+  const speed=
+    item.ground_speed ??
+    item.gs;
+
+
+  const altitude=
+    item.altitude_ft ??
+    item.alt_baro;
+
+
+  if(looksGrounded(item)){
+    return true;
+  }
+
+
+  if(
+    typeof speed==="number" &&
+    speed<35
+  ){
+
+    if(
+      typeof altitude==="number" &&
+      altitude<1500
+    ){
+      return true;
+    }
+
   }
 
 
@@ -1124,13 +1470,19 @@ function splitIntoFlights(points){
       gapMinutes>FLIGHT_GAP_MINUTES
     ){
 
-      flights.push(current);
+      flights.push(
+        current
+      );
 
-      current=[point];
+      current=[
+        point
+      ];
 
     }else{
 
-      current.push(point);
+      current.push(
+        point
+      );
 
     }
 
@@ -1139,7 +1491,9 @@ function splitIntoFlights(points){
 
   if(current.length){
 
-    flights.push(current);
+    flights.push(
+      current
+    );
 
   }
 
@@ -1150,7 +1504,171 @@ function splitIntoFlights(points){
 
 
 /* =========================================================
-   FLUGINFORMATION
+   ZWISCHENLANDUNGEN
+   ========================================================= */
+
+function detectStops(flight){
+
+  if(
+    !flight ||
+    flight.length<2
+  ){
+    return [];
+  }
+
+
+  const candidates=[];
+
+
+  flight.forEach(
+    (point,index)=>{
+
+      if(
+        index===0 ||
+        index===flight.length-1
+      ){
+        return;
+      }
+
+
+      if(
+        !looksLikeLandingPhase(point)
+      ){
+        return;
+      }
+
+
+      const place=
+        nearestPlace(
+          point.lat,
+          point.lon
+        );
+
+
+      candidates.push({
+
+        point,
+        index,
+        place
+
+      });
+
+    }
+  );
+
+
+  /*
+    Benachbarte langsame Punkte zu einem Stopp zusammenfassen.
+  */
+
+  const stops=[];
+
+
+  candidates.forEach(candidate=>{
+
+    const previousStop=
+      stops[
+        stops.length-1
+      ];
+
+
+    if(!previousStop){
+
+      stops.push({
+
+        first:candidate.point,
+        last:candidate.point,
+        point:candidate.point,
+        place:candidate.place,
+        count:1
+
+      });
+
+      return;
+
+    }
+
+
+    const gap=
+      (
+        new Date(
+          candidate.point.timestamp
+        )-
+        new Date(
+          previousStop.last.timestamp
+        )
+      )/
+      60000;
+
+
+    const samePlace=
+
+      (
+        candidate.place &&
+        previousStop.place &&
+        candidate.place.name===
+        previousStop.place.name
+      );
+
+
+    const nearby=
+
+      distanceKm(
+        candidate.point.lat,
+        candidate.point.lon,
+        previousStop.last.lat,
+        previousStop.last.lon
+      )<3;
+
+
+    if(
+      gap<=15 &&
+      (
+        samePlace ||
+        nearby
+      )
+    ){
+
+      previousStop.last=
+        candidate.point;
+
+      previousStop.point=
+        candidate.point;
+
+      previousStop.count++;
+
+      if(
+        !previousStop.place &&
+        candidate.place
+      ){
+        previousStop.place=
+          candidate.place;
+      }
+
+    }else{
+
+      stops.push({
+
+        first:candidate.point,
+        last:candidate.point,
+        point:candidate.point,
+        place:candidate.place,
+        count:1
+
+      });
+
+    }
+
+  });
+
+
+  return stops;
+
+}
+
+
+/* =========================================================
+   FLUGZUSAMMENFASSUNG
    ========================================================= */
 
 function flightSummary(flight){
@@ -1162,7 +1680,11 @@ function flightSummary(flight){
 
     return {
       start:"–",
-      end:"–"
+      end:"–",
+      startPlace:null,
+      endPlace:null,
+      stops:[],
+      route:"–"
     };
 
   }
@@ -1176,6 +1698,26 @@ function flightSummary(flight){
     flight[
       flight.length-1
     ];
+
+
+  const startPlace=
+    nearestPlace(
+      first.lat,
+      first.lon
+    );
+
+
+  const endPlace=
+    nearestPlace(
+      last.lat,
+      last.lon
+    );
+
+
+  const stops=
+    detectStops(
+      flight
+    );
 
 
   let start=
@@ -1192,10 +1734,35 @@ function flightSummary(flight){
     );
 
 
+  if(startPlace){
+
+    start+=
+      " bei "+
+      startPlace.name;
+
+  }
+
+
+  if(endPlace){
+
+    end+=
+      " bei "+
+      endPlace.name;
+
+  }
+
+
   if(looksGrounded(first)){
 
     start=
       "Möglicher Start: "+
+      (
+        startPlace
+        ?
+        startPlace.name+" · "
+        :
+        ""
+      )+
       formatDateTime(
         first.timestamp
       );
@@ -1207,6 +1774,13 @@ function flightSummary(flight){
 
     end=
       "Mögliche Landung: "+
+      (
+        endPlace
+        ?
+        endPlace.name+" · "
+        :
+        ""
+      )+
       formatDateTime(
         last.timestamp
       );
@@ -1214,9 +1788,89 @@ function flightSummary(flight){
   }
 
 
+  /*
+    Flugkette erstellen.
+  */
+
+  const routeParts=[];
+
+
+  if(startPlace){
+
+    routeParts.push(
+      startPlace.name
+    );
+
+  }else{
+
+    routeParts.push(
+      "erste Erfassung"
+    );
+
+  }
+
+
+  stops.forEach(stop=>{
+
+    const name=
+      stop.place
+      ?
+      stop.place.name
+      :
+      "mögliche Zwischenlandung";
+
+
+    if(
+      routeParts[
+        routeParts.length-1
+      ]!==name
+    ){
+
+      routeParts.push(
+        name
+      );
+
+    }
+
+  });
+
+
+  const finalName=
+    endPlace
+    ?
+    endPlace.name
+    :
+    "letzte Erfassung";
+
+
+  if(
+    routeParts[
+      routeParts.length-1
+    ]!==finalName
+  ){
+
+    routeParts.push(
+      finalName
+    );
+
+  }
+
+
   return {
+
     start,
-    end
+    end,
+
+    startPlace,
+    endPlace,
+
+    stops,
+
+    route:
+      routeParts.join(
+        " → "
+      )
+
   };
 
 }
@@ -1232,7 +1886,39 @@ function flightPopup(
 ){
 
   const summary=
-    flightSummary(flight);
+    flightSummary(
+      flight
+    );
+
+
+  let stopsHtml="";
+
+
+  if(summary.stops.length){
+
+    stopsHtml=
+      '<br><br><b>Mögliche Zwischenlandungen:</b><br>';
+
+
+    summary.stops.forEach(stop=>{
+
+      stopsHtml+=
+        (
+          stop.place
+          ?
+          stop.place.name
+          :
+          "Ort nicht bestimmt"
+        )+
+        " · "+
+        formatDateTime(
+          stop.first.timestamp
+        )+
+        "<br>";
+
+    });
+
+  }
 
 
   return (
@@ -1245,7 +1931,7 @@ function flightPopup(
     aircraftRole(point)+
     '</div>'+
 
-    '<b>Station:</b> '+
+    '<b>Heimatstation:</b> '+
     aircraftStation(point)+
     '<br>'+
 
@@ -1273,15 +1959,20 @@ function flightPopup(
     )+
     '<br><br>'+
 
-    '<b>'+
+    '<b>Flugkette:</b><br>'+
+    summary.route+
+    '<br><br>'+
+
     summary.start+
-    '</b><br>'+
+    '<br>'+
 
-    '<b>'+
     summary.end+
-    '</b><br><br>'+
 
-    'Position: '+
+    stopsHtml+
+
+    '<br><br>'+
+
+    '<b>Gewählte Position:</b><br>'+
     formatDateTime(
       point.timestamp
     )+
@@ -1309,7 +2000,7 @@ function flightPopup(
 
 
 /* =========================================================
-   LIVE-DATEN
+   LIVE
    ========================================================= */
 
 async function loadLive(){
@@ -1338,8 +2029,7 @@ async function loadLive(){
     );
 
 
-  dot.className=
-    "dot";
+  dot.className="dot";
 
 
   status.textContent=
@@ -1371,7 +2061,9 @@ async function loadLive(){
 
 
     const all=
-      Array.isArray(data.ac)
+      Array.isArray(
+        data.ac
+      )
       ?
       data.ac
       :
@@ -1398,10 +2090,6 @@ async function loadLive(){
     liveLayer.clearLayers();
 
 
-    /* -----------------------------------------
-       LIVE-MARKER
-       ----------------------------------------- */
-
     rotor.forEach(a=>{
 
       if(
@@ -1410,6 +2098,13 @@ async function loadLive(){
       ){
         return;
       }
+
+
+      const place=
+        nearestPlace(
+          a.lat,
+          a.lon
+        );
 
 
       const marker=
@@ -1439,9 +2134,19 @@ async function loadLive(){
         aircraftRole(a)+
         '</div>'+
 
-        '<b>Station:</b> '+
+        '<b>Heimatstation:</b> '+
         aircraftStation(a)+
         '<br>'+
+
+        (
+          place
+          ?
+          '<b>Aktuell nahe:</b> '+
+          place.name+
+          '<br>'
+          :
+          ''
+        )+
 
         '<b>Kennzeichen:</b> '+
         value(a,"r")+
@@ -1484,10 +2189,6 @@ async function loadLive(){
     });
 
 
-    /* -----------------------------------------
-       KEIN HUBSCHRAUBER
-       ----------------------------------------- */
-
     if(rotor.length===0){
 
       dot.className=
@@ -1509,10 +2210,6 @@ async function loadLive(){
 
     }
 
-
-    /* -----------------------------------------
-       HUBSCHRAUBER VORHANDEN
-       ----------------------------------------- */
 
     dot.className=
       "dot live";
@@ -1552,6 +2249,13 @@ async function loadLive(){
       }
 
 
+      const place=
+        nearestPlace(
+          a.lat,
+          a.lon
+        );
+
+
       const row=
         document.createElement(
           "div"
@@ -1570,9 +2274,20 @@ async function loadLive(){
 
         '<div class="muted">'+
         aircraftRole(a)+
-        ' · Station: '+
+        ' · Heimatstation: '+
         aircraftStation(a)+
         '</div>'+
+
+        (
+          place
+          ?
+          '<div class="flightInfo">'+
+          'Aktuelle Position: nahe <b>'+
+          place.name+
+          '</b></div>'
+          :
+          ''
+        )+
 
         '<span class="tag">Kennzeichen: '+
         value(a,"r")+
@@ -1708,7 +2423,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       14 TAGE
+       LETZTE 14 TAGE
        ===================================================== */
 
     const recent14=
@@ -1735,7 +2450,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       24 STUNDEN
+       LETZTE 24 STUNDEN
        ===================================================== */
 
     const recent24=
@@ -1759,7 +2474,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       NACH MASCHINE GRUPPIEREN
+       24H NACH MASCHINE GRUPPIEREN
        ===================================================== */
 
     const aircraftGroups={};
@@ -1799,7 +2514,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       FLÜGE AUF DER KARTE
+       FLÜGE AUF KARTE
        ===================================================== */
 
     Object.values(
@@ -1815,9 +2530,13 @@ async function loadHistory(){
 
       flights.forEach(flight=>{
 
-        /* -----------------------------------------
-           EINZELNE POSITIONSPUNKTE
-           ----------------------------------------- */
+        const summary=
+          flightSummary(
+            flight
+          );
+
+
+        /* ---------- Positionspunkte ---------- */
 
         flight.forEach(point=>{
 
@@ -1850,9 +2569,7 @@ async function loadHistory(){
         });
 
 
-        /* -----------------------------------------
-           FLUGLINIE
-           ----------------------------------------- */
+        /* ---------- Fluglinie ---------- */
 
         if(flight.length>=2){
 
@@ -1892,9 +2609,109 @@ async function loadHistory(){
         }
 
 
-        /* -----------------------------------------
-           BESCHRIFTUNG
-           ----------------------------------------- */
+        /* ---------- Zwischenlandungen ---------- */
+
+        summary.stops.forEach(
+          stop=>{
+
+            const stopMarker=
+              L.circleMarker(
+                [
+                  stop.point.lat,
+                  stop.point.lon
+                ],
+                {
+                  radius:8,
+                  weight:3,
+                  fillOpacity:0.9
+                }
+              );
+
+
+            const placeName=
+              stop.place
+              ?
+              stop.place.name
+              :
+              "Ort nicht bestimmt";
+
+
+            stopMarker.bindPopup(
+
+              '<div class="popupTitle">'+
+              'Mögliche Zwischenlandung'+
+              '</div>'+
+
+              '<b>'+
+              placeName+
+              '</b><br>'+
+
+              'Hubschrauber: '+
+              displayName(
+                stop.point
+              )+
+              '<br>'+
+
+              'Erste langsame Position: '+
+              formatDateTime(
+                stop.first.timestamp
+              )+
+              '<br>'+
+
+              'Letzte langsame Position: '+
+              formatDateTime(
+                stop.last.timestamp
+              )
+
+            );
+
+
+            stopMarker.addTo(
+              historyLayer
+            );
+
+
+            /*
+              Kleine Beschriftung nur dann,
+              wenn ein Ort bestimmt wurde.
+            */
+
+            if(stop.place){
+
+              const stopLabel=
+                L.marker(
+                  [
+                    stop.point.lat,
+                    stop.point.lon
+                  ],
+                  {
+                    interactive:false,
+
+                    icon:L.divIcon({
+                      className:"",
+                      html:
+                        '<div class="stopLabel">'+
+                        'Zwischenlandung? '+
+                        stop.place.name+
+                        '</div>',
+                      iconSize:null,
+                      iconAnchor:[-10,30]
+                    })
+                  }
+                );
+
+
+              stopLabel.addTo(
+                historyLayer
+              );
+
+            }
+
+          }
+        );
+
+
+        /* ---------- Hubschraubername ---------- */
 
         const latest=
           flight[
@@ -1934,7 +2751,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       14-TAGE-LISTE ALS FLÜGE
+       14 TAGE NACH MASCHINE
        ===================================================== */
 
     const allGroups={};
@@ -1981,14 +2798,13 @@ async function loadHistory(){
 
       flights.forEach(flight=>{
 
-        if(!flight.length){
-          return;
+        if(flight.length){
+
+          allFlights.push(
+            flight
+          );
+
         }
-
-
-        allFlights.push(
-          flight
-        );
 
       });
 
@@ -2084,6 +2900,44 @@ async function loadHistory(){
         "–";
 
 
+      let stopsHtml="";
+
+
+      if(summary.stops.length){
+
+        stopsHtml=
+          '<div class="flightInfo">'+
+          '<b>Mögliche Zwischenlandungen</b><br>';
+
+
+        summary.stops.forEach(
+          stop=>{
+
+            stopsHtml+=
+              '<span class="stopTag">'+
+              (
+                stop.place
+                ?
+                stop.place.name
+                :
+                "Ort nicht bestimmt"
+              )+
+              ' · '+
+              formatTime(
+                stop.first.timestamp
+              )+
+              '</span>';
+
+          }
+        );
+
+
+        stopsHtml+=
+          '</div>';
+
+      }
+
+
       const row=
         document.createElement(
           "div"
@@ -2108,7 +2962,7 @@ async function loadHistory(){
 
         '<div class="muted">'+
         aircraftRole(last)+
-        ' · Station: '+
+        ' · Heimatstation: '+
         aircraftStation(last)+
         '</div>'+
 
@@ -2144,6 +2998,11 @@ async function loadHistory(){
           ''
         )+
 
+        '<div class="routeBox">'+
+        '<div class="routeTitle">Flugkette</div>'+
+        summary.route+
+        '</div>'+
+
         '<div class="flightInfo">'+
         summary.start+
         '<br>'+
@@ -2151,7 +3010,9 @@ async function loadHistory(){
         '<br>'+
         'Gespeicherte Positionspunkte: '+
         flight.length+
-        '</div>';
+        '</div>'+
+
+        stopsHtml;
 
 
       box.appendChild(
@@ -2197,11 +3058,6 @@ async function loadAll(){
   ]);
 
 
-  /*
-    Leaflet neu berechnen lassen.
-    Wichtig insbesondere auf iPhone/iPad.
-  */
-
   setTimeout(
     ()=>{
       map.invalidateSize();
@@ -2230,8 +3086,7 @@ setInterval(
 
 
 /*
-  Falls Safari nach dem Laden die Größe des Kartencontainers
-  verändert, wird Leaflet nochmals korrigiert.
+  Leaflet-Korrektur für Safari / iPad.
 */
 
 window.addEventListener(
