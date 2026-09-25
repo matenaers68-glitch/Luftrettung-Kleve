@@ -26,96 +26,61 @@ jobs:
           import os
           from datetime import datetime, timezone, timedelta
 
-          # -------------------------------------------------
+          # =================================================
           # GRUNDEINSTELLUNGEN
-          # -------------------------------------------------
+          # =================================================
 
-          # Mittelpunkt Goch
-          lat = 51.678
-          lon = 6.159
+          VERSION = "3.7"
 
-          # ca. 30 km
-          radius_nm = 16.2
+          GOCH_LAT = 51.678
+          GOCH_LON = 6.159
 
-          url = (
+          # 30 km ≈ 16,2 NM
+          RADIUS_NM = 16.2
+
+          URL = (
               f"https://api.adsb.lol/v2/lat/"
-              f"{lat}/lon/{lon}/dist/{radius_nm}"
+              f"{GOCH_LAT}/lon/{GOCH_LON}/dist/{RADIUS_NM}"
           )
 
           now = datetime.now(timezone.utc)
 
-          # -------------------------------------------------
-          # ADSB.LOL ABRUFEN
-          # -------------------------------------------------
+          # =================================================
+          # BEKANNTE HUBSCHRAUBER
+          #
+          # Hier können wir später weitere eindeutig
+          # identifizierte Maschinen ergänzen.
+          #
+          # WICHTIG:
+          # "station" bedeutet Heimat-/Regelstation.
+          # Daraus wird NICHT automatisch ein Startort.
+          # =================================================
 
-          try:
-              req = urllib.request.Request(
-                  url,
-                  headers={
-                      "User-Agent": "Luftrettung-Kleve/3.6"
-                  }
-              )
+          KNOWN_AIRCRAFT = {
 
-              with urllib.request.urlopen(
-                  req,
-                  timeout=25
-              ) as response:
-                  source = json.load(response)
+              # Lifeliner 3
+              "PH-DOC": {
+                  "name": "Lifeliner 3",
+                  "service": "Traumahelikopter",
+                  "station": "Volkel / Region Nijmegen",
+                  "country": "Niederlande"
+              },
 
-              aircraft = source.get("ac", [])
-
-              output = {
-                  "updated": now.isoformat(),
-                  "source": "ADSB.lol",
-                  "center": {
-                      "name": "Goch",
-                      "lat": lat,
-                      "lon": lon,
-                      "radius_km": 30
-                  },
-                  "total": len(aircraft),
-                  "ac": aircraft
+              # Christoph 3
+              "D-HZSA": {
+                  "name": "Christoph 3",
+                  "service": "Rettungshubschrauber",
+                  "station": "Köln/Bonn",
+                  "country": "Deutschland"
               }
 
-          except Exception as e:
-
-              output = {
-                  "updated": now.isoformat(),
-                  "source": "ADSB.lol",
-                  "error": str(e),
-                  "total": 0,
-                  "ac": []
-              }
-
-          # Aktuelle Daten speichern
-
-          with open(
-              "aircraft.json",
-              "w",
-              encoding="utf-8"
-          ) as f:
-
-              json.dump(
-                  output,
-                  f,
-                  ensure_ascii=False,
-                  indent=2
-              )
-
-          # -------------------------------------------------
-          # HUBSCHRAUBERERKENNUNG
-          # -------------------------------------------------
-
-          rotor_types = {
-              "H1P", "H1T",
-              "H2P", "H2T",
-              "H3P", "H3T",
-              "H4P", "H4T",
-              "H5P", "H5T",
-              "H6P", "H6T"
           }
 
-          known_rotor_types = {
+          # =================================================
+          # HUBSCHRAUBERTYPEN / ERKENNUNG
+          # =================================================
+
+          KNOWN_ROTOR_TYPES = {
               "EC35",
               "EC45",
               "H135",
@@ -138,7 +103,7 @@ jobs:
               "S92"
           }
 
-          rotor_words = (
+          ROTOR_WORDS = (
               "HELI",
               "ROTOR",
               "CHRISTOPH",
@@ -149,9 +114,59 @@ jobs:
               "SAR"
           )
 
-          # -------------------------------------------------
+          # =================================================
           # HILFSFUNKTIONEN
-          # -------------------------------------------------
+          # =================================================
+
+          def load_json(filename, default):
+
+              if not os.path.exists(filename):
+                  return default
+
+              try:
+                  with open(
+                      filename,
+                      "r",
+                      encoding="utf-8"
+                  ) as f:
+                      return json.load(f)
+
+              except Exception:
+                  return default
+
+
+          def save_json(filename, data):
+
+              with open(
+                  filename,
+                  "w",
+                  encoding="utf-8"
+              ) as f:
+
+                  json.dump(
+                      data,
+                      f,
+                      ensure_ascii=False,
+                      indent=2
+                  )
+
+
+          def parse_time(value):
+
+              if not value:
+                  return None
+
+              try:
+                  return datetime.fromisoformat(
+                      str(value).replace(
+                          "Z",
+                          "+00:00"
+                      )
+                  )
+
+              except Exception:
+                  return None
+
 
           def distance_km(
               lat1,
@@ -159,6 +174,7 @@ jobs:
               lat2,
               lon2
           ):
+
               r = 6371.0
 
               p1 = math.radians(lat1)
@@ -188,37 +204,37 @@ jobs:
               )
 
 
-          def parse_time(value):
+          def normalize_registration(value):
 
-              try:
-                  return datetime.fromisoformat(
-                      value.replace(
-                          "Z",
-                          "+00:00"
-                      )
-                  )
+              return str(
+                  value or ""
+              ).strip().upper()
 
-              except Exception:
-                  return None
+
+          def normalize_callsign(value):
+
+              return str(
+                  value or ""
+              ).strip().upper()
 
 
           def is_rotorcraft(ac):
-
-              ac_type = str(
-                  ac.get("t") or ""
-              ).strip().upper()
 
               category = str(
                   ac.get("category") or ""
               ).strip().upper()
 
-              callsign = str(
-                  ac.get("flight") or ""
+              ac_type = str(
+                  ac.get("t") or ""
               ).strip().upper()
 
-              registration = str(
-                  ac.get("r") or ""
-              ).strip().upper()
+              callsign = normalize_callsign(
+                  ac.get("flight")
+              )
+
+              registration = normalize_registration(
+                  ac.get("r")
+              )
 
               description = str(
                   ac.get("desc") or ""
@@ -228,16 +244,17 @@ jobs:
               if category == "A7":
                   return True
 
-              # ICAO Rotorcraft-Kategorien
-              if ac_type in rotor_types:
+              # Bekannte konkrete Maschine
+              if registration in KNOWN_AIRCRAFT:
                   return True
 
               # Bekannte Hubschraubertypen
-              for rotor_type in known_rotor_types:
+              for rotor_type in KNOWN_ROTOR_TYPES:
+
                   if rotor_type in ac_type:
                       return True
 
-              # Bezeichnungen / Rufnamen
+              # Rufname / Beschreibung
               text = " ".join([
                   callsign,
                   registration,
@@ -245,44 +262,190 @@ jobs:
                   ac_type
               ])
 
-              for word in rotor_words:
+              for word in ROTOR_WORDS:
+
                   if word in text:
                       return True
 
               return False
 
 
-          # -------------------------------------------------
+          def get_profile(
+              registration,
+              callsign
+          ):
+
+              reg = normalize_registration(
+                  registration
+              )
+
+              cs = normalize_callsign(
+                  callsign
+              )
+
+              # -----------------------------
+              # Registrierung hat Vorrang
+              # -----------------------------
+
+              if reg in KNOWN_AIRCRAFT:
+
+                  return KNOWN_AIRCRAFT[
+                      reg
+                  ].copy()
+
+              # -----------------------------
+              # Lifeliner 3
+              # -----------------------------
+
+              if (
+                  "LIFELN3" in cs
+                  or "LIFELINER3" in cs
+                  or "LIFELINER 3" in cs
+              ):
+
+                  return {
+                      "name": "Lifeliner 3",
+                      "service": "Traumahelikopter",
+                      "station": "Region Nijmegen",
+                      "country": "Niederlande"
+                  }
+
+              # -----------------------------
+              # Christoph-Rufname
+              # -----------------------------
+
+              if "CHRISTOPH" in cs:
+
+                  cleaned = (
+                      cs
+                      .replace("_", " ")
+                      .strip()
+                  )
+
+                  return {
+                      "name": cleaned.title(),
+                      "service": "Rettungshubschrauber",
+                      "station": None,
+                      "country": "Deutschland"
+                  }
+
+              # -----------------------------
+              # Polizei
+              # -----------------------------
+
+              if (
+                  "POLICE" in cs
+                  or "POLIZEI" in cs
+              ):
+
+                  return {
+                      "name": "Polizeihubschrauber",
+                      "service": "Polizei",
+                      "station": None,
+                      "country": None
+                  }
+
+              # -----------------------------
+              # Unbekannter Hubschrauber
+              # -----------------------------
+
+              return {
+                  "name": (
+                      callsign
+                      or registration
+                      or "Unbekannter Hubschrauber"
+                  ),
+                  "service": "Hubschrauber",
+                  "station": None,
+                  "country": None
+              }
+
+
+          # =================================================
+          # ADSB.LOL ABRUFEN
+          # =================================================
+
+          try:
+
+              req = urllib.request.Request(
+                  URL,
+                  headers={
+                      "User-Agent":
+                      f"Luftrettung-Kleve/{VERSION}"
+                  }
+              )
+
+              with urllib.request.urlopen(
+                  req,
+                  timeout=25
+              ) as response:
+
+                  source = json.load(
+                      response
+                  )
+
+              aircraft = source.get(
+                  "ac",
+                  []
+              )
+
+              if not isinstance(
+                  aircraft,
+                  list
+              ):
+                  aircraft = []
+
+              output = {
+                  "updated": now.isoformat(),
+                  "version": VERSION,
+                  "source": "ADSB.lol",
+                  "center": {
+                      "name": "Goch",
+                      "lat": GOCH_LAT,
+                      "lon": GOCH_LON,
+                      "radius_km": 30
+                  },
+                  "total": len(aircraft),
+                  "ac": aircraft
+              }
+
+          except Exception as e:
+
+              print(
+                  "ADSB.lol Fehler:",
+                  repr(e)
+              )
+
+              output = {
+                  "updated": now.isoformat(),
+                  "version": VERSION,
+                  "source": "ADSB.lol",
+                  "error": str(e),
+                  "total": 0,
+                  "ac": []
+              }
+
+          save_json(
+              "aircraft.json",
+              output
+          )
+
+          # =================================================
           # HISTORIE LADEN
-          # -------------------------------------------------
+          # =================================================
 
-          history_file = "history.json"
+          history = load_json(
+              "history.json",
+              []
+          )
 
-          if os.path.exists(history_file):
-
-              try:
-                  with open(
-                      history_file,
-                      "r",
-                      encoding="utf-8"
-                  ) as f:
-
-                      history = json.load(f)
-
-              except Exception:
-                  history = []
-
-          else:
+          if not isinstance(
+              history,
+              list
+          ):
               history = []
 
-
-          if not isinstance(history, list):
-              history = []
-
-
-          # -------------------------------------------------
-          # NUR LETZTE 14 TAGE BEHALTEN
-          # -------------------------------------------------
+          # Nur 14 Tage behalten
 
           cutoff = (
               now
@@ -294,46 +457,45 @@ jobs:
           for old in history:
 
               old_time = parse_time(
-                  old.get(
-                      "timestamp",
-                      ""
-                  )
+                  old.get("timestamp")
               )
 
               if (
                   old_time is not None
                   and old_time >= cutoff
               ):
+
                   cleaned_history.append(
                       old
                   )
 
           history = cleaned_history
 
+          # =================================================
+          # FLUGSTATUS LADEN
+          #
+          # Hier merken wir uns die laufenden Erfassungen.
+          # =================================================
 
-          # -------------------------------------------------
+          flight_state = load_json(
+              "flight_state.json",
+              {}
+          )
+
+          if not isinstance(
+              flight_state,
+              dict
+          ):
+              flight_state = {}
+
+          # =================================================
           # PUSH-STATUS LADEN
-          # -------------------------------------------------
+          # =================================================
 
-          push_file = "push_state.json"
-
-          if os.path.exists(push_file):
-
-              try:
-                  with open(
-                      push_file,
-                      "r",
-                      encoding="utf-8"
-                  ) as f:
-
-                      push_state = json.load(f)
-
-              except Exception:
-                  push_state = {}
-
-          else:
-              push_state = {}
-
+          push_state = load_json(
+              "push_state.json",
+              {}
+          )
 
           if not isinstance(
               push_state,
@@ -341,14 +503,13 @@ jobs:
           ):
               push_state = {}
 
-
           detected_for_push = []
           stored_positions = []
+          current_rotorcraft = []
 
-
-          # -------------------------------------------------
+          # =================================================
           # LUFTFAHRZEUGE VERARBEITEN
-          # -------------------------------------------------
+          # =================================================
 
           for ac in output.get(
               "ac",
@@ -358,6 +519,18 @@ jobs:
               if not is_rotorcraft(ac):
                   continue
 
+              registration = str(
+                  ac.get("r") or ""
+              ).strip()
+
+              callsign = str(
+                  ac.get("flight") or ""
+              ).strip()
+
+              hexcode = str(
+                  ac.get("hex") or ""
+              ).strip().lower()
+
               ac_type = str(
                   ac.get("t") or ""
               ).strip().upper()
@@ -366,22 +539,9 @@ jobs:
                   ac.get("category") or ""
               ).strip().upper()
 
-              callsign = str(
-                  ac.get("flight") or ""
-              ).strip()
-
-              registration = str(
-                  ac.get("r") or ""
-              ).strip()
-
-              hexcode = str(
-                  ac.get("hex") or ""
-              ).strip()
-
               alat = ac.get("lat")
               alon = ac.get("lon")
 
-              # Ohne Position keine Flugspur
               if not (
                   isinstance(
                       alat,
@@ -394,59 +554,170 @@ jobs:
               ):
                   continue
 
+              identity = (
+                  hexcode
+                  or normalize_registration(
+                      registration
+                  )
+                  or normalize_callsign(
+                      callsign
+                  )
+              )
+
+              if not identity:
+                  continue
+
               dist = round(
                   distance_km(
-                      lat,
-                      lon,
+                      GOCH_LAT,
+                      GOCH_LON,
                       alat,
                       alon
                   ),
                   1
               )
 
-              identity = (
-                  hexcode
-                  or registration
-                  or callsign
+              profile = get_profile(
+                  registration,
+                  callsign
               )
 
-              if not identity:
-                  continue
+              # =============================================
+              # LAUFENDEN FLUG / ERFASSUNG BESTIMMEN
+              # =============================================
 
+              previous_state = flight_state.get(
+                  identity,
+                  {}
+              )
 
-              # -------------------------------------------------
-              # EINTRAG ERSTELLEN
-              # -------------------------------------------------
+              previous_seen = parse_time(
+                  previous_state.get(
+                      "last_seen"
+                  )
+              )
+
+              # Wenn länger als 60 Minuten nicht gesehen,
+              # behandeln wir die neue Erfassung als
+              # neuen Flugabschnitt / neue Begegnung.
+
+              new_segment = True
+
+              if previous_seen is not None:
+
+                  gap = (
+                      now
+                      - previous_seen
+                  ).total_seconds()
+
+                  if gap <= 3600:
+                      new_segment = False
+
+              if new_segment:
+
+                  segment_id = (
+                      identity
+                      + "-"
+                      + now.strftime(
+                          "%Y%m%dT%H%M%S"
+                      )
+                  )
+
+                  first_seen = now.isoformat()
+
+              else:
+
+                  segment_id = (
+                      previous_state.get(
+                          "segment_id"
+                      )
+                      or (
+                          identity
+                          + "-"
+                          + now.strftime(
+                              "%Y%m%dT%H%M%S"
+                          )
+                      )
+                  )
+
+                  first_seen = (
+                      previous_state.get(
+                          "first_seen"
+                      )
+                      or now.isoformat()
+                  )
+
+              # =============================================
+              # POSITIONSEINTRAG
+              # =============================================
 
               entry = {
                   "timestamp": now.isoformat(),
+
                   "identity": identity,
+                  "segment_id": segment_id,
+
                   "hex": hexcode,
                   "registration": registration,
                   "callsign": callsign,
+
+                  "name": profile.get(
+                      "name"
+                  ),
+
+                  "service": profile.get(
+                      "service"
+                  ),
+
+                  "station": profile.get(
+                      "station"
+                  ),
+
+                  "country": profile.get(
+                      "country"
+                  ),
+
                   "type": ac_type,
                   "category": category,
+
                   "lat": alat,
                   "lon": alon,
+
                   "distance_km": dist,
+
                   "altitude_ft": ac.get(
                       "alt_baro"
                   ),
+
                   "ground_speed": ac.get(
                       "gs"
                   ),
+
                   "track": ac.get(
                       "track"
-                  )
+                  ),
+
+                  "first_seen": first_seen,
+                  "last_seen": now.isoformat(),
+
+                  # Wichtig:
+                  # Station != tatsächlicher Start.
+                  "actual_start": None,
+                  "actual_destination": None
               }
 
+              current_rotorcraft.append(
+                  entry
+              )
 
-              # -------------------------------------------------
-              # FLUGSPUR
+              # =============================================
+              # POSITION SPEICHERN
               #
-              # Bei ungefähr jedem 5-Minuten-Lauf
-              # einen neuen Positionspunkt speichern.
-              # -------------------------------------------------
+              # GitHub läuft etwa alle 5 Minuten.
+              # Wir speichern jeden verwertbaren Lauf.
+              # Nur sehr schnelle Doppelstarts < 2 Minuten
+              # werden unterdrückt.
+              # =============================================
 
               save_position = True
 
@@ -461,10 +732,7 @@ jobs:
                       continue
 
                   old_time = parse_time(
-                      old.get(
-                          "timestamp",
-                          ""
-                      )
+                      old.get("timestamp")
                   )
 
                   if old_time is not None:
@@ -474,13 +742,10 @@ jobs:
                           - old_time
                       ).total_seconds()
 
-                      # Schutz gegen unmittelbar
-                      # doppelte Workflow-Läufe
-                      if seconds < 240:
+                      if seconds < 120:
                           save_position = False
 
                   break
-
 
               if save_position:
 
@@ -492,13 +757,42 @@ jobs:
                       entry
                   )
 
+              # =============================================
+              # FLUGSTATUS AKTUALISIEREN
+              # =============================================
 
-              # -------------------------------------------------
+              flight_state[
+                  identity
+              ] = {
+                  "identity": identity,
+                  "segment_id": segment_id,
+                  "name": profile.get(
+                      "name"
+                  ),
+                  "registration": registration,
+                  "callsign": callsign,
+                  "type": ac_type,
+                  "service": profile.get(
+                      "service"
+                  ),
+                  "station": profile.get(
+                      "station"
+                  ),
+                  "country": profile.get(
+                      "country"
+                  ),
+                  "first_seen": first_seen,
+                  "last_seen": now.isoformat(),
+                  "last_lat": alat,
+                  "last_lon": alon,
+                  "last_distance_km": dist
+              }
+
+              # =============================================
               # PUSH
               #
-              # Dieselbe Maschine höchstens
-              # einmal innerhalb von 60 Minuten.
-              # -------------------------------------------------
+              # Maximal einmal je Maschine / 60 Minuten.
+              # =============================================
 
               send_push = True
 
@@ -512,10 +806,7 @@ jobs:
                       last_push
                   )
 
-                  if (
-                      last_push_time
-                      is not None
-                  ):
+                  if last_push_time is not None:
 
                       seconds = (
                           now
@@ -524,7 +815,6 @@ jobs:
 
                       if seconds < 3600:
                           send_push = False
-
 
               if send_push:
 
@@ -536,10 +826,39 @@ jobs:
                       identity
                   ] = now.isoformat()
 
+          # =================================================
+          # ALTE FLIGHT-STATES BEREINIGEN
+          # =================================================
 
-          # -------------------------------------------------
+          state_cutoff = (
+              now
+              - timedelta(days=2)
+          )
+
+          cleaned_states = {}
+
+          for identity, state in flight_state.items():
+
+              state_time = parse_time(
+                  state.get(
+                      "last_seen"
+                  )
+              )
+
+              if (
+                  state_time is not None
+                  and state_time >= state_cutoff
+              ):
+
+                  cleaned_states[
+                      identity
+                  ] = state
+
+          flight_state = cleaned_states
+
+          # =================================================
           # HISTORIE SORTIEREN
-          # -------------------------------------------------
+          # =================================================
 
           history.sort(
               key=lambda x:
@@ -549,59 +868,45 @@ jobs:
               )
           )
 
-
-          # -------------------------------------------------
+          # =================================================
           # DATEIEN SPEICHERN
-          # -------------------------------------------------
+          # =================================================
 
-          with open(
-              history_file,
-              "w",
-              encoding="utf-8"
-          ) as f:
+          save_json(
+              "history.json",
+              history
+          )
 
-              json.dump(
-                  history,
-                  f,
-                  ensure_ascii=False,
-                  indent=2
-              )
+          save_json(
+              "flight_state.json",
+              flight_state
+          )
 
+          save_json(
+              "push_state.json",
+              push_state
+          )
 
-          with open(
-              push_file,
-              "w",
-              encoding="utf-8"
-          ) as f:
-
-              json.dump(
-                  push_state,
-                  f,
-                  ensure_ascii=False,
-                  indent=2
-              )
-
-
-          with open(
+          save_json(
               "detected.json",
-              "w",
-              encoding="utf-8"
-          ) as f:
+              detected_for_push
+          )
 
-              json.dump(
-                  detected_for_push,
-                  f,
-                  ensure_ascii=False,
-                  indent=2
-              )
+          save_json(
+              "current_rotorcraft.json",
+              {
+                  "updated": now.isoformat(),
+                  "aircraft": current_rotorcraft
+              }
+          )
 
-
-          # -------------------------------------------------
+          # =================================================
           # LOG
-          # -------------------------------------------------
+          # =================================================
 
           print(
-              "aircraft.json aktualisiert"
+              "Luftrettung KLE V"
+              + VERSION
           )
 
           print(
@@ -613,6 +918,13 @@ jobs:
           )
 
           print(
+              "Aktuelle Hubschrauber:",
+              len(
+                  current_rotorcraft
+              )
+          )
+
+          print(
               "Neue Positionspunkte:",
               len(
                   stored_positions
@@ -620,7 +932,7 @@ jobs:
           )
 
           print(
-              "Neue Push-Meldungen:",
+              "Push-Kandidaten:",
               len(
                   detected_for_push
               )
@@ -630,23 +942,16 @@ jobs:
 
               print(
                   "POSITION:",
-                  item.get(
-                      "registration"
-                  ),
-                  item.get(
-                      "callsign"
-                  ),
-                  item.get(
-                      "type"
-                  ),
-                  item.get(
-                      "distance_km"
-                  ),
-                  "km"
+                  item.get("name"),
+                  item.get("registration"),
+                  item.get("callsign"),
+                  item.get("distance_km"),
+                  "km",
+                  "Station:",
+                  item.get("station")
               )
 
           PY
-
 
       # =====================================================
       # PUSH-NACHRICHT
@@ -661,7 +966,6 @@ jobs:
           import os
 
           TOPIC = "luftrettung-goch-jm-26092026-x7k4"
-
 
           def send_ntfy(
               title,
@@ -688,9 +992,8 @@ jobs:
 
                   return response.status
 
-
           # -------------------------------------------------
-          # MANUELLER WORKFLOW = TEST-PUSH
+          # MANUELLER START = TEST-PUSH
           # -------------------------------------------------
 
           if (
@@ -710,14 +1013,13 @@ jobs:
                       "Luftrettung KLE - Test",
                       (
                           "TEST - Luftrettung Goch\n"
-                          "Der Push von GitHub Actions "
-                          "zu ntfy funktioniert."
+                          "GitHub Actions hat den "
+                          "Push-Test ausgeführt."
                       )
                   )
 
                   print(
-                      "TEST-PUSH gesendet. "
-                      "HTTP-Status:",
+                      "TEST-PUSH HTTP:",
                       status
                   )
 
@@ -728,15 +1030,12 @@ jobs:
                       repr(e)
                   )
 
-                  # Workflow absichtlich fehlschlagen
-                  # lassen, damit der Fehler sichtbar ist.
                   raise
 
               raise SystemExit(0)
 
-
           # -------------------------------------------------
-          # AUTOMATISCHER NORMALBETRIEB
+          # AUTOMATISCHER BETRIEB
           # -------------------------------------------------
 
           try:
@@ -747,50 +1046,51 @@ jobs:
                   encoding="utf-8"
               ) as f:
 
-                  detected = json.load(f)
+                  detected = json.load(
+                      f
+                  )
 
           except Exception as e:
 
               print(
-                  "detected.json konnte "
-                  "nicht gelesen werden:",
+                  "detected.json Fehler:",
                   repr(e)
               )
 
               detected = []
 
-
           if not detected:
 
               print(
-                  "Keine neue "
-                  "Hubschrauber-Erkennung "
-                  "- kein Push."
+                  "Keine neue Erkennung - kein Push."
               )
 
               raise SystemExit(0)
 
-
           for item in detected:
 
+              name = (
+                  item.get("name")
+                  or "Hubschrauber"
+              )
+
               registration = (
-                  item.get(
-                      "registration"
-                  )
+                  item.get("registration")
                   or "unbekannt"
               )
 
               callsign = (
-                  item.get(
-                      "callsign"
-                  )
+                  item.get("callsign")
                   or "unbekannt"
               )
 
               ac_type = (
-                  item.get(
-                      "type"
-                  )
+                  item.get("type")
+                  or "unbekannt"
+              )
+
+              station = (
+                  item.get("station")
                   or "unbekannt"
               )
 
@@ -798,33 +1098,22 @@ jobs:
                   "distance_km"
               )
 
-
               if distance is None:
-
-                  distance_text = (
-                      "unbekannt"
-                  )
-
+                  distance_text = "unbekannt"
               else:
-
                   distance_text = (
                       f"{distance} km"
                   )
 
-
               message = (
-                  "Hubschrauber im "
-                  "30-km-Radius erkannt\n"
-                  f"Kennzeichen: "
-                  f"{registration}\n"
-                  f"Rufname: "
-                  f"{callsign}\n"
-                  f"Typ: "
-                  f"{ac_type}\n"
+                  f"{name} im 30-km-Radius erkannt\n"
+                  f"Kennzeichen: {registration}\n"
+                  f"Rufname: {callsign}\n"
+                  f"Typ: {ac_type}\n"
+                  f"Station: {station}\n"
                   f"Entfernung zu Goch: "
                   f"{distance_text}"
               )
-
 
               try:
 
@@ -835,24 +1124,22 @@ jobs:
 
                   print(
                       "Push gesendet:",
+                      name,
                       registration,
-                      callsign,
-                      "HTTP-Status:",
+                      "HTTP:",
                       status
                   )
 
               except Exception as e:
 
                   print(
-                      "Push konnte nicht "
-                      "gesendet werden:",
+                      "Push fehlgeschlagen:",
                       repr(e)
                   )
 
                   raise
 
           PY
-
 
       # =====================================================
       # DATEIEN INS REPOSITORY SCHREIBEN
@@ -867,6 +1154,8 @@ jobs:
           git add \
             aircraft.json \
             history.json \
+            flight_state.json \
+            current_rotorcraft.json \
             push_state.json
 
           if git diff --cached --quiet; then
@@ -876,7 +1165,7 @@ jobs:
           else
 
             git commit \
-              -m "Flugdaten und Flugspuren aktualisiert"
+              -m "Luftrettung V3.7 Flugdaten aktualisiert"
 
             git pull \
               --rebase \
