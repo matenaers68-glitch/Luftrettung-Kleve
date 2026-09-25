@@ -16,7 +16,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
-<title>Luftrettung Goch & Kreis Kleve – V3.8</title>
+<title>Luftrettung Goch & Kreis Kleve – V3.9</title>
 
 <style>
 :root{
@@ -41,7 +41,6 @@ header{
 }
 
 h1{margin:0 0 5px;font-size:25px}
-
 .sub,.muted{color:#aeb9c4}
 .sub{font-size:14px}
 
@@ -113,7 +112,8 @@ h2{
 
 .primary{background:#304c65}
 
-.row,.historyRow{
+.row,
+.historyRow{
   padding:12px 0;
   border-top:1px solid #2a3744
 }
@@ -123,7 +123,8 @@ h2{
   border-top:0
 }
 
-.name,.historyName{
+.name,
+.historyName{
   font-size:18px;
   font-weight:700
 }
@@ -155,6 +156,16 @@ h2{
   padding:4px 9px;
   font-size:12px;
   margin-left:5px
+}
+
+.flightInfo{
+  margin-top:8px;
+  padding:8px 10px;
+  background:#101820;
+  border-radius:10px;
+  color:#c8d2db;
+  font-size:13px;
+  line-height:1.45
 }
 
 
@@ -195,15 +206,26 @@ h2{
   padding:4px 7px;
   font-size:12px;
   font-weight:700;
-  white-space:nowrap
+  white-space:nowrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.35);
 }
 
 .heliLabel:before{
   display:none
 }
 
-@media(max-width:650px){
+.popupTitle{
+  font-size:15px;
+  font-weight:750;
+  margin-bottom:5px
+}
 
+.popupSub{
+  color:#b7c2cc;
+  margin-bottom:6px
+}
+
+@media(max-width:650px){
   .grid{
     grid-template-columns:1fr 1fr
   }
@@ -222,17 +244,13 @@ h2{
 <body>
 
 <header>
-
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
-
 <div class="sub">
-Version 3.8 · Live · einzelne Flüge · 24-h-Karte · 14-Tage-Flughistorie
+Version 3.9 · Live · einzelne Flüge · 24-h-Karte · 14-Tage-Historie
 </div>
-
 </header>
 
 <main>
-
 
 <section class="card">
 
@@ -240,10 +258,7 @@ Version 3.8 · Live · einzelne Flüge · 24-h-Karte · 14-Tage-Flughistorie
 
 <div class="status">
 <div id="dot" class="dot"></div>
-
-<div id="status" class="big">
-Daten werden geladen …
-</div>
+<div id="status" class="big">Daten werden geladen …</div>
 </div>
 
 <div id="info" class="muted">
@@ -270,9 +285,12 @@ Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions.
 <div id="map"></div>
 
 <div class="mapLegend">
-30-km-Überwachungsbereich um Goch.
-Flugspuren bleiben 24 Stunden sichtbar.
-Nach einer Unterbrechung von mehr als 20 Minuten beginnt ein neuer Flug.
+Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
+Zusammengehörige Positionspunkte werden zu einzelnen Flugspuren verbunden.
+Nach einer längeren Unterbrechung beginnt eine neue Flugspur.
+Bei bekannten Rettungshubschraubern wird zusätzlich die Heimatstation angezeigt.
+Start und Landung werden nur angezeigt, wenn sie aus den vorhandenen
+Daten plausibel ableitbar sind.
 </div>
 
 </section>
@@ -283,9 +301,7 @@ Nach einer Unterbrechung von mehr als 20 Minuten beginnt ein neuer Flug.
 <h2>Aktuell erkannte Hubschrauber</h2>
 
 <div id="aircraft">
-<div class="muted">
-Noch keine Daten geladen.
-</div>
+<div class="muted">Noch keine Daten geladen.</div>
 </div>
 
 </section>
@@ -294,1086 +310,14 @@ Noch keine Daten geladen.
 <section class="card">
 
 <h2>
-Flüge – letzte 14 Tage
+Hubschrauber – letzte 14 Tage
 <span id="historyCounter" class="counter">0</span>
 </h2>
 
 <div id="history">
-<div class="muted">
-Historie wird geladen …
-</div>
+<div class="muted">Historie wird geladen …</div>
 </div>
 
 <p class="small">
-Jeder zusammenhängende Flug wird nur einmal angezeigt;
-die Positionspunkte bleiben für die Flugspur erhalten.
-</p>
-
-</section>
-
-
-<section class="card">
-
-<h2>Unsere beobachteten Maschinen</h2>
-
-<div class="grid">
-
-<div class="btn">Christoph 9</div>
-<div class="btn">Lifeliner 3</div>
-<div class="btn">Christoph 8</div>
-<div class="btn">Christoph Westfalen</div>
-<div class="btn">Christoph Dortmund</div>
-<div class="btn">Polizeihubschrauber</div>
-
-</div>
-
-</section>
-
-
-<section class="card">
-
-<h2>NotfallRadar – Kreis Kleve</h2>
-
-<div class="grid">
-
-<a class="btn primary"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/goch"
-target="_blank">
-Goch
-</a>
-
-<a class="btn primary"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve"
-target="_blank">
-Kreis Kleve
-</a>
-
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/rees"
-target="_blank">
-Rees
-</a>
-
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kevelaer"
-target="_blank">
-Kevelaer
-</a>
-
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/geldern"
-target="_blank">
-Geldern
-</a>
-
-<a class="btn"
-href="https://notfallradar.de/orte/nordrhein-westfalen/kleve/kalkar"
-target="_blank">
-Kalkar
-</a>
-
-</div>
-
-</section>
-
-</main>
-
-
-<script>
-
-const GOCH={
-  lat:51.678,
-  lon:6.159
-};
-
-const GAP=20;
-
-
-/* ---------- BEKANNTE HUBSCHRAUBER ---------- */
-
-const known=[
-  ["CHRISTOPH3","Christoph 3","Rettungshubschrauber","Köln"],
-  ["CHRISTOPH 3","Christoph 3","Rettungshubschrauber","Köln"],
-
-  ["CHRISTOPH9","Christoph 9","Rettungshubschrauber","Duisburg-Buchholz"],
-  ["CHRISTOPH 9","Christoph 9","Rettungshubschrauber","Duisburg-Buchholz"],
-
-  ["CHRISTOPH8","Christoph 8","Rettungshubschrauber","Lünen"],
-  ["CHRISTOPH 8","Christoph 8","Rettungshubschrauber","Lünen"],
-
-  ["CHRISTOPH WESTFALEN","Christoph Westfalen","Intensivtransporthubschrauber","Greven"],
-
-  ["CHRISTOPH DORTMUND","Christoph Dortmund","Intensivtransporthubschrauber","Dortmund"],
-
-  ["LIFELN3","Lifeliner 3","Traumahubschrauber","Nijmegen"],
-  ["LIFELINER3","Lifeliner 3","Traumahubschrauber","Nijmegen"]
-];
-
-
-const types=[
-  "EC35","EC45",
-  "H135","H145",
-  "EC135","EC145",
-  "BK17",
-  "B06","B407",
-  "AS50","AS55",
-  "R22","R44","R66",
-  "AW09","AW109","AW139","AW169",
-  "S76","S92"
-];
-
-
-const words=[
-  "HELI",
-  "ROTOR",
-  "CHRISTOPH",
-  "LIFELINER",
-  "LIFELN",
-  "POLICE",
-  "POLIZEI",
-  "SAR"
-];
-
-
-/* ---------- KARTE ---------- */
-
-const map=
-  L.map("map").setView(
-    [GOCH.lat,GOCH.lon],
-    10
-  );
-
-
-L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom:19,
-    attribution:"© OpenStreetMap"
-  }
-).addTo(map);
-
-
-L.circleMarker(
-  [GOCH.lat,GOCH.lon],
-  {
-    radius:7,
-    weight:2,
-    fillOpacity:1
-  }
-)
-.addTo(map)
-.bindPopup(
-  "<b>Goch</b>"
-);
-
-
-L.circle(
-  [GOCH.lat,GOCH.lon],
-  {
-    radius:30000,
-    weight:2,
-    fillOpacity:0.04
-  }
-).addTo(map);
-
-
-const historyLayer=
-  L.layerGroup().addTo(map);
-
-
-const liveLayer=
-  L.layerGroup().addTo(map);
-
-
-/* ---------- HILFSFUNKTIONEN ---------- */
-
-function text(a){
-
-  return [
-    a.flight,
-    a.callsign,
-    a.r,
-    a.registration,
-    a.t,
-    a.type,
-    a.desc,
-    a.category
-  ]
-  .filter(Boolean)
-  .join(" ")
-  .toUpperCase();
-
-}
-
-
-function info(a){
-
-  const x=text(a);
-
-  const registration=
-    String(
-      a.r||
-      a.registration||
-      ""
-    )
-    .toUpperCase();
-
-
-  if(registration==="PH-DOC"){
-
-    return {
-      name:"Lifeliner 3",
-      role:"Traumahubschrauber",
-      station:"Nijmegen"
-    };
-
-  }
-
-
-  for(const k of known){
-
-    if(x.includes(k[0])){
-
-      return {
-        name:k[1],
-        role:k[2],
-        station:k[3]
-      };
-
-    }
-
-  }
-
-
-  if(
-    x.includes("POLICE") ||
-    x.includes("POLIZEI") ||
-    x.includes("BPO")
-  ){
-
-    return {
-      name:"Polizeihubschrauber",
-      role:"Polizeihubschrauber",
-      station:"nicht automatisch bestimmbar"
-    };
-
-  }
-
-
-  return null;
-
-}
-
-
-function name(a){
-
-  const k=info(a);
-
-  if(k){
-    return k.name;
-  }
-
-  return (
-    a.flight||
-    a.callsign||
-    a.r||
-    a.registration||
-    a.t||
-    a.type||
-    "Hubschrauber"
-  );
-
-}
-
-
-function role(a){
-
-  const k=info(a);
-
-  return k
-    ? k.role
-    : "Hubschrauber";
-
-}
-
-
-function station(a){
-
-  const k=info(a);
-
-  return k
-    ? k.station
-    : "nicht automatisch bestimmbar";
-
-}
-
-
-function rotor(a){
-
-  const category=
-    String(
-      a.category||
-      ""
-    )
-    .toUpperCase();
-
-
-  const type=
-    String(
-      a.t||
-      a.type||
-      ""
-    )
-    .toUpperCase();
-
-
-  const x=text(a);
-
-
-  return (
-    category==="A7" ||
-
-    types.some(
-      z=>type.includes(z)
-    ) ||
-
-    words.some(
-      z=>x.includes(z)
-    )
-  );
-
-}
-
-
-function val(a,k){
-
-  if(
-    a[k]===undefined ||
-    a[k]===null ||
-    a[k]===""
-  ){
-    return "–";
-  }
-
-  return a[k];
-
-}
-
-
-function dt(s){
-
-  return new Date(s)
-  .toLocaleString(
-    "de-DE",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-
-}
-
-
-function tm(s){
-
-  return new Date(s)
-  .toLocaleTimeString(
-    "de-DE",
-    {
-      hour:"2-digit",
-      minute:"2-digit",
-      second:"2-digit"
-    }
-  );
-
-}
-
-
-/* ---------- START / LANDUNG ---------- */
-
-function grounded(a){
-
-  const altitude=
-    a.altitude_ft ??
-    a.alt_baro;
-
-
-  const speed=
-    a.ground_speed ??
-    a.gs;
-
-
-  return (
-
-    String(altitude)
-    .toLowerCase()==="ground"
-
-    ||
-
-    (
-      typeof speed==="number" &&
-      speed<8
-    )
-
-  );
-
-}
-
-
-/* ---------- EINZELNE FLÜGE ---------- */
-
-function split(points){
-
-  points=
-    [...points].sort(
-      (a,b)=>
-        new Date(a.timestamp)-
-        new Date(b.timestamp)
-    );
-
-
-  const flights=[];
-
-  let current=[];
-
-
-  for(const point of points){
-
-    if(
-      current.length &&
-      (
-        new Date(point.timestamp)-
-        new Date(
-          current[
-            current.length-1
-          ].timestamp
-        )
-      )/
-      60000
-      >
-      GAP
-    ){
-
-      flights.push(
-        current
-      );
-
-      current=[];
-
-    }
-
-
-    current.push(
-      point
-    );
-
-  }
-
-
-  if(current.length){
-
-    flights.push(
-      current
-    );
-
-  }
-
-
-  return flights;
-
-}
-
-
-/* ---------- FLUGDAUER ---------- */
-
-function duration(flight){
-
-  if(flight.length<2){
-
-    return "nur eine Erfassung";
-
-  }
-
-
-  const minutes=
-    Math.round(
-      (
-        new Date(
-          flight[
-            flight.length-1
-          ].timestamp
-        )
-        -
-        new Date(
-          flight[0].timestamp
-        )
-      )/
-      60000
-    );
-
-
-  const hours=
-    Math.floor(
-      minutes/60
-    );
-
-
-  if(hours){
-
-    return (
-      hours+
-      " h "+
-      (
-        minutes%60
-      )+
-      " min"
-    );
-
-  }
-
-
-  return minutes+" min";
-
-}
-
-
-/* ---------- NACH MASCHINE GRUPPIEREN ---------- */
-
-function group(data){
-
-  const groups={};
-
-
-  for(const item of data){
-
-    if(
-      typeof item.lat!=="number" ||
-      typeof item.lon!=="number"
-    ){
-      continue;
-    }
-
-
-    const identity=
-      item.identity ||
-      item.hex ||
-      item.registration ||
-      item.callsign ||
-      "unknown";
-
-
-    if(!groups[identity]){
-
-      groups[identity]=[];
-
-    }
-
-
-    groups[identity]
-    .push(item);
-
-  }
-
-
-  return groups;
-
-}
-
-
-/* ---------- POPUP ---------- */
-
-function popup(point,flight){
-
-  const first=
-    flight[0];
-
-
-  const last=
-    flight[
-      flight.length-1
-    ];
-
-
-  return (
-
-    "<b>"+
-    name(point)+
-    "</b><br>"+
-
-    role(point)+
-    " · Station: "+
-    station(point)+
-    "<br>"+
-
-    "Kennzeichen: "+
-    (
-      point.registration||
-      point.r||
-      "–"
-    )+
-    "<br>"+
-
-    "Callsign: "+
-    (
-      point.callsign||
-      point.flight||
-      "–"
-    )+
-    "<br>"+
-
-    "Typ: "+
-    (
-      point.type||
-      point.t||
-      "–"
-    )+
-    "<br><br>"+
-
-
-    (
-      grounded(first)
-      ? "Möglicher Start"
-      : "Erste Erfassung"
-    )+
-    ": "+
-    dt(first.timestamp)+
-    "<br>"+
-
-
-    (
-      grounded(last)
-      ? "Mögliche Landung"
-      : "Letzte Erfassung"
-    )+
-    ": "+
-    dt(last.timestamp)+
-    "<br>"+
-
-
-    "Dauer: "+
-    duration(flight)+
-    " · Punkte: "+
-    flight.length
-
-  );
-
-}
-
-
-/* ---------- LIVE ---------- */
-
-async function loadLive(){
-
-  const dot=
-    document.querySelector(
-      "#dot"
-    );
-
-
-  const status=
-    document.querySelector(
-      "#status"
-    );
-
-
-  const infoBox=
-    document.querySelector(
-      "#info"
-    );
-
-
-  const box=
-    document.querySelector(
-      "#aircraft"
-    );
-
-
-  try{
-
-    const response=
-      await fetch(
-        "aircraft.json?"+
-        Date.now(),
-        {
-          cache:"no-store"
-        }
-      );
-
-
-    if(!response.ok){
-
-      throw Error(
-        "HTTP "+
-        response.status
-      );
-
-    }
-
-
-    const data=
-      await response.json();
-
-
-    const all=
-      Array.isArray(
-        data.ac
-      )
-      ? data.ac
-      : [];
-
-
-    const helicopters=
-      all.filter(
-        rotor
-      );
-
-
-    infoBox.innerHTML=
-
-      "Letzte Server-Aktualisierung: <b>"+
-      tm(data.updated)+
-      "</b> · Luftfahrzeuge im Suchbereich: <b>"+
-      all.length+
-      "</b>";
-
-
-    liveLayer.clearLayers();
-
-
-    for(const a of helicopters){
-
-      if(
-        typeof a.lat!=="number" ||
-        typeof a.lon!=="number"
-      ){
-        continue;
-      }
-
-
-      const marker=
-        L.marker(
-          [
-            a.lat,
-            a.lon
-          ],
-          {
-
-            icon:L.divIcon({
-              className:"heliIcon",
-              html:"🚁",
-              iconSize:[32,32],
-              iconAnchor:[16,16]
-            })
-
-          }
-        );
-
-
-      marker.bindPopup(
-
-        "<b>"+
-        name(a)+
-        "</b><br>"+
-
-        role(a)+
-        " · Station: "+
-        station(a)+
-        "<br>"+
-
-        "Kennzeichen: "+
-        val(a,"r")+
-        "<br>"+
-
-        "Callsign: "+
-        val(a,"flight")+
-        "<br>"+
-
-        "Typ: "+
-        val(a,"t")
-
-      );
-
-
-      marker.bindTooltip(
-        name(a),
-        {
-          permanent:true,
-          direction:"right",
-          offset:[18,0],
-          className:"heliLabel"
-        }
-      );
-
-
-      marker.addTo(
-        liveLayer
-      );
-
-    }
-
-
-    dot.className=
-      helicopters.length
-      ? "dot live"
-      : "dot warn";
-
-
-    status.textContent=
-
-      helicopters.length
-
-      ? (
-          helicopters.length===1
-          ? "1 Hubschrauber erkannt"
-          : helicopters.length+
-            " Hubschrauber erkannt"
-        )
-
-      : "Derzeit kein Hubschrauber erkannt";
-
-
-    box.innerHTML=
-
-      helicopters.length
-
-      ? ""
-
-      : '<div class="muted">'+
-        'Kein Hubschrauber im aktuellen Datenstand.'+
-        '</div>';
-
-
-    for(const a of helicopters){
-
-      const row=
-        document.createElement(
-          "div"
-        );
-
-
-      row.className=
-        "row alert";
-
-
-      row.innerHTML=
-
-        '<div class="name">'+
-        name(a)+
-        '</div>'+
-
-        '<div class="muted">'+
-        role(a)+
-        ' · Station: '+
-        station(a)+
-        '</div>'+
-
-        '<span class="tag">Kennzeichen: '+
-        val(a,"r")+
-        '</span>'+
-
-        '<span class="tag">Callsign: '+
-        val(a,"flight")+
-        '</span>'+
-
-        '<span class="tag">Typ: '+
-        val(a,"t")+
-        '</span>'+
-
-        '<span class="tag">Höhe: '+
-        val(a,"alt_baro")+
-        ' ft</span>'+
-
-        '<span class="tag">Geschwindigkeit: '+
-        val(a,"gs")+
-        ' kt</span>';
-
-
-      box.appendChild(
-        row
-      );
-
-    }
-
-  }
-  catch(error){
-
-    dot.className=
-      "dot err";
-
-
-    status.textContent=
-      "Flugdaten derzeit nicht erreichbar";
-
-
-    infoBox.textContent=
-      error.message;
-
-  }
-
-}
-
-
-/* ---------- HISTORIE ---------- */
-
-async function loadHistory(){
-
-  const box=
-    document.querySelector(
-      "#history"
-    );
-
-
-  const counter=
-    document.querySelector(
-      "#historyCounter"
-    );
-
-
-  try{
-
-    const response=
-      await fetch(
-        "history.json?"+
-        Date.now(),
-        {
-          cache:"no-store"
-        }
-      );
-
-
-    if(!response.ok){
-
-      throw Error(
-        "HTTP "+
-        response.status
-      );
-
-    }
-
-
-    const history=
-      await response.json();
-
-
-    const now=
-      Date.now();
-
-
-    const recent14=
-      history.filter(
-        item=>
-
-          now-
-          new Date(
-            item.timestamp
-          ).getTime()
-
-          <=
-
-          14*86400000
-      );
-
-
-    const recent24=
-      recent14.filter(
-        item=>
-
-          now-
-          new Date(
-            item.timestamp
-          ).getTime()
-
-          <=
-
-          86400000
-      );
-
-
-    historyLayer.clearLayers();
-
-
-    /* ---------- 24-STUNDEN-KARTE ---------- */
-
-
-    for(
-      const points
-      of Object.values(
-        group(recent24)
-      )
-    ){
-
-      for(
-        const flight
-        of split(points)
-      ){
-
-        /*
-          Einzelne Positionspunkte
-        */
-
-        for(const point of flight){
-
-          L.circleMarker(
-            [
-              point.lat,
-              point.lon
-            ],
-            {
-              radius:5,
-              weight:2,
-              fillOpacity:0.8
-            }
-          )
-          .bindPopup(
-            popup(
-              point,
-              flight
-            )
-          )
-          .addTo(
-            historyLayer
-          );
-
-        }
-
-
-        /*
-          Flugspur
-        */
-
-        if(
-          flight.length>1
-        ){
-
-          L.polyline(
-            flight.map(
-              point=>[
-                point.lat,
-                point.lon
-              ]
-            ),
-            {
-              weight:3,
-              opacity:0.8
-            }
-          )
-          .bindPopup(
-            popup(
-              flight[
-                flight.length-1
-              ],
-              flight
-            )
-          )
-          .addTo(
-            historyLayer
-          );
-
-        }
-
-
-        /*
-          Name
+Die Liste enthält die gespeicherten Hubschrauber-Erfassungen
+der letzten 14 Tage. Zusammengehörige Messpunkte werden als
