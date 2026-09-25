@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-25T02:58:49.619029+00:00",
+  "updated": "2026-09-25T03:11:03.778754+00:00",
   "source": "ADSB.lol",
   "center": {
     "name": "Goch",
@@ -7,6 +7,63 @@
     "lon": 6.159,
     "radius_km": 30
   },
-  "total": 0,
-  "ac": []
+  "total": 1,
+  "ac": [
+    {
+      "hex": "a76683",
+      "type": "adsb_icao",
+      "flight": "UPS204  ",
+      "r": "N576UP",
+      "t": "B744",
+      "alt_baro": 25400,
+      "alt_geom": 26600,
+      "gs": 464.0,
+      "ias": 343,
+      "tas": 502,
+      "mach": 0.816,
+      "wd": 352,
+      "ws": 47,
+      "oat": -24,
+      "tat": 9,
+      "track": 313.6,
+      "track_rate": 0.03,
+      "roll": 0.0,
+      "mag_heading": 313.77,
+      "true_heading": 316.92,
+      "baro_rate": 1792,
+      "geom_rate": 1792,
+      "squawk": "2553",
+      "emergency": "none",
+      "category": "A5",
+      "nav_qnh": 1013.6,
+      "nav_altitude_mcp": 34016,
+      "nav_heading": 314.3,
+      "nav_modes": [
+        "vnav",
+        "tcas"
+      ],
+      "lat": 51.653183,
+      "lon": 6.289599,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 0.204,
+      "version": 2,
+      "nic_baro": 1,
+      "nac_p": 10,
+      "nac_v": 1,
+      "sil": 3,
+      "sil_type": "perhour",
+      "gva": 2,
+      "sda": 2,
+      "alert": 0,
+      "spi": 0,
+      "mlat": [],
+      "tisb": [],
+      "messages": 14834,
+      "seen": 0.0,
+      "rssi": -8.2,
+      "dst": 5.077,
+      "dir": 107.0
+    }
+  ]
 }
