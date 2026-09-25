@@ -99,11 +99,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-25T12:39:37.126964+00:00",
-    "last_seen": "2026-09-25T12:39:37.126964+00:00",
-    "last_lat": 52.372009,
-    "last_lon": 5.985794,
-    "last_distance_km": 78.1,
-    "minimum_distance_km": 78.1,
+    "last_seen": "2026-09-25T12:53:28.446122+00:00",
+    "last_lat": 52.075987,
+    "last_lon": 5.257821,
+    "last_distance_km": 76.1,
+    "minimum_distance_km": 76.1,
     "inside_30km": false,
     "status": "needs_identification"
   }
