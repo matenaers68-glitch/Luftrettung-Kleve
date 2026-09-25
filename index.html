@@ -16,7 +16,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<title>Luftrettung Goch & Kreis Kleve – V4.3</title>
+<title>Luftrettung Goch & Kreis Kleve – V4.4</title>
 
 <style>
 
@@ -188,13 +188,22 @@ h2{
   border-radius:10px;
   color:#c8d2db;
   font-size:13px;
-  line-height:1.45;
+  line-height:1.55;
 }
 
+.stopInfo{
+  margin-top:7px;
+  padding:8px 10px;
+  background:#18242f;
+  border-radius:9px;
+  font-size:13px;
+  line-height:1.5;
+}
 
-/* =========================================================
-   KARTE
-   ========================================================= */
+.stopTitle{
+  font-weight:700;
+  color:#fff;
+}
 
 #map{
   width:100%;
@@ -239,6 +248,15 @@ h2{
   display:none;
 }
 
+.stopMarker{
+  width:18px;
+  height:18px;
+  background:#e5b64b;
+  border:3px solid #fff;
+  border-radius:50%;
+  box-shadow:0 2px 6px rgba(0,0,0,.5);
+}
+
 .popupTitle{
   font-size:15px;
   font-weight:750;
@@ -268,7 +286,6 @@ h2{
 </style>
 </head>
 
-
 <body>
 
 <header>
@@ -276,18 +293,12 @@ h2{
 <h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
 
 <div class="sub">
-Version 4.3 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
+Version 4.4 · Live · Flugketten · Zwischenlandungen · 24-h-Karte · 14-Tage-Historie
 </div>
 
 </header>
 
-
 <main>
-
-
-<!-- =====================================================
-     LIVE
-     ===================================================== -->
 
 <section class="card">
 
@@ -321,10 +332,6 @@ Private und nicht klassifizierte Hubschrauber werden nicht angezeigt.
 </section>
 
 
-<!-- =====================================================
-     KARTE
-     ===================================================== -->
-
 <section class="card">
 
 <h2>Karte – letzte 24 Stunden</h2>
@@ -334,21 +341,19 @@ Private und nicht klassifizierte Hubschrauber werden nicht angezeigt.
 <div class="mapLegend">
 
 Der Kreis zeigt den 30-km-Überwachungsbereich um Goch.
-Positionspunkte derselben Maschine werden zu einzelnen Flügen zusammengefasst.
-Niedrige bzw. langsame Flugphasen können als mögliche Zwischenlandungen
-erkannt werden. Angezeigt werden ausschließlich bekannte bzw. klassifizierte
+Positionspunkte derselben Maschine werden zu Flugketten verbunden.
+Mögliche Zwischenlandungen innerhalb eines Fluges werden gesondert markiert.
+Eine kurze Zwischenlandung beendet die Flugkette nicht automatisch.
+Angezeigt werden ausschließlich bekannte bzw. klassifizierte
 Rettungs-, Polizei- und Militärhubschrauber.
-Start, Landung und Zwischenlandungen werden automatisch aus den
-vorhandenen Flugdaten abgeleitet und sind daher nicht immer bestätigt.
+Die Erkennung von Start, Landung und Zwischenlandungen erfolgt aus den
+vorhandenen Positions-, Höhen- und Geschwindigkeitsdaten und stellt
+daher keine bestätigte Einsatzinformation dar.
 
 </div>
 
 </section>
 
-
-<!-- =====================================================
-     AKTUELL
-     ===================================================== -->
 
 <section class="card">
 
@@ -364,10 +369,6 @@ Noch keine Daten geladen.
 
 </section>
 
-
-<!-- =====================================================
-     HISTORIE
-     ===================================================== -->
 
 <section class="card">
 
@@ -392,10 +393,6 @@ Private und weiterhin unbekannte Maschinen bleiben ausgeblendet.
 
 </section>
 
-
-<!-- =====================================================
-     BEOBACHTETE MASCHINEN
-     ===================================================== -->
 
 <section class="card">
 
@@ -425,10 +422,6 @@ klassifiziert wurden.
 
 </section>
 
-
-<!-- =====================================================
-     NOTFALLRADAR
-     ===================================================== -->
 
 <section class="card">
 
@@ -502,7 +495,29 @@ const GOCH={
   lon:6.159
 };
 
-const FLIGHT_GAP_MINUTES=20;
+/*
+  Erst nach einer größeren zeitlichen Unterbrechung
+  beginnt ein neuer Flug.
+
+  Dadurch kann eine kurze Landung Teil derselben
+  Flugkette bleiben.
+*/
+
+const FLIGHT_GAP_MINUTES=30;
+
+
+/*
+  Parameter für mögliche Zwischenlandungen.
+
+  Da GitHub nur etwa alle fünf Minuten Daten speichert,
+  dürfen die Grenzwerte nicht zu eng gewählt werden.
+*/
+
+const STOP_SPEED_KT=20;
+
+const STOP_ALTITUDE_FT=1000;
+
+const STOP_CLUSTER_KM=2.0;
 
 
 /* =========================================================
@@ -574,17 +589,6 @@ const knownCallsigns=[
 
 ];
 
-
-/*
-  Bekannte Registrierungen.
-
-  Diese Liste ist besonders wichtig für alte history.json-
-  Datensätze, in denen möglicherweise kein service- oder
-  name-Feld vorhanden ist.
-
-  Die Zuordnung PH-DOC wird hier als bekannte Maschine
-  für Lifeliner 3 verwendet.
-*/
 
 const knownRegistrations={
 
@@ -746,22 +750,8 @@ function registrationOf(a){
 
 
 /* =========================================================
-   V4.3 – NACHKLASSIFIZIERUNG
+   KLASSIFIZIERUNG – AUS V4.3
    ========================================================= */
-
-/*
-  Der wesentliche Unterschied zu V4.2:
-
-  Wir fragen nicht zuerst:
-  "Hat der Datensatz bereits service?"
-
-  Sondern:
-  "Können wir den Datensatz anhand aller vorhandenen
-   Informationen zuverlässig klassifizieren?"
-
-  Dadurch können auch ältere history.json-Einträge
-  wieder angezeigt werden.
-*/
 
 function classifyAircraft(item){
 
@@ -783,11 +773,6 @@ function classifyAircraft(item){
   const serviceUpper=
     service.toUpperCase();
 
-
-  /*
-    1. Bereits vom Workflow klassifizierter
-       Rettungshubschrauber
-  */
 
   if(
     serviceUpper.includes("RETTUNG") ||
@@ -819,10 +804,6 @@ function classifyAircraft(item){
   }
 
 
-  /*
-    2. Bereits klassifizierte Polizei
-  */
-
   if(
     serviceUpper.includes("POLIZEI") ||
     serviceUpper.includes("POLICE")
@@ -850,10 +831,6 @@ function classifyAircraft(item){
 
   }
 
-
-  /*
-    3. Bereits klassifiziertes Militär
-  */
 
   if(
     serviceUpper.includes("MILITÄR") ||
@@ -888,12 +865,6 @@ function classifyAircraft(item){
   }
 
 
-  /*
-    4. Bekannte Registrierung
-
-       Damit holen wir auch alte Datensätze zurück.
-  */
-
   if(
     registration &&
     knownRegistrations[registration]
@@ -921,13 +892,6 @@ function classifyAircraft(item){
 
   }
 
-
-  /*
-    5. Bekannte Einsatzrufnamen
-
-       Das ist absichtlich unabhängig vom Feld service.
-       Dadurch funktionieren auch alte history.json-Einträge.
-  */
 
   for(
     const entry
@@ -964,14 +928,6 @@ function classifyAircraft(item){
   }
 
 
-  /*
-    6. Allgemeiner Christoph-Rufname
-
-       Auch ein Christoph, den wir noch nicht in unserer
-       Stationsliste haben, ist eindeutig ein relevanter
-       Einsatzhubschrauber.
-  */
-
   if(
     text.includes("CHRISTOPH")
   ){
@@ -1000,10 +956,6 @@ function classifyAircraft(item){
 
   }
 
-
-  /*
-    7. Lifeliner allgemein
-  */
 
   if(
     text.includes("LIFELINER") ||
@@ -1035,10 +987,6 @@ function classifyAircraft(item){
   }
 
 
-  /*
-    8. Polizei anhand Rufname/Beschreibung
-  */
-
   if(
     text.includes("POLICE") ||
     text.includes("POLIZEI") ||
@@ -1065,10 +1013,6 @@ function classifyAircraft(item){
 
   }
 
-
-  /*
-    9. Militär anhand eindeutiger Begriffe
-  */
 
   if(
     text.includes("BUNDESWEHR") ||
@@ -1101,13 +1045,6 @@ function classifyAircraft(item){
   }
 
 
-  /*
-    Nicht eindeutig klassifiziert.
-
-    Diese Maschine bleibt im Hintergrund
-    und erscheint nicht auf der Webseite.
-  */
-
   return {
 
     relevant:false,
@@ -1134,10 +1071,6 @@ function classifyAircraft(item){
 }
 
 
-/* =========================================================
-   RELEVANZFILTER V4.3
-   ========================================================= */
-
 function isRelevantAircraft(item){
 
   return classifyAircraft(
@@ -1146,10 +1079,6 @@ function isRelevantAircraft(item){
 
 }
 
-
-/* =========================================================
-   ANZEIGEINFORMATIONEN
-   ========================================================= */
 
 function knownInfo(a){
 
@@ -1319,8 +1248,66 @@ function formatDateTime(dateString){
 
 
 /* =========================================================
-   BODEN / LANDUNG
+   FLUGZUSTAND
    ========================================================= */
+
+function numericAltitude(item){
+
+  const altitude=
+    item.altitude_ft ??
+    item.alt_baro;
+
+
+  if(
+    typeof altitude==="number"
+  ){
+
+    return altitude;
+
+  }
+
+
+  const parsed=
+    Number(altitude);
+
+
+  return Number.isFinite(parsed)
+    ?
+    parsed
+    :
+    null;
+
+}
+
+
+function numericSpeed(item){
+
+  const speed=
+    item.ground_speed ??
+    item.gs;
+
+
+  if(
+    typeof speed==="number"
+  ){
+
+    return speed;
+
+  }
+
+
+  const parsed=
+    Number(speed);
+
+
+  return Number.isFinite(parsed)
+    ?
+    parsed
+    :
+    null;
+
+}
+
 
 function looksGrounded(item){
 
@@ -1330,8 +1317,7 @@ function looksGrounded(item){
 
 
   const speed=
-    item.ground_speed ??
-    item.gs;
+    numericSpeed(item);
 
 
   if(
@@ -1343,10 +1329,58 @@ function looksGrounded(item){
 
 
   if(
-    typeof speed==="number" &&
+    speed!==null &&
     speed<8
   ){
     return true;
+  }
+
+
+  return false;
+
+}
+
+
+/*
+  Etwas großzügigere Prüfung für einen
+  möglichen Zwischenstopp.
+
+  Ein Rettungshubschrauber muss bei der gespeicherten
+  Position nicht exakt "ground" melden, weil zwischen
+  zwei GitHub-Messungen mehrere Minuten liegen können.
+*/
+
+function looksLikeStopPoint(item){
+
+  if(
+    looksGrounded(item)
+  ){
+    return true;
+  }
+
+
+  const speed=
+    numericSpeed(item);
+
+
+  const altitude=
+    numericAltitude(item);
+
+
+  if(
+    speed!==null &&
+    speed<=STOP_SPEED_KT
+  ){
+
+    if(
+      altitude===null ||
+      altitude<=STOP_ALTITUDE_FT
+    ){
+
+      return true;
+
+    }
+
   }
 
 
@@ -1460,6 +1494,322 @@ function splitIntoFlights(points){
 
 
 /* =========================================================
+   V4.4 – ZWISCHENLANDUNGEN ERKENNEN
+   ========================================================= */
+
+function detectIntermediateStops(flight){
+
+  const stops=[];
+
+
+  /*
+    Mit weniger als drei Messpunkten können wir
+    keine sinnvolle Zwischenlandung zwischen
+    Anflug und Weiterflug ableiten.
+  */
+
+  if(
+    !flight ||
+    flight.length<3
+  ){
+
+    return stops;
+
+  }
+
+
+  let currentStop=null;
+
+
+  /*
+    Erster und letzter Punkt werden bewusst nicht
+    als Zwischenlandung behandelt.
+
+    Sie können zum Start bzw. zum Ende des
+    erfassten Flugabschnitts gehören.
+  */
+
+  for(
+    let i=1;
+    i<flight.length-1;
+    i++
+  ){
+
+    const point=
+      flight[i];
+
+
+    if(
+      !looksLikeStopPoint(
+        point
+      )
+    ){
+
+      if(currentStop){
+
+        stops.push(
+          currentStop
+        );
+
+        currentStop=null;
+
+      }
+
+      continue;
+
+    }
+
+
+    if(
+      !currentStop
+    ){
+
+      currentStop={
+
+        points:[
+          point
+        ],
+
+        arrival:
+          point.timestamp,
+
+        departure:
+          point.timestamp,
+
+        lat:
+          point.lat,
+
+        lon:
+          point.lon
+
+      };
+
+      continue;
+
+    }
+
+
+    /*
+      Prüfen, ob der nächste langsame/niedrige Punkt
+      räumlich noch zum selben Stopp gehört.
+    */
+
+    const previousStopPoint=
+      currentStop.points[
+        currentStop.points.length-1
+      ];
+
+
+    const separation=
+      distanceKm(
+        previousStopPoint.lat,
+        previousStopPoint.lon,
+        point.lat,
+        point.lon
+      );
+
+
+    if(
+      separation<=
+      STOP_CLUSTER_KM
+    ){
+
+      currentStop.points.push(
+        point
+      );
+
+
+      currentStop.departure=
+        point.timestamp;
+
+
+      /*
+        Mittelpunkt des Stopps laufend aktualisieren.
+      */
+
+      const latSum=
+        currentStop.points.reduce(
+          (sum,p)=>sum+p.lat,
+          0
+        );
+
+
+      const lonSum=
+        currentStop.points.reduce(
+          (sum,p)=>sum+p.lon,
+          0
+        );
+
+
+      currentStop.lat=
+        latSum/
+        currentStop.points.length;
+
+
+      currentStop.lon=
+        lonSum/
+        currentStop.points.length;
+
+    }else{
+
+      stops.push(
+        currentStop
+      );
+
+
+      currentStop={
+
+        points:[
+          point
+        ],
+
+        arrival:
+          point.timestamp,
+
+        departure:
+          point.timestamp,
+
+        lat:
+          point.lat,
+
+        lon:
+          point.lon
+
+      };
+
+    }
+
+  }
+
+
+  if(currentStop){
+
+    stops.push(
+      currentStop
+    );
+
+  }
+
+
+  /*
+    Ein einzelner niedriger Messpunkt kann bereits
+    relevant sein, weil nur etwa alle fünf Minuten
+    gespeichert wird.
+
+    Wir markieren ihn deshalb als "möglich",
+    nicht als bestätigte Landung.
+  */
+
+  return stops;
+
+}
+
+
+/* =========================================================
+   STOPP-BESCHREIBUNG
+   ========================================================= */
+
+function stopDescription(stop){
+
+  if(!stop){
+    return "";
+  }
+
+
+  const distanceToGoch=
+    distanceKm(
+      GOCH.lat,
+      GOCH.lon,
+      stop.lat,
+      stop.lon
+    );
+
+
+  let location=
+    "im überwachten Gebiet";
+
+
+  /*
+    Ohne Geocoding nennen wir nur dann Goch,
+    wenn die Position tatsächlich relativ nah
+    am Gocher Mittelpunkt liegt.
+  */
+
+  if(
+    distanceToGoch<=5
+  ){
+
+    location=
+      "im Bereich Goch";
+
+  }else{
+
+    location=
+      distanceToGoch.toFixed(1)+
+      " km von Goch";
+
+  }
+
+
+  return location;
+
+}
+
+
+/* =========================================================
+   FLUGKETTE
+   ========================================================= */
+
+function flightChain(flight){
+
+  const stops=
+    detectIntermediateStops(
+      flight
+    );
+
+
+  if(
+    stops.length===0
+  ){
+
+    return (
+      "Keine mögliche Zwischenlandung "+
+      "aus den gespeicherten Punkten ableitbar."
+    );
+
+  }
+
+
+  return stops
+    .map(
+      (stop,index)=>{
+
+        return (
+          "Mögliche Zwischenlandung "+
+          (index+1)+
+          ": "+
+          stopDescription(stop)+
+          " · ca. "+
+          formatTime(stop.arrival)+
+          (
+            stop.departure &&
+            stop.departure!==stop.arrival
+            ?
+            " bis "+
+            formatTime(stop.departure)
+            :
+            ""
+          )
+        );
+
+      }
+    )
+    .join("<br>");
+
+}
+
+
+/* =========================================================
    FLUGINFORMATION
    ========================================================= */
 
@@ -1555,6 +1905,12 @@ function flightPopup(
     );
 
 
+  const stops=
+    detectIntermediateStops(
+      flight
+    );
+
+
   return (
 
     '<div class="popupTitle">'+
@@ -1601,6 +1957,16 @@ function flightPopup(
     summary.end+
     '</b><br><br>'+
 
+    (
+      stops.length
+      ?
+      '<b>Flugkette:</b><br>'+
+      flightChain(flight)+
+      '<br><br>'
+      :
+      ''
+    )+
+
     'Position: '+
     formatDateTime(
       point.timestamp
@@ -1629,7 +1995,57 @@ function flightPopup(
 
 
 /* =========================================================
-   LIVE V4.3
+   STOPP-POPUP
+   ========================================================= */
+
+function stopPopup(
+  aircraft,
+  stop,
+  index
+){
+
+  return (
+
+    '<div class="popupTitle">'+
+    displayName(aircraft)+
+    '</div>'+
+
+    '<div class="popupSub">'+
+    'Mögliche Zwischenlandung '+
+    (index+1)+
+    '</div>'+
+
+    '<b>Bereich:</b> '+
+    stopDescription(stop)+
+    '<br>'+
+
+    '<b>Erster langsamer/niedriger Punkt:</b><br>'+
+    formatDateTime(
+      stop.arrival
+    )+
+    '<br>'+
+
+    '<b>Letzter langsamer/niedriger Punkt:</b><br>'+
+    formatDateTime(
+      stop.departure
+    )+
+    '<br>'+
+
+    '<b>Messpunkte:</b> '+
+    stop.points.length+
+    '<br><br>'+
+
+    '<span style="color:#b7c2cc">'+
+    'Die Zwischenlandung wird automatisch aus den Flugdaten abgeleitet und ist nicht bestätigt.'+
+    '</span>'
+
+  );
+
+}
+
+
+/* =========================================================
+   LIVE
    ========================================================= */
 
 async function loadLive(){
@@ -1668,16 +2084,6 @@ async function loadLive(){
 
   try{
 
-    /*
-      Zunächst current_rotorcraft.json versuchen.
-
-      Die Datei enthält die vom Workflow
-      aktuell erkannten Hubschrauber.
-
-      V4.3 klassifiziert die darin enthaltenen
-      Datensätze anschließend selbst noch einmal.
-    */
-
     const response=
       await fetch(
         "current_rotorcraft.json?time="+
@@ -1714,19 +2120,11 @@ async function loadLive(){
       [];
 
 
-    /*
-      Jetzt erst klassifizieren.
-    */
-
     const rotor=
       supplied.filter(
         isRelevantAircraft
       );
 
-
-    /*
-      30-km-Filter
-    */
 
     const visibleRotor=
       rotor.filter(a=>{
@@ -1766,10 +2164,6 @@ async function loadLive(){
 
     liveLayer.clearLayers();
 
-
-    /* =====================================================
-       LIVE-MARKER
-       ===================================================== */
 
     visibleRotor.forEach(a=>{
 
@@ -1887,10 +2281,6 @@ async function loadLive(){
     });
 
 
-    /* =====================================================
-       KEIN RELEVANTER HUBSCHRAUBER
-       ===================================================== */
-
     if(
       visibleRotor.length===0
     ){
@@ -1914,10 +2304,6 @@ async function loadLive(){
 
     }
 
-
-    /* =====================================================
-       EINSATZHUBSCHRAUBER VORHANDEN
-       ===================================================== */
 
     dot.className=
       "dot live";
@@ -2054,7 +2440,7 @@ async function loadLive(){
 
 
 /* =========================================================
-   HISTORIE V4.3
+   HISTORIE V4.4
    ========================================================= */
 
 async function loadHistory(){
@@ -2131,26 +2517,12 @@ async function loadHistory(){
       1000;
 
 
-    /* =====================================================
-       V4.3:
-       ALTE DATENSÄTZE NACHKLASSIFIZIEREN
-       ===================================================== */
-
     const recent14=
       history
-
-      /*
-        Erst anhand aller vorhandenen Informationen
-        klassifizieren.
-      */
 
       .filter(
         isRelevantAircraft
       )
-
-      /*
-        Danach Zeitfilter.
-      */
 
       .filter(item=>{
 
@@ -2210,10 +2582,6 @@ async function loadHistory(){
     historyLayer.clearLayers();
 
 
-    /* =====================================================
-       NACH MASCHINE GRUPPIEREN
-       ===================================================== */
-
     const aircraftGroups={};
 
 
@@ -2269,7 +2637,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       FLÜGE AUF DER KARTE
+       FLÜGE UND FLUGKETTEN AUF DER KARTE
        ===================================================== */
 
     Object.values(
@@ -2285,9 +2653,9 @@ async function loadHistory(){
 
       flights.forEach(flight=>{
 
-        /* -----------------------------------------
-           POSITIONSPUNKTE
-           ----------------------------------------- */
+        /*
+          Positionspunkte
+        */
 
         flight.forEach(point=>{
 
@@ -2320,9 +2688,9 @@ async function loadHistory(){
         });
 
 
-        /* -----------------------------------------
-           FLUGLINIE
-           ----------------------------------------- */
+        /*
+          Durchgehende Flugspur
+        */
 
         if(
           flight.length>=2
@@ -2364,9 +2732,72 @@ async function loadHistory(){
         }
 
 
-        /* -----------------------------------------
-           BESCHRIFTUNG
-           ----------------------------------------- */
+        /*
+          V4.4:
+          mögliche Zwischenlandungen
+        */
+
+        const stops=
+          detectIntermediateStops(
+            flight
+          );
+
+
+        stops.forEach(
+          (stop,index)=>{
+
+            const stopMarker=
+              L.marker(
+                [
+                  stop.lat,
+                  stop.lon
+                ],
+                {
+                  icon:L.divIcon({
+                    className:"",
+                    html:
+                      '<div class="stopMarker"></div>',
+                    iconSize:[
+                      18,
+                      18
+                    ],
+                    iconAnchor:[
+                      9,
+                      9
+                    ]
+                  })
+                }
+              );
+
+
+            stopMarker.bindPopup(
+              stopPopup(
+                flight[0],
+                stop,
+                index
+              )
+            );
+
+
+            stopMarker.bindTooltip(
+              "Mögliche Zwischenlandung",
+              {
+                direction:"top"
+              }
+            );
+
+
+            stopMarker.addTo(
+              historyLayer
+            );
+
+          }
+        );
+
+
+        /*
+          Name der Maschine am letzten Punkt
+        */
 
         const latest=
           flight[
@@ -2411,7 +2842,7 @@ async function loadHistory(){
 
 
     /* =====================================================
-       14-TAGE-HISTORIE GRUPPIEREN
+       14-TAGE-HISTORIE
        ===================================================== */
 
     const allGroups={};
@@ -2492,10 +2923,6 @@ async function loadHistory(){
     });
 
 
-    /* =====================================================
-       NEUESTE FLÜGE ZUERST
-       ===================================================== */
-
     allFlights.sort(
       (a,b)=>
 
@@ -2518,10 +2945,6 @@ async function loadHistory(){
       allFlights.length;
 
 
-    /* =====================================================
-       KEINE HISTORIE
-       ===================================================== */
-
     if(
       allFlights.length===0
     ){
@@ -2537,10 +2960,6 @@ async function loadHistory(){
 
     }
 
-
-    /* =====================================================
-       HISTORIENLISTE
-       ===================================================== */
 
     box.innerHTML="";
 
@@ -2559,6 +2978,12 @@ async function loadHistory(){
 
       const summary=
         flightSummary(
+          flight
+        );
+
+
+      const stops=
+        detectIntermediateStops(
           flight
         );
 
@@ -2610,6 +3035,38 @@ async function loadHistory(){
 
       row.className=
         "historyRow";
+
+
+      let stopHtml="";
+
+
+      if(
+        stops.length>0
+      ){
+
+        stopHtml=
+
+          '<div class="stopInfo">'+
+
+          '<div class="stopTitle">'+
+          'Flugkette · '+
+          stops.length+
+          (
+            stops.length===1
+            ?
+            ' mögliche Zwischenlandung'
+            :
+            ' mögliche Zwischenlandungen'
+          )+
+          '</div>'+
+
+          flightChain(
+            flight
+          )+
+
+          '</div>';
+
+      }
 
 
       row.innerHTML=
@@ -2669,13 +3126,21 @@ async function loadHistory(){
         )+
 
         '<div class="flightInfo">'+
+
         summary.start+
+
         '<br>'+
+
         summary.end+
+
         '<br>'+
+
         'Gespeicherte Positionspunkte: '+
         flight.length+
-        '</div>';
+
+        '</div>'+
+
+        stopHtml;
 
 
       box.appendChild(
