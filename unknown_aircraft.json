@@ -376,5 +376,23 @@
     "minimum_distance_km": 67.9,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "4082a8": {
+    "identity": "4082a8",
+    "hex": "4082a8",
+    "registration": "G-CMYZ",
+    "callsign": "GCMYZ",
+    "type": "GYRO",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T06:58:15.221244+00:00",
+    "last_seen": "2026-09-26T06:58:15.221244+00:00",
+    "last_lat": 51.623016,
+    "last_lon": 7.030953,
+    "last_distance_km": 60.5,
+    "minimum_distance_km": 60.5,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
