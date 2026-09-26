@@ -621,11 +621,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-26T14:12:32.460602+00:00",
-    "last_seen": "2026-09-26T14:12:32.460602+00:00",
-    "last_lat": 52.137901,
-    "last_lon": 5.656546,
-    "last_distance_km": 61.7,
-    "minimum_distance_km": 61.7,
+    "last_seen": "2026-09-26T14:25:15.896677+00:00",
+    "last_lat": 52.187991,
+    "last_lon": 5.918492,
+    "last_distance_km": 59.1,
+    "minimum_distance_km": 59.1,
     "inside_30km": false,
     "status": "needs_identification"
   }
