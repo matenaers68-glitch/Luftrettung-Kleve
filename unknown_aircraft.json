@@ -502,5 +502,23 @@
     "minimum_distance_km": 25.6,
     "inside_30km": true,
     "status": "needs_identification"
+  },
+  "3d355c": {
+    "identity": "3d355c",
+    "hex": "3d355c",
+    "registration": "D-ESLO",
+    "callsign": "DESLO",
+    "type": "SR22",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T10:03:34.199991+00:00",
+    "last_seen": "2026-09-26T10:03:34.199991+00:00",
+    "last_lat": 51.804943,
+    "last_lon": 7.202378,
+    "last_distance_km": 73.2,
+    "minimum_distance_km": 73.2,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
