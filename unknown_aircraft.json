@@ -351,11 +351,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-26T00:53:32.436708+00:00",
-    "last_seen": "2026-09-26T01:12:29.010520+00:00",
-    "last_lat": 51.492129,
-    "last_lon": 7.176666,
-    "last_distance_km": 73.3,
-    "minimum_distance_km": 73.1,
+    "last_seen": "2026-09-26T01:23:59.618800+00:00",
+    "last_lat": 51.579849,
+    "last_lon": 6.778193,
+    "last_distance_km": 44.1,
+    "minimum_distance_km": 44.1,
     "inside_30km": false,
     "status": "needs_identification"
   }
