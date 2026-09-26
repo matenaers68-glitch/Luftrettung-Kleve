@@ -745,5 +745,33 @@
     "approaching_goch": null,
     "inside_30km": false,
     "relevant": false
+  },
+  "4866b9": {
+    "identity": "4866b9",
+    "segment_id": "4866b9-20260926T083638",
+    "name": "PHBLA",
+    "registration": "PH-BLA",
+    "callsign": "PHBLA",
+    "type": "AS50",
+    "classification": "unknown",
+    "classification_source": "unknown",
+    "service": "noch nicht bestimmt",
+    "station": null,
+    "country": null,
+    "operator": "",
+    "first_seen": "2026-09-26T08:36:38.469292+00:00",
+    "first_seen_distance_km": 49.7,
+    "minimum_distance_km": 49.7,
+    "entered_30km": null,
+    "last_seen": "2026-09-26T08:36:38.469292+00:00",
+    "last_lat": 51.451083,
+    "last_lon": 6.778102,
+    "last_distance_km": 49.7,
+    "movement_bearing": null,
+    "movement_direction": null,
+    "distance_change_km": null,
+    "approaching_goch": null,
+    "inside_30km": false,
+    "relevant": false
   }
 }
