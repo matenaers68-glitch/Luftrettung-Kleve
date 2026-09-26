@@ -358,5 +358,23 @@
     "minimum_distance_km": 44.1,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3e0a3c": {
+    "identity": "3e0a3c",
+    "hex": "3e0a3c",
+    "registration": "D-HVBO",
+    "callsign": "BPO160",
+    "type": "EC35",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T03:30:43.716146+00:00",
+    "last_seen": "2026-09-26T03:30:43.716146+00:00",
+    "last_lat": 51.513356,
+    "last_lon": 7.106781,
+    "last_distance_km": 68.0,
+    "minimum_distance_km": 68.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
