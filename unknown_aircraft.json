@@ -700,5 +700,23 @@
     "minimum_distance_km": 53.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "4857b3": {
+    "identity": "4857b3",
+    "hex": "4857b3",
+    "registration": "PH-TTR",
+    "callsign": "LIFELN1",
+    "type": "EC35",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T22:45:59.481647+00:00",
+    "last_seen": "2026-09-26T22:45:59.481647+00:00",
+    "last_lat": 52.16802,
+    "last_lon": 5.387852,
+    "last_distance_km": 75.9,
+    "minimum_distance_km": 75.9,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }

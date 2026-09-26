@@ -1137,5 +1137,33 @@
     "approaching_goch": false,
     "inside_30km": false,
     "relevant": false
+  },
+  "4857b3": {
+    "identity": "4857b3",
+    "segment_id": "4857b3-20260926T224559",
+    "name": "LIFELN1",
+    "registration": "PH-TTR",
+    "callsign": "LIFELN1",
+    "type": "EC35",
+    "classification": "unknown",
+    "classification_source": "unknown",
+    "service": "noch nicht bestimmt",
+    "station": null,
+    "country": null,
+    "operator": "",
+    "first_seen": "2026-09-26T22:45:59.481647+00:00",
+    "first_seen_distance_km": 75.9,
+    "minimum_distance_km": 75.9,
+    "entered_30km": null,
+    "last_seen": "2026-09-26T22:45:59.481647+00:00",
+    "last_lat": 52.16802,
+    "last_lon": 5.387852,
+    "last_distance_km": 75.9,
+    "movement_bearing": null,
+    "movement_direction": null,
+    "distance_change_km": null,
+    "approaching_goch": null,
+    "inside_30km": false,
+    "relevant": false
   }
 }
