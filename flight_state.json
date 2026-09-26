@@ -577,5 +577,33 @@
     "approaching_goch": true,
     "inside_30km": false,
     "relevant": false
+  },
+  "3df741": {
+    "identity": "3df741",
+    "segment_id": "3df741-20260926T005332",
+    "name": "HUMMEL1",
+    "registration": "D-HNWR",
+    "callsign": "HUMMEL1",
+    "type": "EC45",
+    "classification": "unknown",
+    "classification_source": "unknown",
+    "service": "noch nicht bestimmt",
+    "station": null,
+    "country": null,
+    "operator": "",
+    "first_seen": "2026-09-26T00:53:32.436708+00:00",
+    "first_seen_distance_km": 73.1,
+    "minimum_distance_km": 73.1,
+    "entered_30km": null,
+    "last_seen": "2026-09-26T00:53:32.436708+00:00",
+    "last_lat": 51.489801,
+    "last_lon": 7.172546,
+    "last_distance_km": 73.1,
+    "movement_bearing": null,
+    "movement_direction": null,
+    "distance_change_km": null,
+    "approaching_goch": null,
+    "inside_30km": false,
+    "relevant": false
   }
 }
