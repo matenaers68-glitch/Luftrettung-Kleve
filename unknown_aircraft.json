@@ -495,12 +495,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-26T09:39:44.491337+00:00",
-    "last_seen": "2026-09-26T09:39:44.491337+00:00",
-    "last_lat": 51.382451,
-    "last_lon": 6.779099,
-    "last_distance_km": 54.0,
-    "minimum_distance_km": 54.0,
-    "inside_30km": false,
+    "last_seen": "2026-09-26T09:48:06.750886+00:00",
+    "last_lat": 51.563049,
+    "last_lon": 6.4803,
+    "last_distance_km": 25.6,
+    "minimum_distance_km": 25.6,
+    "inside_30km": true,
     "status": "needs_identification"
   }
 }
