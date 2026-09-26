@@ -628,5 +628,23 @@
     "minimum_distance_km": 55.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "a0bdaf": {
+    "identity": "a0bdaf",
+    "hex": "a0bdaf",
+    "registration": "N147LD",
+    "callsign": "N147LD",
+    "type": "SR22",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T15:39:02.917036+00:00",
+    "last_seen": "2026-09-26T15:39:02.917036+00:00",
+    "last_lat": 52.053285,
+    "last_lon": 5.459731,
+    "last_distance_km": 63.6,
+    "minimum_distance_km": 63.6,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
