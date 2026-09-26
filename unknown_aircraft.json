@@ -664,5 +664,23 @@
     "minimum_distance_km": 73.6,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3e1211": {
+    "identity": "3e1211",
+    "hex": "3e1211",
+    "registration": "D-HYAR",
+    "callsign": "CHX76",
+    "type": "EC45",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T18:12:57.962379+00:00",
+    "last_seen": "2026-09-26T18:12:57.962379+00:00",
+    "last_lat": 51.863383,
+    "last_lon": 7.198105,
+    "last_distance_km": 74.4,
+    "minimum_distance_km": 74.4,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
