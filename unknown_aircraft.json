@@ -693,11 +693,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-26T19:31:09.965898+00:00",
-    "last_seen": "2026-09-26T19:31:09.965898+00:00",
-    "last_lat": 51.53389,
-    "last_lon": 5.214868,
-    "last_distance_km": 67.1,
-    "minimum_distance_km": 67.1,
+    "last_seen": "2026-09-26T19:40:35.217371+00:00",
+    "last_lat": 51.616795,
+    "last_lon": 5.397491,
+    "last_distance_km": 53.0,
+    "minimum_distance_km": 53.0,
     "inside_30km": false,
     "status": "needs_identification"
   }
