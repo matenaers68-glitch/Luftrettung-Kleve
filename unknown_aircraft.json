@@ -520,5 +520,23 @@
     "minimum_distance_km": 73.2,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "485017": {
+    "identity": "485017",
+    "hex": "485017",
+    "registration": "PH-KTM",
+    "callsign": "PHKTM",
+    "type": "R44",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-26T10:17:32.629749+00:00",
+    "last_seen": "2026-09-26T10:17:32.629749+00:00",
+    "last_lat": 52.223004,
+    "last_lon": 5.41948,
+    "last_distance_km": 79.0,
+    "minimum_distance_km": 79.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
