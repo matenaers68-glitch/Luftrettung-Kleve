@@ -31,7 +31,6 @@ jobs:
           import urllib.parse
           import math
           import re
-          import time
 
           from datetime import datetime, timezone, timedelta
 
@@ -56,14 +55,10 @@ jobs:
               1
           )
 
-          ADSB_URL = (
+          URL = (
               "https://api.adsb.lol/v2/lat/"
               f"{GOCH_LAT}/lon/{GOCH_LON}/dist/"
               f"{BACKGROUND_RADIUS_NM}"
-          )
-
-          NOMINATIM_URL = (
-              "https://nominatim.openstreetmap.org/reverse"
           )
 
           now = datetime.now(timezone.utc)
@@ -82,7 +77,6 @@ jobs:
           DETECTED_FILE = "detected.json"
           DATABASE_FILE = "aircraft_db.json"
           UNKNOWN_FILE = "unknown_aircraft.json"
-          GEOCODE_CACHE_FILE = "geocode_cache.json"
 
 
           # =====================================================
@@ -95,7 +89,7 @@ jobs:
                   "name": "Lifeliner 3",
                   "classification": "rescue",
                   "service": "Traumahelikopter",
-                  "station": "Nijmegen/Volkel-Region",
+                  "station": "Volkel",
                   "country": "Niederlande"
               },
 
@@ -103,7 +97,7 @@ jobs:
                   "name": "Lifeliner 3",
                   "classification": "rescue",
                   "service": "Traumahelikopter",
-                  "station": "Nijmegen/Volkel-Region",
+                  "station": "Volkel",
                   "country": "Niederlande"
               },
 
@@ -210,6 +204,7 @@ jobs:
                       encoding="utf-8"
                   ) as f:
                       return json.load(f)
+
               except Exception:
                   return default
 
@@ -243,6 +238,7 @@ jobs:
                           "+00:00"
                       )
                   )
+
               except Exception:
                   return None
 
@@ -360,6 +356,210 @@ jobs:
 
 
           # =====================================================
+          # ORTSBESTIMMUNG / REVERSE GEOCODING
+          # =====================================================
+
+          geocode_cache = {}
+
+
+          def reverse_geocode(lat, lon):
+              """
+              Ermittelt aus Koordinaten einen ungefähren Ort.
+              Die Daten kommen von OpenStreetMap/Nominatim.
+
+              Das Ergebnis wird im jeweiligen Datensatz gespeichert,
+              damit die Webseite später nicht selbst geocodieren muss.
+              """
+
+              cache_key = (
+                  round(lat, 4),
+                  round(lon, 4)
+              )
+
+              if cache_key in geocode_cache:
+                  return geocode_cache[
+                      cache_key
+                  ]
+
+
+              result = {
+                  "display": None,
+                  "road": None,
+                  "house_number": None,
+                  "city": None,
+                  "postcode": None,
+                  "county": None,
+                  "country": None
+              }
+
+
+              try:
+                  query = urllib.parse.urlencode(
+                      {
+                          "lat": lat,
+                          "lon": lon,
+                          "format": "jsonv2",
+                          "addressdetails": 1,
+                          "zoom": 18
+                      }
+                  )
+
+                  url = (
+                      "https://nominatim.openstreetmap.org/reverse?"
+                      +
+                      query
+                  )
+
+                  request = urllib.request.Request(
+                      url,
+                      headers={
+                          "User-Agent":
+                              "Luftrettung-Kleve/4.8"
+                      }
+                  )
+
+                  with urllib.request.urlopen(
+                      request,
+                      timeout=10
+                  ) as response:
+                      data = json.load(
+                          response
+                      )
+
+
+                  address = data.get(
+                      "address",
+                      {}
+                  )
+
+
+                  road = (
+                      address.get("road")
+                      or
+                      address.get("pedestrian")
+                      or
+                      address.get("residential")
+                      or
+                      address.get("path")
+                      or
+                      address.get("track")
+                  )
+
+
+                  house_number = (
+                      address.get(
+                          "house_number"
+                      )
+                  )
+
+
+                  city = (
+                      address.get("city")
+                      or
+                      address.get("town")
+                      or
+                      address.get("village")
+                      or
+                      address.get("municipality")
+                      or
+                      address.get("hamlet")
+                  )
+
+
+                  postcode = address.get(
+                      "postcode"
+                  )
+
+
+                  county = address.get(
+                      "county"
+                  )
+
+
+                  country = address.get(
+                      "country"
+                  )
+
+
+                  location_parts = []
+
+
+                  if city:
+                      location_parts.append(
+                          city
+                      )
+
+
+                  if road:
+                      road_text = road
+
+                      if house_number:
+                          road_text += (
+                              " "
+                              +
+                              str(
+                                  house_number
+                              )
+                          )
+
+                      location_parts.append(
+                          road_text
+                      )
+
+
+                  if location_parts:
+                      display = ", ".join(
+                          location_parts
+                      )
+
+                  else:
+                      display = data.get(
+                          "display_name"
+                      )
+
+
+                  result = {
+                      "display":
+                          display,
+
+                      "road":
+                          road,
+
+                      "house_number":
+                          house_number,
+
+                      "city":
+                          city,
+
+                      "postcode":
+                          postcode,
+
+                      "county":
+                          county,
+
+                      "country":
+                          country
+                  }
+
+
+              except Exception as error:
+                  print(
+                      "Ortsbestimmung fehlgeschlagen:",
+                      round(lat, 5),
+                      round(lon, 5),
+                      repr(error)
+                  )
+
+
+              geocode_cache[
+                  cache_key
+              ] = result
+
+
+              return result
+
+
+          # =====================================================
           # STAMMDATENBANK
           # =====================================================
 
@@ -376,7 +576,6 @@ jobs:
 
 
           def database_profile(ac):
-
               hexcode = str(
                   ac.get("hex")
                   or ""
@@ -397,7 +596,6 @@ jobs:
               )
 
               for key in possible_keys:
-
                   if not key:
                       continue
 
@@ -426,7 +624,6 @@ jobs:
           # =====================================================
 
           def is_rotorcraft(ac):
-
               if database_profile(ac):
                   return True
 
@@ -460,10 +657,13 @@ jobs:
                   )
               )
 
-              return any(
+              if any(
                   word in text
                   for word in ROTOR_WORDS
-              )
+              ):
+                  return True
+
+              return False
 
 
           # =====================================================
@@ -471,7 +671,6 @@ jobs:
           # =====================================================
 
           def classify(ac):
-
               profile = database_profile(ac)
 
               if profile:
@@ -499,9 +698,7 @@ jobs:
 
 
               for key, profile in KNOWN_CALLSIGNS.items():
-
                   if key in callsign_key:
-
                       result = profile.copy()
 
                       result[
@@ -640,9 +837,11 @@ jobs:
                       callsign_key
                   )
                   or
-                  "BUNDESPOLIZEI" in operator
+                  "BUNDESPOLIZEI"
+                  in operator
                   or
-                  "BUNDESPOLIZEI" in description
+                  "BUNDESPOLIZEI"
+                  in description
               ):
                   return {
                       "name":
@@ -784,362 +983,36 @@ jobs:
 
 
           # =====================================================
-          # V4.8 – REVERSE GEOCODING
-          # =====================================================
-
-          geocode_cache = load_json(
-              GEOCODE_CACHE_FILE,
-              {}
-          )
-
-          if not isinstance(
-              geocode_cache,
-              dict
-          ):
-              geocode_cache = {}
-
-
-          def geocode_key(lat, lon):
-
-              # Rundung auf ca. 100 Meter.
-              # Dadurch vermeiden wir unnötig viele Anfragen.
-
-              return (
-                  f"{round(lat, 3):.3f},"
-                  f"{round(lon, 3):.3f}"
-              )
-
-
-          def reverse_geocode(lat, lon):
-
-              key = geocode_key(
-                  lat,
-                  lon
-              )
-
-
-              if key in geocode_cache:
-
-                  cached = geocode_cache[
-                      key
-                  ]
-
-                  if isinstance(
-                      cached,
-                      dict
-                  ):
-                      return cached
-
-
-              params = urllib.parse.urlencode(
-                  {
-                      "lat": lat,
-                      "lon": lon,
-                      "format": "jsonv2",
-                      "addressdetails": 1,
-                      "zoom": 18
-                  }
-              )
-
-
-              url = (
-                  NOMINATIM_URL
-                  +
-                  "?"
-                  +
-                  params
-              )
-
-
-              request = urllib.request.Request(
-                  url,
-                  headers={
-                      "User-Agent":
-                          "Luftrettung-Kleve/4.8 "
-                          "(private non-commercial monitoring)"
-                  }
-              )
-
-
-              try:
-
-                  print(
-                      "Geocoding:",
-                      key
-                  )
-
-                  with urllib.request.urlopen(
-                      request,
-                      timeout=15
-                  ) as response:
-
-                      data = json.load(
-                          response
-                      )
-
-
-                  address = data.get(
-                      "address",
-                      {}
-                  )
-
-
-                  road = (
-                      address.get("road")
-                      or
-                      address.get("pedestrian")
-                      or
-                      address.get("footway")
-                      or
-                      address.get("path")
-                      or
-                      address.get("residential")
-                      or
-                      address.get("cycleway")
-                      or
-                      address.get("service")
-                  )
-
-
-                  house_number = address.get(
-                      "house_number"
-                  )
-
-
-                  city = (
-                      address.get("city")
-                      or
-                      address.get("town")
-                      or
-                      address.get("village")
-                      or
-                      address.get("municipality")
-                      or
-                      address.get("hamlet")
-                  )
-
-
-                  district = (
-                      address.get("city_district")
-                      or
-                      address.get("suburb")
-                      or
-                      address.get("quarter")
-                  )
-
-
-                  postcode = address.get(
-                      "postcode"
-                  )
-
-
-                  county = address.get(
-                      "county"
-                  )
-
-
-                  state = address.get(
-                      "state"
-                  )
-
-
-                  country = address.get(
-                      "country"
-                  )
-
-
-                  display_parts = []
-
-
-                  if road:
-
-                      road_text = road
-
-                      if house_number:
-                          road_text += (
-                              " "
-                              +
-                              house_number
-                          )
-
-                      display_parts.append(
-                          road_text
-                      )
-
-
-                  if postcode or city:
-
-                      city_text = " ".join(
-                          x
-                          for x in (
-                              postcode,
-                              city
-                          )
-                          if x
-                      )
-
-                      if city_text:
-                          display_parts.append(
-                              city_text
-                          )
-
-
-                  if not display_parts:
-
-                      if city:
-                          display_parts.append(
-                              city
-                          )
-
-                      elif county:
-                          display_parts.append(
-                              county
-                          )
-
-                      else:
-                          display_parts.append(
-                              data.get(
-                                  "display_name",
-                                  "Ort nicht bestimmbar"
-                              )
-                          )
-
-
-                  location = {
-                      "display":
-                          ", ".join(
-                              display_parts
-                          ),
-
-                      "road":
-                          road,
-
-                      "house_number":
-                          house_number,
-
-                      "city":
-                          city,
-
-                      "district":
-                          district,
-
-                      "postcode":
-                          postcode,
-
-                      "county":
-                          county,
-
-                      "state":
-                          state,
-
-                      "country":
-                          country,
-
-                      "source":
-                          "OpenStreetMap / Nominatim",
-
-                      "geocoded_at":
-                          now.isoformat()
-                  }
-
-
-                  geocode_cache[
-                      key
-                  ] = location
-
-
-                  # Öffentlichen Dienst nicht mit
-                  # schnellen Folgeanfragen belasten.
-                  time.sleep(
-                      1.1
-                  )
-
-
-                  return location
-
-
-              except Exception as error:
-
-                  print(
-                      "Geocoding fehlgeschlagen:",
-                      key,
-                      repr(error)
-                  )
-
-
-                  # Geocoding-Fehler darf niemals
-                  # den Luftrettungs-Workflow stoppen.
-
-                  return {
-                      "display":
-                          None,
-
-                      "road":
-                          None,
-
-                      "house_number":
-                          None,
-
-                      "city":
-                          None,
-
-                      "district":
-                          None,
-
-                      "postcode":
-                          None,
-
-                      "county":
-                          None,
-
-                      "state":
-                          None,
-
-                      "country":
-                          None,
-
-                      "source":
-                          "Geocoding fehlgeschlagen"
-                  }
-
-
-          # =====================================================
           # ADSB.LOL
           # =====================================================
 
           try:
-
               request = urllib.request.Request(
-                  ADSB_URL,
+                  URL,
                   headers={
                       "User-Agent":
                           f"Luftrettung-Kleve/{VERSION}"
                   }
               )
 
-
               with urllib.request.urlopen(
                   request,
                   timeout=25
               ) as response:
-
                   source = json.load(
                       response
                   )
-
 
               aircraft = source.get(
                   "ac",
                   []
               )
 
-
               if not isinstance(
                   aircraft,
                   list
               ):
                   aircraft = []
-
 
               output = {
                   "updated":
@@ -1170,9 +1043,7 @@ jobs:
                       aircraft
               }
 
-
           except Exception as error:
-
               print(
                   "ADSB.lol Fehler:",
                   repr(error)
@@ -1234,7 +1105,6 @@ jobs:
               {}
           )
 
-
           if not isinstance(history, list):
               history = []
 
@@ -1256,11 +1126,9 @@ jobs:
           # =====================================================
 
           def clean(entries, cutoff):
-
               cleaned = []
 
               for item in entries:
-
                   timestamp = parse_time(
                       item.get("timestamp")
                   )
@@ -1289,7 +1157,7 @@ jobs:
 
 
           # =====================================================
-          # DOPPELTE PUNKTE VERHINDERN
+          # DOPPELTE MESSUNGEN VERMEIDEN
           # =====================================================
 
           def recent_same(
@@ -1297,11 +1165,9 @@ jobs:
               identity,
               seconds=120
           ):
-
               for old in reversed(
                   entries
               ):
-
                   if (
                       old.get("identity")
                       != identity
@@ -1340,30 +1206,20 @@ jobs:
               []
           ):
 
-              if not is_rotorcraft(
-                  ac
-              ):
+              if not is_rotorcraft(ac):
                   continue
-
 
               rotor_count += 1
 
 
-              lat = ac.get(
-                  "lat"
-              )
-
-              lon = ac.get(
-                  "lon"
-              )
-
+              lat = ac.get("lat")
+              lon = ac.get("lon")
 
               if not isinstance(
                   lat,
                   (int, float)
               ):
                   continue
-
 
               if not isinstance(
                   lon,
@@ -1377,18 +1233,15 @@ jobs:
                   or ""
               ).strip().lower()
 
-
               registration = str(
                   ac.get("r")
                   or ""
               ).strip()
 
-
               callsign = str(
                   ac.get("flight")
                   or ""
               ).strip()
-
 
               identity = (
                   hexcode
@@ -1397,7 +1250,6 @@ jobs:
                   or
                   compact(callsign)
               )
-
 
               if not identity:
                   continue
@@ -1408,18 +1260,15 @@ jobs:
                   or ""
               ).strip().upper()
 
-
               category = str(
                   ac.get("category")
                   or ""
               ).strip().upper()
 
-
               description = str(
                   ac.get("desc")
                   or ""
               ).strip()
-
 
               operator = str(
                   ac.get("ownOp")
@@ -1442,12 +1291,10 @@ jobs:
                   ac
               )
 
-
               classification = profile.get(
                   "classification",
                   "unknown"
               )
-
 
               relevant = (
                   classification
@@ -1460,14 +1307,40 @@ jobs:
 
 
               # =================================================
-              # ALTER ZUSTAND
+              # ORTSBESTIMMUNG
+              # =================================================
+
+              location = {
+                  "display": None,
+                  "road": None,
+                  "house_number": None,
+                  "city": None,
+                  "postcode": None,
+                  "county": None,
+                  "country": None
+              }
+
+              # Geocoding nur für relevante Maschinen im
+              # eigentlichen 30-km-Gebiet.
+              if (
+                  relevant
+                  and
+                  distance <= ACTION_RADIUS_KM
+              ):
+                  location = reverse_geocode(
+                      lat,
+                      lon
+                  )
+
+
+              # =================================================
+              # BISHERIGER ZUSTAND
               # =================================================
 
               previous = states.get(
                   identity,
                   {}
               )
-
 
               previous_seen = parse_time(
                   previous.get(
@@ -1477,24 +1350,18 @@ jobs:
 
 
               # =================================================
-              # NEUER FLUG
+              # NEUER FLUG?
               # =================================================
 
               new_flight = False
 
-
               if not previous_seen:
-
                   new_flight = True
 
               else:
-
                   gap_seconds = (
-                      now
-                      -
-                      previous_seen
+                      now - previous_seen
                   ).total_seconds()
-
 
                   if (
                       gap_seconds
@@ -1507,7 +1374,6 @@ jobs:
 
 
               if new_flight:
-
                   segment_id = (
                       identity
                       +
@@ -1540,9 +1406,7 @@ jobs:
                       REENTRY_ARM_DISTANCE_KM
                   )
 
-
               else:
-
                   segment_id = (
                       previous.get(
                           "segment_id"
@@ -1557,7 +1421,6 @@ jobs:
                       )
                   )
 
-
                   first_seen = (
                       previous.get(
                           "first_seen"
@@ -1566,14 +1429,12 @@ jobs:
                       now.isoformat()
                   )
 
-
                   first_distance = (
                       previous.get(
                           "first_seen_distance_km",
                           distance
                       )
                   )
-
 
                   old_minimum = (
                       previous.get(
@@ -1582,19 +1443,18 @@ jobs:
                       )
                   )
 
-
                   if not isinstance(
                       old_minimum,
                       (int, float)
                   ):
-                      old_minimum = distance
-
+                      old_minimum = (
+                          distance
+                      )
 
                   minimum_distance = min(
                       old_minimum,
                       distance
                   )
-
 
                   entered_30km = (
                       previous.get(
@@ -1602,14 +1462,12 @@ jobs:
                       )
                   )
 
-
                   alert_sent_for_segment = bool(
                       previous.get(
                           "alert_sent_for_segment",
                           False
                       )
                   )
-
 
                   reentry_armed = bool(
                       previous.get(
@@ -1666,8 +1524,10 @@ jobs:
                   "last_lon"
               )
 
-              previous_distance = previous.get(
-                  "last_distance_km"
+              previous_distance = (
+                  previous.get(
+                      "last_distance_km"
+                  )
               )
 
 
@@ -1682,7 +1542,6 @@ jobs:
                       (int, float)
                   )
               ):
-
                   movement_bearing = round(
                       bearing_degrees(
                           previous_lat,
@@ -1704,14 +1563,12 @@ jobs:
                   previous_distance,
                   (int, float)
               ):
-
                   distance_change = round(
                       distance
                       -
                       previous_distance,
                       1
                   )
-
 
                   if distance_change < -0.5:
                       approaching_goch = True
@@ -1721,7 +1578,7 @@ jobs:
 
 
               # =================================================
-              # PUSH
+              # PUSH-ENTSCHEIDUNG
               # =================================================
 
               push_reason = None
@@ -1735,7 +1592,6 @@ jobs:
                       and
                       not alert_sent_for_segment
                   ):
-
                       allow_push = True
 
                       push_reason = (
@@ -1752,7 +1608,6 @@ jobs:
                           False
                       )
                   ):
-
                       allow_push = True
 
                       push_reason = (
@@ -1761,38 +1616,10 @@ jobs:
 
 
               # =================================================
-              # V4.8 – ORT NUR FÜR NEUEN HISTORIENPUNKT
-              # =================================================
-
-              location = None
-
-
-              should_store_history = (
-                  relevant
-                  and
-                  inside
-                  and
-                  not recent_same(
-                      history,
-                      identity
-                  )
-              )
-
-
-              if should_store_history:
-
-                  location = reverse_geocode(
-                      lat,
-                      lon
-                  )
-
-
-              # =================================================
-              # DATENSATZ
+              # EINTRAG
               # =================================================
 
               entry = {
-
                   "timestamp":
                       now.isoformat(),
 
@@ -1923,30 +1750,31 @@ jobs:
               # UNBEKANNTE HUBSCHRAUBER
               # =================================================
 
-              if classification == "unknown":
-
+              if (
+                  classification
+                  ==
+                  "unknown"
+              ):
                   old_unknown = unknown.get(
                       identity,
                       {}
                   )
 
-
-                  old_minimum = old_unknown.get(
-                      "minimum_distance_km"
+                  old_minimum = (
+                      old_unknown.get(
+                          "minimum_distance_km"
+                      )
                   )
-
 
                   if not isinstance(
                       old_minimum,
                       (int, float)
                   ):
-                      old_minimum = distance
+                      old_minimum = (
+                          distance
+                      )
 
-
-                  unknown[
-                      identity
-                  ] = {
-
+                  unknown[identity] = {
                       "identity":
                           identity,
 
@@ -2012,21 +1840,8 @@ jobs:
                   background,
                   identity
               ):
-
-                  background_entry = (
-                      entry.copy()
-                  )
-
-                  # Hintergrundpositionen brauchen
-                  # kein Reverse-Geocoding.
-
-                  if not should_store_history:
-                      background_entry[
-                          "location"
-                      ] = None
-
                   background.append(
-                      background_entry
+                      entry
                   )
 
 
@@ -2039,13 +1854,13 @@ jobs:
                   and
                   inside
               ):
-
-                  if should_store_history:
-
+                  if not recent_same(
+                      history,
+                      identity
+                  ):
                       history.append(
                           entry
                       )
-
 
                   current.append(
                       entry
@@ -2063,14 +1878,9 @@ jobs:
                   )
 
                   alert_sent_for_segment = True
-
                   reentry_armed = False
 
-
-                  pushes[
-                      identity
-                  ] = {
-
+                  pushes[identity] = {
                       "timestamp":
                           now.isoformat(),
 
@@ -2086,7 +1896,10 @@ jobs:
                           ),
 
                       "distance_km":
-                          distance
+                          distance,
+
+                      "location":
+                          location
                   }
 
 
@@ -2095,6 +1908,13 @@ jobs:
               # =================================================
 
               if relevant:
+
+                  push_status = (
+                      "JA"
+                      if allow_push
+                      else
+                      "NEIN"
+                  )
 
                   print(
                       "STATUS:",
@@ -2110,26 +1930,20 @@ jobs:
                       "|",
                       distance,
                       "km",
+                      "| Ort:",
+                      location.get(
+                          "display"
+                      )
+                      or
+                      "-",
                       "| innerhalb:",
                       inside,
                       "| neuer Flug:",
                       new_flight,
+                      "| Wiedereinflug scharf:",
+                      reentry_armed,
                       "| Push:",
-                      "JA"
-                      if allow_push
-                      else
-                      "NEIN",
-                      "| Ort:",
-                      (
-                          location.get(
-                              "display"
-                          )
-                          if isinstance(
-                              location,
-                              dict
-                          )
-                          else "-"
-                      ),
+                      push_status,
                       "| Grund:",
                       push_reason
                       or
@@ -2141,10 +1955,7 @@ jobs:
               # FLIGHT STATE
               # =================================================
 
-              states[
-                  identity
-              ] = {
-
+              states[identity] = {
                   "identity":
                       identity,
 
@@ -2215,6 +2026,9 @@ jobs:
                   "last_distance_km":
                       distance,
 
+                  "last_location":
+                      location,
+
                   "movement_bearing":
                       movement_bearing,
 
@@ -2251,26 +2065,27 @@ jobs:
               timedelta(days=2)
           )
 
+          cleaned_states = {}
 
-          states = {
-              identity: state
-              for identity, state in states.items()
+          for identity, state in states.items():
+              timestamp = parse_time(
+                  state.get(
+                      "last_seen"
+                  )
+              )
+
               if (
-                  parse_time(
-                      state.get(
-                          "last_seen"
-                      )
-                  )
+                  timestamp
                   and
-                  parse_time(
-                      state.get(
-                          "last_seen"
-                      )
-                  )
+                  timestamp
                   >=
                   state_cutoff
-              )
-          }
+              ):
+                  cleaned_states[
+                      identity
+                  ] = state
+
+          states = cleaned_states
 
 
           # =====================================================
@@ -2283,9 +2098,7 @@ jobs:
               timedelta(days=14)
           )
 
-
           cleaned_pushes = {}
-
 
           for identity, item in pushes.items():
 
@@ -2293,7 +2106,6 @@ jobs:
                   item,
                   str
               ):
-
                   timestamp = parse_time(
                       item
                   )
@@ -2302,7 +2114,6 @@ jobs:
                   item,
                   dict
               ):
-
                   timestamp = parse_time(
                       item.get(
                           "timestamp"
@@ -2310,20 +2121,18 @@ jobs:
                   )
 
               else:
-
                   timestamp = None
-
 
               if (
                   timestamp
                   and
-                  timestamp >= push_cutoff
+                  timestamp
+                  >=
+                  push_cutoff
               ):
-
                   cleaned_pushes[
                       identity
                   ] = item
-
 
           pushes = cleaned_pushes
 
@@ -2339,7 +2148,6 @@ jobs:
                       ""
                   )
           )
-
 
           background.sort(
               key=lambda item:
@@ -2383,12 +2191,6 @@ jobs:
               DETECTED_FILE,
               detected
           )
-
-          save_json(
-              GEOCODE_CACHE_FILE,
-              geocode_cache
-          )
-
 
           save_json(
               CURRENT_FILE,
@@ -2455,17 +2257,8 @@ jobs:
           )
 
           print(
-              "Geocoding-Cache:",
-              len(
-                  geocode_cache
-              ),
-              "Positionen"
-          )
-
-          print(
               "=========================================="
           )
-
           PY
 
 
@@ -2480,7 +2273,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python3 - <<'PY'
-
           import json
           import os
           import urllib.parse
@@ -2492,7 +2284,6 @@ jobs:
               ""
           ).strip()
 
-
           chat_id = os.environ.get(
               "TELEGRAM_CHAT_ID",
               ""
@@ -2500,7 +2291,6 @@ jobs:
 
 
           if not token or not chat_id:
-
               raise RuntimeError(
                   "TELEGRAM_BOT_TOKEN oder "
                   "TELEGRAM_CHAT_ID fehlt."
@@ -2513,7 +2303,6 @@ jobs:
                   "https://api.telegram.org/"
                   f"bot{token}/sendMessage"
               )
-
 
               data = urllib.parse.urlencode(
                   {
@@ -2530,13 +2319,11 @@ jobs:
                   "utf-8"
               )
 
-
               request = urllib.request.Request(
                   url,
                   data=data,
                   method="POST"
               )
-
 
               with urllib.request.urlopen(
                   request,
@@ -2555,7 +2342,6 @@ jobs:
               if not result.get(
                   "ok"
               ):
-
                   raise RuntimeError(
                       "Telegram-Fehler: "
                       +
@@ -2605,21 +2391,18 @@ jobs:
                   "Version 4.8 läuft.\n"
                   "80-km-Hintergrundüberwachung aktiv.\n"
                   "30-km-Einsatzalarm aktiv.\n"
-                  "Flugsegment-Erkennung aktiv.\n"
+                  "Neue Flugsegment-Erkennung aktiv.\n"
                   "Wiedereinflug-Erkennung aktiv.\n"
                   "Polizei-/Bundespolizei-Erkennung aktiv.\n"
-                  "Reverse-Geocoding aktiv.\n"
-                  "Orts- und Straßenerkennung aktiv.\n"
-                  "Geocoding-Cache aktiv.\n"
+                  "Ortsbestimmung aktiv.\n"
+                  "aircraft_db.json aktiv.\n"
                   "Telegram-Verbindung funktioniert."
               )
-
 
               print(
                   "Telegram-Testnachricht "
                   "erfolgreich gesendet."
               )
-
 
               raise SystemExit(
                   0
@@ -2631,20 +2414,16 @@ jobs:
           # =====================================================
 
           try:
-
               with open(
                   "detected.json",
                   "r",
                   encoding="utf-8"
               ) as file:
-
                   detected = json.load(
                       file
                   )
 
-
           except Exception as error:
-
               print(
                   "detected.json Fehler:",
                   repr(
@@ -2656,7 +2435,6 @@ jobs:
 
 
           if not detected:
-
               print(
                   "Keine relevante neue "
                   "Erkennung – keine "
@@ -2678,7 +2456,6 @@ jobs:
                   "Hubschrauber"
               )
 
-
               registration = (
                   item.get(
                       "registration"
@@ -2686,7 +2463,6 @@ jobs:
                   or
                   "unbekannt"
               )
-
 
               callsign = (
                   item.get(
@@ -2696,7 +2472,6 @@ jobs:
                   "unbekannt"
               )
 
-
               service = (
                   item.get(
                       "service"
@@ -2704,7 +2479,6 @@ jobs:
                   or
                   "unbekannt"
               )
-
 
               station = (
                   item.get(
@@ -2714,7 +2488,6 @@ jobs:
                   "noch nicht bestimmt"
               )
 
-
               country = (
                   item.get(
                       "country"
@@ -2723,21 +2496,17 @@ jobs:
                   "unbekannt"
               )
 
-
               distance = item.get(
                   "distance_km"
               )
-
 
               first_distance = item.get(
                   "first_seen_distance_km"
               )
 
-
               minimum_distance = item.get(
                   "minimum_distance_km"
               )
-
 
               direction = (
                   item.get(
@@ -2747,13 +2516,156 @@ jobs:
                   "noch unbekannt"
               )
 
-
               approaching = item.get(
                   "approaching_goch"
               )
-
 
               reason = (
                   item.get(
                       "push_reason"
                   )
+                  or
+                  "neue Erkennung"
+              )
+
+              location = item.get(
+                  "location"
+              )
+
+
+              if (
+                  isinstance(
+                      location,
+                      dict
+                  )
+                  and
+                  location.get(
+                      "display"
+                  )
+              ):
+                  location_text = (
+                      location.get(
+                          "display"
+                      )
+                  )
+
+              else:
+                  location_text = (
+                      "noch nicht bestimmt"
+                  )
+
+
+              if approaching is True:
+                  movement = (
+                      "nähert sich Goch"
+                  )
+
+              elif approaching is False:
+                  movement = (
+                      "entfernt sich von Goch"
+                  )
+
+              else:
+                  movement = (
+                      "Bewegung noch nicht bestimmbar"
+                  )
+
+
+              text = (
+                  f"🚁 {name} im 30-km-Radius erkannt\n\n"
+                  f"Art: {service}\n"
+                  f"Kennzeichen: {registration}\n"
+                  f"Rufname: {callsign}\n"
+                  f"Station: {station}\n"
+                  f"Land: {country}\n\n"
+                  f"Position nahe: {location_text}\n"
+                  f"Jetzt: {distance} km von Goch\n"
+                  f"Erstmals erfasst: {first_distance} km\n"
+                  f"Bisher nächste Entfernung: {minimum_distance} km\n"
+                  f"Flugrichtung: {direction}\n"
+                  f"Status: {movement}\n\n"
+                  f"Alarmgrund: {reason}"
+              )
+
+
+              result = send(
+                  text
+              )
+
+
+              message_id = (
+                  result
+                  .get(
+                      "result",
+                      {}
+                  )
+                  .get(
+                      "message_id"
+                  )
+              )
+
+
+              print(
+                  "TELEGRAM GESENDET:",
+                  name,
+                  "|",
+                  registration,
+                  "| message_id:",
+                  message_id,
+                  "| Position:",
+                  location_text,
+                  "| Grund:",
+                  reason
+              )
+
+          PY
+
+
+      # =========================================================
+      # REPOSITORY AKTUALISIEREN
+      # =========================================================
+
+      - name: Neue Daten speichern
+        shell: bash
+        run: |
+
+          git config \
+            user.name \
+            "Luftrettung-Kleve Bot"
+
+          git config \
+            user.email \
+            "actions@github.com"
+
+
+          git add \
+            aircraft.json \
+            history.json \
+            background_history.json \
+            flight_state.json \
+            current_rotorcraft.json \
+            push_state.json \
+            unknown_aircraft.json \
+            aircraft_db.json \
+            detected.json
+
+
+          if git diff --cached --quiet; then
+
+            echo "Keine Änderung vorhanden."
+
+          else
+
+            git commit \
+              -m "Luftrettung V4.8 Flugdaten aktualisiert"
+
+
+            git pull \
+              --rebase \
+              origin main
+
+
+            git push \
+              origin main
+
+          fi
