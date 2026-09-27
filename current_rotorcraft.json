@@ -1,7 +1,43 @@
 {
-  "updated": "2026-09-27T14:33:21.967758+00:00",
+  "updated": "2026-09-27T14:44:06.909200+00:00",
   "version": "4.6",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": []
+  "aircraft": [
+    {
+      "timestamp": "2026-09-27T14:44:06.909200+00:00",
+      "identity": "485e49",
+      "segment_id": "485e49-20260927T135217",
+      "hex": "485e49",
+      "registration": "PH-DOC",
+      "callsign": "LIFELN3",
+      "name": "Lifeliner 3",
+      "classification": "rescue",
+      "classification_source": "callsign",
+      "service": "Traumahelikopter",
+      "station": "Volkel",
+      "country": "Niederlande",
+      "operator": "",
+      "description": "",
+      "type": "EC35",
+      "category": "A7",
+      "lat": 51.821998,
+      "lon": 5.832138,
+      "distance_km": 27.6,
+      "inside_30km": true,
+      "relevant": true,
+      "altitude_ft": 575,
+      "ground_speed": 116.8,
+      "track": 208.1,
+      "movement_bearing": 205.5,
+      "movement_direction": "Südwest",
+      "distance_change_km": -23.3,
+      "approaching_goch": true,
+      "first_seen": "2026-09-27T13:52:17.478739+00:00",
+      "first_seen_distance_km": 28.0,
+      "minimum_distance_km": 27.6,
+      "entered_30km": "2026-09-27T13:52:17.478739+00:00",
+      "last_seen": "2026-09-27T14:44:06.909200+00:00"
+    }
+  ]
 }
