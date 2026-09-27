@@ -808,5 +808,23 @@
     "minimum_distance_km": 44.9,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "a5cc61": {
+    "identity": "a5cc61",
+    "hex": "a5cc61",
+    "registration": "N473BJ",
+    "callsign": "N473BJ",
+    "type": "SR22",
+    "category": "A1",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-27T15:34:40.433421+00:00",
+    "last_seen": "2026-09-27T15:34:40.433421+00:00",
+    "last_lat": 52.283889,
+    "last_lon": 5.906172,
+    "last_distance_km": 69.6,
+    "minimum_distance_km": 69.6,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
