@@ -43,5 +43,125 @@
     "service": "Traumahelikopter",
     "station": "Volkel",
     "country": "Niederlande"
+  },
+
+  "D-HNWR": {
+    "name": "Hummel 1",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "D-HNWS": {
+    "name": "Hummel 2",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "D-HNWT": {
+    "name": "Hummel 3",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "D-HNWU": {
+    "name": "Hummel 4",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "D-HNWV": {
+    "name": "Hummel 5",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "D-HNWW": {
+    "name": "Hummel 6",
+    "classification": "police",
+    "service": "Polizeihubschrauber NRW",
+    "station": "Polizeifliegerstaffel NRW",
+    "country": "Deutschland"
+  },
+
+  "PH-PXA": {
+    "name": "Politie 01",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXB": {
+    "name": "Politie 02",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXC": {
+    "name": "Politie 03",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXD": {
+    "name": "Politie 04",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXE": {
+    "name": "Politie 05",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXF": {
+    "name": "Politie 06",
+    "classification": "police",
+    "service": "Politiehelikopter EC135",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXX": {
+    "name": "Politie 24",
+    "classification": "police",
+    "service": "Politiehelikopter AW139",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXY": {
+    "name": "Politie 25",
+    "classification": "police",
+    "service": "Politiehelikopter AW139",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
+  },
+
+  "PH-PXZ": {
+    "name": "Politie 26",
+    "classification": "police",
+    "service": "Politiehelikopter AW139",
+    "station": "Dienst Luchtvaartpolitie",
+    "country": "Niederlande"
   }
 }
