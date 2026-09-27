@@ -765,12 +765,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-27T10:45:03.157888+00:00",
-    "last_seen": "2026-09-27T10:53:25.475986+00:00",
-    "last_lat": 51.501709,
-    "last_lon": 5.919775,
-    "last_distance_km": 25.6,
+    "last_seen": "2026-09-27T11:00:26.037689+00:00",
+    "last_lat": 51.720374,
+    "last_lon": 5.567093,
+    "last_distance_km": 41.1,
     "minimum_distance_km": 25.6,
-    "inside_30km": true,
+    "inside_30km": false,
     "status": "needs_identification"
   }
 }
