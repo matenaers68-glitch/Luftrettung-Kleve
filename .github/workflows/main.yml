@@ -22,15 +22,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Flugdaten V4.7 abrufen und auswerten
+      - name: Flugdaten V4.8 abrufen und auswerten
         shell: bash
         run: |
           python3 - <<'PY'
           import json
           import urllib.request
+          import urllib.parse
           import math
-          import os
           import re
+          import time
 
           from datetime import datetime, timezone, timedelta
 
@@ -39,7 +40,7 @@ jobs:
           # VERSION / GRUNDEINSTELLUNGEN
           # =====================================================
 
-          VERSION = "4.7"
+          VERSION = "4.8"
 
           GOCH_LAT = 51.678
           GOCH_LON = 6.159
@@ -47,14 +48,7 @@ jobs:
           ACTION_RADIUS_KM = 30
           BACKGROUND_RADIUS_KM = 80
 
-          # Nach dieser Zeit ohne Sichtung beginnt ein neuer Flug.
-          # 75 Minuten verhindern, dass kurze ADS-B-Lücken
-          # fälschlich einen neuen Einsatz erzeugen.
           NEW_FLIGHT_AFTER_MINUTES = 75
-
-          # Erst wenn die Maschine mindestens 32 km entfernt war,
-          # gilt ein späterer Eintritt <=30 km als echter Wiedereinflug.
-          # Die Hysterese verhindert Flattern direkt an der Grenze.
           REENTRY_ARM_DISTANCE_KM = 32
 
           BACKGROUND_RADIUS_NM = round(
@@ -62,10 +56,14 @@ jobs:
               1
           )
 
-          URL = (
+          ADSB_URL = (
               "https://api.adsb.lol/v2/lat/"
               f"{GOCH_LAT}/lon/{GOCH_LON}/dist/"
               f"{BACKGROUND_RADIUS_NM}"
+          )
+
+          NOMINATIM_URL = (
+              "https://nominatim.openstreetmap.org/reverse"
           )
 
           now = datetime.now(timezone.utc)
@@ -84,6 +82,7 @@ jobs:
           DETECTED_FILE = "detected.json"
           DATABASE_FILE = "aircraft_db.json"
           UNKNOWN_FILE = "unknown_aircraft.json"
+          GEOCODE_CACHE_FILE = "geocode_cache.json"
 
 
           # =====================================================
@@ -96,7 +95,7 @@ jobs:
                   "name": "Lifeliner 3",
                   "classification": "rescue",
                   "service": "Traumahelikopter",
-                  "station": "Volkel",
+                  "station": "Nijmegen/Volkel-Region",
                   "country": "Niederlande"
               },
 
@@ -104,7 +103,7 @@ jobs:
                   "name": "Lifeliner 3",
                   "classification": "rescue",
                   "service": "Traumahelikopter",
-                  "station": "Volkel",
+                  "station": "Nijmegen/Volkel-Region",
                   "country": "Niederlande"
               },
 
@@ -211,7 +210,6 @@ jobs:
                       encoding="utf-8"
                   ) as f:
                       return json.load(f)
-
               except Exception:
                   return default
 
@@ -245,7 +243,6 @@ jobs:
                           "+00:00"
                       )
                   )
-
               except Exception:
                   return None
 
@@ -379,6 +376,7 @@ jobs:
 
 
           def database_profile(ac):
+
               hexcode = str(
                   ac.get("hex")
                   or ""
@@ -399,6 +397,7 @@ jobs:
               )
 
               for key in possible_keys:
+
                   if not key:
                       continue
 
@@ -427,6 +426,7 @@ jobs:
           # =====================================================
 
           def is_rotorcraft(ac):
+
               if database_profile(ac):
                   return True
 
@@ -460,13 +460,10 @@ jobs:
                   )
               )
 
-              if any(
+              return any(
                   word in text
                   for word in ROTOR_WORDS
-              ):
-                  return True
-
-              return False
+              )
 
 
           # =====================================================
@@ -474,6 +471,7 @@ jobs:
           # =====================================================
 
           def classify(ac):
+
               profile = database_profile(ac)
 
               if profile:
@@ -500,12 +498,10 @@ jobs:
               )
 
 
-              # ---------------------------------------------
-              # Bekannte Rettungshubschrauber
-              # ---------------------------------------------
-
               for key, profile in KNOWN_CALLSIGNS.items():
+
                   if key in callsign_key:
+
                       result = profile.copy()
 
                       result[
@@ -514,10 +510,6 @@ jobs:
 
                       return result
 
-
-              # ---------------------------------------------
-              # Allgemeiner CHRISTOPH-Rufname
-              # ---------------------------------------------
 
               if callsign_key.startswith(
                   "CHRISTOPH"
@@ -544,10 +536,6 @@ jobs:
                           "callsign"
                   }
 
-
-              # ---------------------------------------------
-              # Allgemeiner Lifeliner
-              # ---------------------------------------------
 
               if (
                   callsign_key.startswith(
@@ -580,10 +568,6 @@ jobs:
                           "callsign"
                   }
 
-
-              # ---------------------------------------------
-              # Polizei NRW
-              # ---------------------------------------------
 
               if (
                   callsign_key.startswith(
@@ -618,10 +602,6 @@ jobs:
                   }
 
 
-              # ---------------------------------------------
-              # Niederländische Polizei
-              # ---------------------------------------------
-
               if (
                   callsign_key.startswith(
                       "POLICE"
@@ -654,21 +634,15 @@ jobs:
                   }
 
 
-              # ---------------------------------------------
-              # Bundespolizei
-              # ---------------------------------------------
-
               if (
                   re.fullmatch(
                       r"BPO\d+",
                       callsign_key
                   )
                   or
-                  "BUNDESPOLIZEI"
-                  in operator
+                  "BUNDESPOLIZEI" in operator
                   or
-                  "BUNDESPOLIZEI"
-                  in description
+                  "BUNDESPOLIZEI" in description
               ):
                   return {
                       "name":
@@ -694,10 +668,6 @@ jobs:
                           "callsign/metadata"
                   }
 
-
-              # ---------------------------------------------
-              # Sonstige Polizei
-              # ---------------------------------------------
 
               police_text = " ".join(
                   (
@@ -740,10 +710,6 @@ jobs:
                           "ADSB metadata"
                   }
 
-
-              # ---------------------------------------------
-              # Militär / SAR
-              # ---------------------------------------------
 
               military_text = " ".join(
                   (
@@ -818,36 +784,362 @@ jobs:
 
 
           # =====================================================
+          # V4.8 – REVERSE GEOCODING
+          # =====================================================
+
+          geocode_cache = load_json(
+              GEOCODE_CACHE_FILE,
+              {}
+          )
+
+          if not isinstance(
+              geocode_cache,
+              dict
+          ):
+              geocode_cache = {}
+
+
+          def geocode_key(lat, lon):
+
+              # Rundung auf ca. 100 Meter.
+              # Dadurch vermeiden wir unnötig viele Anfragen.
+
+              return (
+                  f"{round(lat, 3):.3f},"
+                  f"{round(lon, 3):.3f}"
+              )
+
+
+          def reverse_geocode(lat, lon):
+
+              key = geocode_key(
+                  lat,
+                  lon
+              )
+
+
+              if key in geocode_cache:
+
+                  cached = geocode_cache[
+                      key
+                  ]
+
+                  if isinstance(
+                      cached,
+                      dict
+                  ):
+                      return cached
+
+
+              params = urllib.parse.urlencode(
+                  {
+                      "lat": lat,
+                      "lon": lon,
+                      "format": "jsonv2",
+                      "addressdetails": 1,
+                      "zoom": 18
+                  }
+              )
+
+
+              url = (
+                  NOMINATIM_URL
+                  +
+                  "?"
+                  +
+                  params
+              )
+
+
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "User-Agent":
+                          "Luftrettung-Kleve/4.8 "
+                          "(private non-commercial monitoring)"
+                  }
+              )
+
+
+              try:
+
+                  print(
+                      "Geocoding:",
+                      key
+                  )
+
+                  with urllib.request.urlopen(
+                      request,
+                      timeout=15
+                  ) as response:
+
+                      data = json.load(
+                          response
+                      )
+
+
+                  address = data.get(
+                      "address",
+                      {}
+                  )
+
+
+                  road = (
+                      address.get("road")
+                      or
+                      address.get("pedestrian")
+                      or
+                      address.get("footway")
+                      or
+                      address.get("path")
+                      or
+                      address.get("residential")
+                      or
+                      address.get("cycleway")
+                      or
+                      address.get("service")
+                  )
+
+
+                  house_number = address.get(
+                      "house_number"
+                  )
+
+
+                  city = (
+                      address.get("city")
+                      or
+                      address.get("town")
+                      or
+                      address.get("village")
+                      or
+                      address.get("municipality")
+                      or
+                      address.get("hamlet")
+                  )
+
+
+                  district = (
+                      address.get("city_district")
+                      or
+                      address.get("suburb")
+                      or
+                      address.get("quarter")
+                  )
+
+
+                  postcode = address.get(
+                      "postcode"
+                  )
+
+
+                  county = address.get(
+                      "county"
+                  )
+
+
+                  state = address.get(
+                      "state"
+                  )
+
+
+                  country = address.get(
+                      "country"
+                  )
+
+
+                  display_parts = []
+
+
+                  if road:
+
+                      road_text = road
+
+                      if house_number:
+                          road_text += (
+                              " "
+                              +
+                              house_number
+                          )
+
+                      display_parts.append(
+                          road_text
+                      )
+
+
+                  if postcode or city:
+
+                      city_text = " ".join(
+                          x
+                          for x in (
+                              postcode,
+                              city
+                          )
+                          if x
+                      )
+
+                      if city_text:
+                          display_parts.append(
+                              city_text
+                          )
+
+
+                  if not display_parts:
+
+                      if city:
+                          display_parts.append(
+                              city
+                          )
+
+                      elif county:
+                          display_parts.append(
+                              county
+                          )
+
+                      else:
+                          display_parts.append(
+                              data.get(
+                                  "display_name",
+                                  "Ort nicht bestimmbar"
+                              )
+                          )
+
+
+                  location = {
+                      "display":
+                          ", ".join(
+                              display_parts
+                          ),
+
+                      "road":
+                          road,
+
+                      "house_number":
+                          house_number,
+
+                      "city":
+                          city,
+
+                      "district":
+                          district,
+
+                      "postcode":
+                          postcode,
+
+                      "county":
+                          county,
+
+                      "state":
+                          state,
+
+                      "country":
+                          country,
+
+                      "source":
+                          "OpenStreetMap / Nominatim",
+
+                      "geocoded_at":
+                          now.isoformat()
+                  }
+
+
+                  geocode_cache[
+                      key
+                  ] = location
+
+
+                  # Öffentlichen Dienst nicht mit
+                  # schnellen Folgeanfragen belasten.
+                  time.sleep(
+                      1.1
+                  )
+
+
+                  return location
+
+
+              except Exception as error:
+
+                  print(
+                      "Geocoding fehlgeschlagen:",
+                      key,
+                      repr(error)
+                  )
+
+
+                  # Geocoding-Fehler darf niemals
+                  # den Luftrettungs-Workflow stoppen.
+
+                  return {
+                      "display":
+                          None,
+
+                      "road":
+                          None,
+
+                      "house_number":
+                          None,
+
+                      "city":
+                          None,
+
+                      "district":
+                          None,
+
+                      "postcode":
+                          None,
+
+                      "county":
+                          None,
+
+                      "state":
+                          None,
+
+                      "country":
+                          None,
+
+                      "source":
+                          "Geocoding fehlgeschlagen"
+                  }
+
+
+          # =====================================================
           # ADSB.LOL
           # =====================================================
 
           try:
+
               request = urllib.request.Request(
-                  URL,
+                  ADSB_URL,
                   headers={
                       "User-Agent":
                           f"Luftrettung-Kleve/{VERSION}"
                   }
               )
 
+
               with urllib.request.urlopen(
                   request,
                   timeout=25
               ) as response:
+
                   source = json.load(
                       response
                   )
+
 
               aircraft = source.get(
                   "ac",
                   []
               )
 
+
               if not isinstance(
                   aircraft,
                   list
               ):
                   aircraft = []
+
 
               output = {
                   "updated":
@@ -878,7 +1170,9 @@ jobs:
                       aircraft
               }
 
+
           except Exception as error:
+
               print(
                   "ADSB.lol Fehler:",
                   repr(error)
@@ -912,7 +1206,7 @@ jobs:
 
 
           # =====================================================
-          # BESTEHENDE DATEN LADEN
+          # BESTEHENDE DATEN
           # =====================================================
 
           history = load_json(
@@ -940,6 +1234,7 @@ jobs:
               {}
           )
 
+
           if not isinstance(history, list):
               history = []
 
@@ -957,13 +1252,15 @@ jobs:
 
 
           # =====================================================
-          # ALTE HISTORIE BEREINIGEN
+          # HISTORIE BEREINIGEN
           # =====================================================
 
           def clean(entries, cutoff):
+
               cleaned = []
 
               for item in entries:
+
                   timestamp = parse_time(
                       item.get("timestamp")
                   )
@@ -992,7 +1289,7 @@ jobs:
 
 
           # =====================================================
-          # HILFSFUNKTION HISTORIE
+          # DOPPELTE PUNKTE VERHINDERN
           # =====================================================
 
           def recent_same(
@@ -1000,9 +1297,11 @@ jobs:
               identity,
               seconds=120
           ):
+
               for old in reversed(
                   entries
               ):
+
                   if (
                       old.get("identity")
                       != identity
@@ -1041,20 +1340,30 @@ jobs:
               []
           ):
 
-              if not is_rotorcraft(ac):
+              if not is_rotorcraft(
+                  ac
+              ):
                   continue
+
 
               rotor_count += 1
 
 
-              lat = ac.get("lat")
-              lon = ac.get("lon")
+              lat = ac.get(
+                  "lat"
+              )
+
+              lon = ac.get(
+                  "lon"
+              )
+
 
               if not isinstance(
                   lat,
                   (int, float)
               ):
                   continue
+
 
               if not isinstance(
                   lon,
@@ -1068,15 +1377,18 @@ jobs:
                   or ""
               ).strip().lower()
 
+
               registration = str(
                   ac.get("r")
                   or ""
               ).strip()
 
+
               callsign = str(
                   ac.get("flight")
                   or ""
               ).strip()
+
 
               identity = (
                   hexcode
@@ -1085,6 +1397,7 @@ jobs:
                   or
                   compact(callsign)
               )
+
 
               if not identity:
                   continue
@@ -1095,15 +1408,18 @@ jobs:
                   or ""
               ).strip().upper()
 
+
               category = str(
                   ac.get("category")
                   or ""
               ).strip().upper()
 
+
               description = str(
                   ac.get("desc")
                   or ""
               ).strip()
+
 
               operator = str(
                   ac.get("ownOp")
@@ -1126,10 +1442,12 @@ jobs:
                   ac
               )
 
+
               classification = profile.get(
                   "classification",
                   "unknown"
               )
+
 
               relevant = (
                   classification
@@ -1142,13 +1460,14 @@ jobs:
 
 
               # =================================================
-              # BISHERIGER ZUSTAND
+              # ALTER ZUSTAND
               # =================================================
 
               previous = states.get(
                   identity,
                   {}
               )
+
 
               previous_seen = parse_time(
                   previous.get(
@@ -1158,18 +1477,24 @@ jobs:
 
 
               # =================================================
-              # NEUER FLUG?
+              # NEUER FLUG
               # =================================================
 
               new_flight = False
 
+
               if not previous_seen:
+
                   new_flight = True
 
               else:
+
                   gap_seconds = (
-                      now - previous_seen
+                      now
+                      -
+                      previous_seen
                   ).total_seconds()
+
 
                   if (
                       gap_seconds
@@ -1182,6 +1507,7 @@ jobs:
 
 
               if new_flight:
+
                   segment_id = (
                       identity
                       +
@@ -1206,19 +1532,17 @@ jobs:
 
                   entered_30km = None
 
-                  # Für einen neuen Flug darf innerhalb 30 km
-                  # sofort alarmiert werden.
                   alert_sent_for_segment = False
 
-                  # Außerhalb des Bereichs ist ein späterer
-                  # Eintritt automatisch scharf.
                   reentry_armed = (
                       distance
                       >
                       REENTRY_ARM_DISTANCE_KM
                   )
 
+
               else:
+
                   segment_id = (
                       previous.get(
                           "segment_id"
@@ -1233,6 +1557,7 @@ jobs:
                       )
                   )
 
+
                   first_seen = (
                       previous.get(
                           "first_seen"
@@ -1241,12 +1566,14 @@ jobs:
                       now.isoformat()
                   )
 
+
                   first_distance = (
                       previous.get(
                           "first_seen_distance_km",
                           distance
                       )
                   )
+
 
                   old_minimum = (
                       previous.get(
@@ -1255,18 +1582,19 @@ jobs:
                       )
                   )
 
+
                   if not isinstance(
                       old_minimum,
                       (int, float)
                   ):
-                      old_minimum = (
-                          distance
-                      )
+                      old_minimum = distance
+
 
                   minimum_distance = min(
                       old_minimum,
                       distance
                   )
+
 
                   entered_30km = (
                       previous.get(
@@ -1274,12 +1602,14 @@ jobs:
                       )
                   )
 
+
                   alert_sent_for_segment = bool(
                       previous.get(
                           "alert_sent_for_segment",
                           False
                       )
                   )
+
 
                   reentry_armed = bool(
                       previous.get(
@@ -1300,8 +1630,6 @@ jobs:
               )
 
 
-              # Maschine war wirklich außerhalb.
-              # Damit ist ein späterer Wiedereinflug alarmfähig.
               if (
                   distance
                   >
@@ -1338,10 +1666,8 @@ jobs:
                   "last_lon"
               )
 
-              previous_distance = (
-                  previous.get(
-                      "last_distance_km"
-                  )
+              previous_distance = previous.get(
+                  "last_distance_km"
               )
 
 
@@ -1356,6 +1682,7 @@ jobs:
                       (int, float)
                   )
               ):
+
                   movement_bearing = round(
                       bearing_degrees(
                           previous_lat,
@@ -1377,12 +1704,14 @@ jobs:
                   previous_distance,
                   (int, float)
               ):
+
                   distance_change = round(
                       distance
                       -
                       previous_distance,
                       1
                   )
+
 
                   if distance_change < -0.5:
                       approaching_goch = True
@@ -1392,7 +1721,7 @@ jobs:
 
 
               # =================================================
-              # PUSH-ENTSCHEIDUNG
+              # PUSH
               # =================================================
 
               push_reason = None
@@ -1401,15 +1730,12 @@ jobs:
 
               if relevant and inside:
 
-                  # Fall 1:
-                  # Neuer Flug wird erstmals innerhalb
-                  # des 30-km-Gebiets gesehen.
-
                   if (
                       new_flight
                       and
                       not alert_sent_for_segment
                   ):
+
                       allow_push = True
 
                       push_reason = (
@@ -1417,10 +1743,6 @@ jobs:
                           "innerhalb 30 km erkannt"
                       )
 
-
-                  # Fall 2:
-                  # Laufender Flug war mindestens 32 km weg
-                  # und kommt wieder in den 30-km-Bereich.
 
                   elif (
                       reentry_armed
@@ -1430,6 +1752,7 @@ jobs:
                           False
                       )
                   ):
+
                       allow_push = True
 
                       push_reason = (
@@ -1438,10 +1761,38 @@ jobs:
 
 
               # =================================================
-              # EINTRAG
+              # V4.8 – ORT NUR FÜR NEUEN HISTORIENPUNKT
+              # =================================================
+
+              location = None
+
+
+              should_store_history = (
+                  relevant
+                  and
+                  inside
+                  and
+                  not recent_same(
+                      history,
+                      identity
+                  )
+              )
+
+
+              if should_store_history:
+
+                  location = reverse_geocode(
+                      lat,
+                      lon
+                  )
+
+
+              # =================================================
+              # DATENSATZ
               # =================================================
 
               entry = {
+
                   "timestamp":
                       now.isoformat(),
 
@@ -1506,6 +1857,9 @@ jobs:
                   "lon":
                       lon,
 
+                  "location":
+                      location,
+
                   "distance_km":
                       distance,
 
@@ -1569,31 +1923,30 @@ jobs:
               # UNBEKANNTE HUBSCHRAUBER
               # =================================================
 
-              if (
-                  classification
-                  ==
-                  "unknown"
-              ):
+              if classification == "unknown":
+
                   old_unknown = unknown.get(
                       identity,
                       {}
                   )
 
-                  old_minimum = (
-                      old_unknown.get(
-                          "minimum_distance_km"
-                      )
+
+                  old_minimum = old_unknown.get(
+                      "minimum_distance_km"
                   )
+
 
                   if not isinstance(
                       old_minimum,
                       (int, float)
                   ):
-                      old_minimum = (
-                          distance
-                      )
+                      old_minimum = distance
 
-                  unknown[identity] = {
+
+                  unknown[
+                      identity
+                  ] = {
+
                       "identity":
                           identity,
 
@@ -1659,8 +2012,21 @@ jobs:
                   background,
                   identity
               ):
+
+                  background_entry = (
+                      entry.copy()
+                  )
+
+                  # Hintergrundpositionen brauchen
+                  # kein Reverse-Geocoding.
+
+                  if not should_store_history:
+                      background_entry[
+                          "location"
+                      ] = None
+
                   background.append(
-                      entry
+                      background_entry
                   )
 
 
@@ -1673,13 +2039,13 @@ jobs:
                   and
                   inside
               ):
-                  if not recent_same(
-                      history,
-                      identity
-                  ):
+
+                  if should_store_history:
+
                       history.append(
                           entry
                       )
+
 
                   current.append(
                       entry
@@ -1698,11 +2064,13 @@ jobs:
 
                   alert_sent_for_segment = True
 
-                  # Nach erfolgreicher Entscheidung ist
-                  # der Wiedereinflug zunächst wieder gesperrt.
                   reentry_armed = False
 
-                  pushes[identity] = {
+
+                  pushes[
+                      identity
+                  ] = {
+
                       "timestamp":
                           now.isoformat(),
 
@@ -1728,17 +2096,6 @@ jobs:
 
               if relevant:
 
-                  if allow_push:
-                      push_status = (
-                          "JA"
-                      )
-
-                  else:
-                      push_status = (
-                          "NEIN"
-                      )
-
-
                   print(
                       "STATUS:",
                       profile.get(
@@ -1757,10 +2114,22 @@ jobs:
                       inside,
                       "| neuer Flug:",
                       new_flight,
-                      "| Wiedereinflug scharf:",
-                      reentry_armed,
                       "| Push:",
-                      push_status,
+                      "JA"
+                      if allow_push
+                      else
+                      "NEIN",
+                      "| Ort:",
+                      (
+                          location.get(
+                              "display"
+                          )
+                          if isinstance(
+                              location,
+                              dict
+                          )
+                          else "-"
+                      ),
                       "| Grund:",
                       push_reason
                       or
@@ -1772,7 +2141,10 @@ jobs:
               # FLIGHT STATE
               # =================================================
 
-              states[identity] = {
+              states[
+                  identity
+              ] = {
+
                   "identity":
                       identity,
 
@@ -1879,27 +2251,26 @@ jobs:
               timedelta(days=2)
           )
 
-          cleaned_states = {}
 
-          for identity, state in states.items():
-              timestamp = parse_time(
-                  state.get(
-                      "last_seen"
-                  )
-              )
-
+          states = {
+              identity: state
+              for identity, state in states.items()
               if (
-                  timestamp
+                  parse_time(
+                      state.get(
+                          "last_seen"
+                      )
+                  )
                   and
-                  timestamp
+                  parse_time(
+                      state.get(
+                          "last_seen"
+                      )
+                  )
                   >=
                   state_cutoff
-              ):
-                  cleaned_states[
-                      identity
-                  ] = state
-
-          states = cleaned_states
+              )
+          }
 
 
           # =====================================================
@@ -1912,7 +2283,9 @@ jobs:
               timedelta(days=14)
           )
 
+
           cleaned_pushes = {}
+
 
           for identity, item in pushes.items():
 
@@ -1920,6 +2293,7 @@ jobs:
                   item,
                   str
               ):
+
                   timestamp = parse_time(
                       item
                   )
@@ -1928,6 +2302,7 @@ jobs:
                   item,
                   dict
               ):
+
                   timestamp = parse_time(
                       item.get(
                           "timestamp"
@@ -1935,18 +2310,20 @@ jobs:
                   )
 
               else:
+
                   timestamp = None
+
 
               if (
                   timestamp
                   and
-                  timestamp
-                  >=
-                  push_cutoff
+                  timestamp >= push_cutoff
               ):
+
                   cleaned_pushes[
                       identity
                   ] = item
+
 
           pushes = cleaned_pushes
 
@@ -1962,6 +2339,7 @@ jobs:
                       ""
                   )
           )
+
 
           background.sort(
               key=lambda item:
@@ -2007,6 +2385,12 @@ jobs:
           )
 
           save_json(
+              GEOCODE_CACHE_FILE,
+              geocode_cache
+          )
+
+
+          save_json(
               CURRENT_FILE,
               {
                   "updated":
@@ -2036,7 +2420,7 @@ jobs:
           )
 
           print(
-              "Luftrettung Goch V4.7"
+              "Luftrettung Goch V4.8"
           )
 
           print(
@@ -2071,8 +2455,17 @@ jobs:
           )
 
           print(
+              "Geocoding-Cache:",
+              len(
+                  geocode_cache
+              ),
+              "Positionen"
+          )
+
+          print(
               "=========================================="
           )
+
           PY
 
 
@@ -2087,6 +2480,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python3 - <<'PY'
+
           import json
           import os
           import urllib.parse
@@ -2098,6 +2492,7 @@ jobs:
               ""
           ).strip()
 
+
           chat_id = os.environ.get(
               "TELEGRAM_CHAT_ID",
               ""
@@ -2105,6 +2500,7 @@ jobs:
 
 
           if not token or not chat_id:
+
               raise RuntimeError(
                   "TELEGRAM_BOT_TOKEN oder "
                   "TELEGRAM_CHAT_ID fehlt."
@@ -2117,6 +2513,7 @@ jobs:
                   "https://api.telegram.org/"
                   f"bot{token}/sendMessage"
               )
+
 
               data = urllib.parse.urlencode(
                   {
@@ -2133,11 +2530,13 @@ jobs:
                   "utf-8"
               )
 
+
               request = urllib.request.Request(
                   url,
                   data=data,
                   method="POST"
               )
+
 
               with urllib.request.urlopen(
                   request,
@@ -2156,6 +2555,7 @@ jobs:
               if not result.get(
                   "ok"
               ):
+
                   raise RuntimeError(
                       "Telegram-Fehler: "
                       +
@@ -2201,21 +2601,25 @@ jobs:
           ):
 
               send(
-                  "🚁 Luftrettung KLE – V4.7 Test\n\n"
-                  "Version 4.7 läuft.\n"
+                  "🚁 Luftrettung KLE – V4.8 Test\n\n"
+                  "Version 4.8 läuft.\n"
                   "80-km-Hintergrundüberwachung aktiv.\n"
                   "30-km-Einsatzalarm aktiv.\n"
-                  "Neue Flugsegment-Erkennung aktiv.\n"
+                  "Flugsegment-Erkennung aktiv.\n"
                   "Wiedereinflug-Erkennung aktiv.\n"
                   "Polizei-/Bundespolizei-Erkennung aktiv.\n"
-                  "aircraft_db.json aktiv.\n"
+                  "Reverse-Geocoding aktiv.\n"
+                  "Orts- und Straßenerkennung aktiv.\n"
+                  "Geocoding-Cache aktiv.\n"
                   "Telegram-Verbindung funktioniert."
               )
+
 
               print(
                   "Telegram-Testnachricht "
                   "erfolgreich gesendet."
               )
+
 
               raise SystemExit(
                   0
@@ -2227,16 +2631,20 @@ jobs:
           # =====================================================
 
           try:
+
               with open(
                   "detected.json",
                   "r",
                   encoding="utf-8"
               ) as file:
+
                   detected = json.load(
                       file
                   )
 
+
           except Exception as error:
+
               print(
                   "detected.json Fehler:",
                   repr(
@@ -2248,6 +2656,7 @@ jobs:
 
 
           if not detected:
+
               print(
                   "Keine relevante neue "
                   "Erkennung – keine "
@@ -2269,6 +2678,7 @@ jobs:
                   "Hubschrauber"
               )
 
+
               registration = (
                   item.get(
                       "registration"
@@ -2276,6 +2686,7 @@ jobs:
                   or
                   "unbekannt"
               )
+
 
               callsign = (
                   item.get(
@@ -2285,6 +2696,7 @@ jobs:
                   "unbekannt"
               )
 
+
               service = (
                   item.get(
                       "service"
@@ -2292,6 +2704,7 @@ jobs:
                   or
                   "unbekannt"
               )
+
 
               station = (
                   item.get(
@@ -2301,6 +2714,7 @@ jobs:
                   "noch nicht bestimmt"
               )
 
+
               country = (
                   item.get(
                       "country"
@@ -2309,17 +2723,21 @@ jobs:
                   "unbekannt"
               )
 
+
               distance = item.get(
                   "distance_km"
               )
+
 
               first_distance = item.get(
                   "first_seen_distance_km"
               )
 
+
               minimum_distance = item.get(
                   "minimum_distance_km"
               )
+
 
               direction = (
                   item.get(
@@ -2329,127 +2747,13 @@ jobs:
                   "noch unbekannt"
               )
 
+
               approaching = item.get(
                   "approaching_goch"
               )
+
 
               reason = (
                   item.get(
                       "push_reason"
                   )
-                  or
-                  "neue Erkennung"
-              )
-
-
-              if approaching is True:
-                  movement = (
-                      "nähert sich Goch"
-                  )
-
-              elif approaching is False:
-                  movement = (
-                      "entfernt sich von Goch"
-                  )
-
-              else:
-                  movement = (
-                      "Bewegung noch nicht bestimmbar"
-                  )
-
-
-              text = (
-                  f"🚁 {name} im 30-km-Radius erkannt\n\n"
-                  f"Art: {service}\n"
-                  f"Kennzeichen: {registration}\n"
-                  f"Rufname: {callsign}\n"
-                  f"Station: {station}\n"
-                  f"Land: {country}\n\n"
-                  f"Jetzt: {distance} km von Goch\n"
-                  f"Erstmals erfasst: {first_distance} km\n"
-                  f"Bisher nächste Entfernung: {minimum_distance} km\n"
-                  f"Flugrichtung: {direction}\n"
-                  f"Status: {movement}\n\n"
-                  f"Alarmgrund: {reason}"
-              )
-
-
-              result = send(
-                  text
-              )
-
-
-              message_id = (
-                  result
-                  .get(
-                      "result",
-                      {}
-                  )
-                  .get(
-                      "message_id"
-                  )
-              )
-
-
-              print(
-                  "TELEGRAM GESENDET:",
-                  name,
-                  "|",
-                  registration,
-                  "| message_id:",
-                  message_id,
-                  "| Grund:",
-                  reason
-              )
-
-          PY
-
-
-      # =========================================================
-      # REPOSITORY AKTUALISIEREN
-      # =========================================================
-
-      - name: Neue Daten speichern
-        shell: bash
-        run: |
-
-          git config \
-            user.name \
-            "Luftrettung-Kleve Bot"
-
-          git config \
-            user.email \
-            "actions@github.com"
-
-
-          git add \
-            aircraft.json \
-            history.json \
-            background_history.json \
-            flight_state.json \
-            current_rotorcraft.json \
-            push_state.json \
-            unknown_aircraft.json \
-            aircraft_db.json \
-            detected.json
-
-
-          if git diff --cached --quiet; then
-
-            echo "Keine Änderung vorhanden."
-
-          else
-
-            git commit \
-              -m "Luftrettung V4.7 Flugdaten aktualisiert"
-
-
-            git pull \
-              --rebase \
-              origin main
-
-
-            git push \
-              origin main
-
-          fi
