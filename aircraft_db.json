@@ -13,6 +13,30 @@
     "country": "Deutschland"
   },
 
+  "D-HZSA": {
+    "name": "Christoph 3",
+    "classification": "rescue",
+    "service": "Rettungshubschrauber",
+    "station": "Köln",
+    "country": "Deutschland"
+  },
+
+  "D-HXAB": {
+    "name": "Christoph 8",
+    "classification": "rescue",
+    "service": "Rettungshubschrauber",
+    "station": "Lünen",
+    "country": "Deutschland"
+  },
+
+  "D-HYAR": {
+    "name": "Christoph Westfalen",
+    "classification": "rescue",
+    "service": "Intensivtransporthubschrauber",
+    "station": "Greven",
+    "country": "Deutschland"
+  },
+
   "PH-DOC": {
     "name": "Lifeliner 3",
     "classification": "rescue",
