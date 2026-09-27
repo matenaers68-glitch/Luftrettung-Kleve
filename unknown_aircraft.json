@@ -736,5 +736,23 @@
     "minimum_distance_km": 54.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3dd474": {
+    "identity": "3dd474",
+    "hex": "3dd474",
+    "registration": "D-HASA",
+    "callsign": "DHASA",
+    "type": "R44",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-27T09:59:51.628750+00:00",
+    "last_seen": "2026-09-27T09:59:51.628750+00:00",
+    "last_lat": 51.127258,
+    "last_lon": 6.471021,
+    "last_distance_km": 65.0,
+    "minimum_distance_km": 65.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
