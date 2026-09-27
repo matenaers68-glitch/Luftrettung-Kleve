@@ -754,5 +754,23 @@
     "minimum_distance_km": 65.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "40804c": {
+    "identity": "40804c",
+    "hex": "40804c",
+    "registration": "G-LRMJ",
+    "callsign": "GLRMJ",
+    "type": "SR22",
+    "category": "A1",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-27T10:45:03.157888+00:00",
+    "last_seen": "2026-09-27T10:45:03.157888+00:00",
+    "last_lat": 51.158954,
+    "last_lon": 6.23436,
+    "last_distance_km": 58.0,
+    "minimum_distance_km": 58.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
