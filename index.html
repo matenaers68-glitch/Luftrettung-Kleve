@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="F3FB6DCC-CFEA-4364-9AA3-C1D64EBEF4A6.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<title>Luftrettung Goch & Kreis Kleve – V4.5</title>
+<title>Luftrettung Goch & Kreis Kleve – V4.6</title>
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color-scheme:dark}
 *{box-sizing:border-box} body{margin:0;background:#0b1117;color:#fff}
@@ -36,14 +36,14 @@ h2{font-size:19px;margin:2px 0 12px}.status{display:flex;align-items:center;gap:
 </head>
 <body>
 <header><h1>🚁 Luftrettung Goch & Kreis Kleve</h1>
-<div class="sub">Version 4.5 · Live · Flugketten · Zwischenlandungen · Ort/Straße · 24-h-Karte · 14-Tage-Historie</div></header>
+<div class="sub">Version 4.6 · Live · Flugketten · Zwischenlandungen · Ort/Straße · 24-h-Karte · 14-Tage-Historie</div></header>
 <main>
 <section class="card"><h2>LIVE – 30 km um Goch</h2><div class="status"><div id="dot" class="dot"></div><div id="status" class="big">Daten werden geladen …</div></div>
 <div id="info" class="muted">Einsatzdaten werden abgerufen.</div><br><button class="btn primary" onclick="loadAll()">Daten neu laden</button>
 <p class="small">Quelle: ADSB.lol · serverseitiger Abruf über GitHub Actions. Private und nicht klassifizierte Hubschrauber werden nicht angezeigt.</p></section>
 
 <section class="card"><h2>Karte – letzte 24 Stunden</h2><div id="map"></div>
-<div class="mapLegend">Der Kreis zeigt den 30-km-Überwachungsbereich um Goch. Positionspunkte derselben Maschine werden zu Flugketten verbunden. Beim Antippen eines Punktes werden Uhrzeit sowie – soweit über OpenStreetMap bestimmbar – Ort und Straße angezeigt. Mögliche Zwischenlandungen werden gesondert markiert. Eine kurze Zwischenlandung beendet die Flugkette nicht automatisch. Angezeigt werden ausschließlich bekannte bzw. klassifizierte Rettungs-, Polizei- und Militärhubschrauber. Start, Landung und Zwischenlandungen sind automatische Ableitungen und keine bestätigten Einsatzinformationen.</div></section>
+<div class="mapLegend">Der Kreis zeigt den 30-km-Überwachungsbereich um Goch. Positionspunkte derselben Maschine werden zu Flugketten verbunden. Der Name einer Maschine wird auf der Karte nur einmal je Flugkette angezeigt. Beim Antippen eines Punktes werden Uhrzeit sowie – soweit über OpenStreetMap bestimmbar – Ort und Straße angezeigt. Mögliche Zwischenlandungen werden gesondert markiert. Eine kurze Zwischenlandung beendet die Flugkette nicht automatisch. Angezeigt werden ausschließlich bekannte bzw. klassifizierte Rettungs-, Polizei- und Militärhubschrauber. Start, Landung und Zwischenlandungen sind automatische Ableitungen und keine bestätigten Einsatzinformationen.</div></section>
 
 <section class="card"><h2>Aktuell erkannte Einsatzhubschrauber</h2><div id="aircraft"><div class="muted">Noch keine Daten geladen.</div></div></section>
 
@@ -140,8 +140,6 @@ function stopDescription(stop){if(!stop)return"";const d=distanceKm(GOCH.lat,GOC
 function flightChain(f){const s=detectIntermediateStops(f);if(!s.length)return"Keine mögliche Zwischenlandung aus den gespeicherten Punkten ableitbar.";return s.map((x,i)=>"Mögliche Zwischenlandung "+(i+1)+": "+stopDescription(x)+" · ca. "+formatTime(x.arrival)+(x.departure&&x.departure!==x.arrival?" bis "+formatTime(x.departure):"")).join("<br>")}
 function flightSummary(f){if(!f||!f.length)return{start:"–",end:"–"};const a=f[0],b=f[f.length-1];return{start:(looksGrounded(a)?"Möglicher Start: ":"Erste Erfassung: ")+formatDateTime(a.timestamp),end:(looksGrounded(b)?"Mögliche Landung: ":"Letzte Erfassung: ")+formatDateTime(b.timestamp)}}
 
-/* Reverse-Geocoding wird nur beim Öffnen eines Popups ausgeführt.
-   So entstehen nicht hunderte Anfragen beim Laden der Karte. */
 const placeCache=new Map();
 function placeKey(lat,lon){return Number(lat).toFixed(4)+","+Number(lon).toFixed(4)}
 async function reversePlace(lat,lon){
@@ -211,7 +209,19 @@ async function loadHistory(){
    f.forEach(p=>L.circleMarker([p.lat,p.lon],{radius:5,weight:2,fillOpacity:.8}).bindPopup(()=>flightPopup(p,f)).addTo(historyLayer));
    if(f.length>=2)L.polyline(f.map(p=>[p.lat,p.lon]),{weight:3,opacity:.8}).bindPopup(()=>flightPopup(f[f.length-1],f)).addTo(historyLayer);
    detectIntermediateStops(f).forEach((s,i)=>L.marker([s.lat,s.lon],{icon:L.divIcon({className:"",html:'<div class="stopMarker"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).bindPopup(()=>stopPopup(f[0],s,i)).bindTooltip("Mögliche Zwischenlandung",{direction:"top"}).addTo(historyLayer));
-   const last=f[f.length-1];L.marker([last.lat,last.lon],{interactive:false,icon:L.divIcon({className:"",html:'<div class="heliLabel">'+displayName(last)+'</div>',iconSize:null,iconAnchor:[-8,15]})}).addTo(historyLayer);
+
+   /* V4.6: genau EIN dauerhaftes Namenslabel pro Flugkette.
+      Die einzelnen Positionspunkte bleiben vollständig anklickbar. */
+   const last=f[f.length-1];
+   L.marker([last.lat,last.lon],{
+     interactive:false,
+     icon:L.divIcon({
+       className:"",
+       html:'<div class="heliLabel">'+displayName(last)+'</div>',
+       iconSize:null,
+       iconAnchor:[-8,15]
+     })
+   }).addTo(historyLayer);
   }));
   const all={};recent14.forEach(x=>{const id=x.identity||x.hex||x.registration||x.r||x.callsign||x.flight||displayName(x);(all[id]??=[]).push(x)});
   const flights=[];Object.values(all).forEach(p=>splitIntoFlights(p).forEach(f=>{if(f.length)flights.push(f)}));flights.sort((a,b)=>new Date(b[b.length-1].timestamp)-new Date(a[a.length-1].timestamp));counter.textContent=flights.length;
