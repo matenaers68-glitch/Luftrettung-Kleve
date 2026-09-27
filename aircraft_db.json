@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "4.6",
-    "description": "Stammdaten Luftrettung Goch/Kreis Kleve",
-    "note": "Nur zweifelsfrei identifizierte Luftfahrzeuge eintragen."
+    "version": "4.7",
+    "description": "Stammdaten Luftrettung und Polizeihubschrauber Goch/Kreis Kleve",
+    "note": "Nur zweifelsfrei identifizierte Luftfahrzeuge eintragen. Stationsmaschinen können wechseln."
   },
 
   "D-HZSF": {
@@ -34,6 +34,22 @@
     "classification": "rescue",
     "service": "Intensivtransporthubschrauber",
     "station": "Greven",
+    "country": "Deutschland"
+  },
+
+  "D-HDOM": {
+    "name": "Christoph Rheinland",
+    "classification": "rescue",
+    "service": "Intensivtransport-/Rettungshubschrauber",
+    "station": "Köln/Bonn",
+    "country": "Deutschland"
+  },
+
+  "D-HXFC": {
+    "name": "Christoph Dortmund",
+    "classification": "rescue",
+    "service": "Intensivtransport-/Rettungshubschrauber",
+    "station": "Dortmund",
     "country": "Deutschland"
   },
 
