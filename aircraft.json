@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-27T02:53:57.761391+00:00",
+  "updated": "2026-09-27T03:00:44.036969+00:00",
   "version": "4.2",
   "source": "ADSB.lol",
   "center": {
@@ -9,44 +9,6 @@
   },
   "background_radius_km": 80,
   "action_radius_km": 30,
-  "total": 1,
-  "ac": [
-    {
-      "hex": "485e49",
-      "type": "adsb_icao",
-      "flight": "LIFELN3 ",
-      "r": "PH-DOC",
-      "t": "EC35",
-      "alt_baro": 1125,
-      "alt_geom": 1475,
-      "gs": 142.0,
-      "track": 268.79,
-      "baro_rate": -64,
-      "squawk": "6223",
-      "emergency": "none",
-      "category": "A7",
-      "lat": 51.693512,
-      "lon": 5.237287,
-      "nic": 9,
-      "rc": 75,
-      "seen_pos": 0.27,
-      "version": 2,
-      "nic_baro": 1,
-      "nac_p": 11,
-      "nac_v": 2,
-      "sil": 3,
-      "sil_type": "perhour",
-      "gva": 2,
-      "sda": 2,
-      "alert": 0,
-      "spi": 0,
-      "mlat": [],
-      "tisb": [],
-      "messages": 6063,
-      "seen": 0.3,
-      "rssi": -18.3,
-      "dst": 34.245,
-      "dir": 271.9
-    }
-  ]
+  "total": 0,
+  "ac": []
 }
