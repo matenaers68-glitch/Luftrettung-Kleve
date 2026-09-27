@@ -1165,5 +1165,33 @@
     "approaching_goch": null,
     "inside_30km": false,
     "relevant": false
+  },
+  "3e0fe0": {
+    "identity": "3e0fe0",
+    "segment_id": "3e0fe0-20260927T003701",
+    "name": "CHX83",
+    "registration": "D-HXFC",
+    "callsign": "CHX83",
+    "type": "EC45",
+    "classification": "unknown",
+    "classification_source": "unknown",
+    "service": "noch nicht bestimmt",
+    "station": null,
+    "country": null,
+    "operator": "",
+    "first_seen": "2026-09-27T00:37:01.885459+00:00",
+    "first_seen_distance_km": 54.0,
+    "minimum_distance_km": 54.0,
+    "entered_30km": null,
+    "last_seen": "2026-09-27T00:37:01.885459+00:00",
+    "last_lat": 51.750732,
+    "last_lon": 6.933264,
+    "last_distance_km": 54.0,
+    "movement_bearing": null,
+    "movement_direction": null,
+    "distance_change_km": null,
+    "approaching_goch": null,
+    "inside_30km": false,
+    "relevant": false
   }
 }

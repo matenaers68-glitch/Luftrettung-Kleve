@@ -718,5 +718,23 @@
     "minimum_distance_km": 75.9,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3e0fe0": {
+    "identity": "3e0fe0",
+    "hex": "3e0fe0",
+    "registration": "D-HXFC",
+    "callsign": "CHX83",
+    "type": "EC45",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-27T00:37:01.885459+00:00",
+    "last_seen": "2026-09-27T00:37:01.885459+00:00",
+    "last_lat": 51.750732,
+    "last_lon": 6.933264,
+    "last_distance_km": 54.0,
+    "minimum_distance_km": 54.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
