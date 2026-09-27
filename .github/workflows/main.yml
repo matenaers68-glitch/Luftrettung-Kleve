@@ -22,20 +22,58 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Flugdaten V4.6 abrufen und auswerten
+      - name: Flugdaten V4.7 abrufen und auswerten
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, urllib.request, math, os, re
+          import json
+          import urllib.request
+          import math
+          import os
+          import re
+
           from datetime import datetime, timezone, timedelta
 
-          VERSION = "4.6"
-          GOCH_LAT, GOCH_LON = 51.678, 6.159
+
+          # =====================================================
+          # VERSION / GRUNDEINSTELLUNGEN
+          # =====================================================
+
+          VERSION = "4.7"
+
+          GOCH_LAT = 51.678
+          GOCH_LON = 6.159
+
           ACTION_RADIUS_KM = 30
           BACKGROUND_RADIUS_KM = 80
-          BACKGROUND_RADIUS_NM = round(BACKGROUND_RADIUS_KM / 1.852, 1)
-          URL = f"https://api.adsb.lol/v2/lat/{GOCH_LAT}/lon/{GOCH_LON}/dist/{BACKGROUND_RADIUS_NM}"
+
+          # Nach dieser Zeit ohne Sichtung beginnt ein neuer Flug.
+          # 75 Minuten verhindern, dass kurze ADS-B-Lücken
+          # fälschlich einen neuen Einsatz erzeugen.
+          NEW_FLIGHT_AFTER_MINUTES = 75
+
+          # Erst wenn die Maschine mindestens 32 km entfernt war,
+          # gilt ein späterer Eintritt <=30 km als echter Wiedereinflug.
+          # Die Hysterese verhindert Flattern direkt an der Grenze.
+          REENTRY_ARM_DISTANCE_KM = 32
+
+          BACKGROUND_RADIUS_NM = round(
+              BACKGROUND_RADIUS_KM / 1.852,
+              1
+          )
+
+          URL = (
+              "https://api.adsb.lol/v2/lat/"
+              f"{GOCH_LAT}/lon/{GOCH_LON}/dist/"
+              f"{BACKGROUND_RADIUS_NM}"
+          )
+
           now = datetime.now(timezone.utc)
+
+
+          # =====================================================
+          # DATEIEN
+          # =====================================================
 
           AIRCRAFT_FILE = "aircraft.json"
           HISTORY_FILE = "history.json"
@@ -47,7 +85,13 @@ jobs:
           DATABASE_FILE = "aircraft_db.json"
           UNKNOWN_FILE = "unknown_aircraft.json"
 
+
+          # =====================================================
+          # BEKANNTE RUFNAMEN
+          # =====================================================
+
           KNOWN_CALLSIGNS = {
+
               "LIFELINER3": {
                   "name": "Lifeliner 3",
                   "classification": "rescue",
@@ -55,6 +99,7 @@ jobs:
                   "station": "Volkel",
                   "country": "Niederlande"
               },
+
               "LIFELN3": {
                   "name": "Lifeliner 3",
                   "classification": "rescue",
@@ -62,6 +107,7 @@ jobs:
                   "station": "Volkel",
                   "country": "Niederlande"
               },
+
               "CHRISTOPH9": {
                   "name": "Christoph 9",
                   "classification": "rescue",
@@ -69,6 +115,7 @@ jobs:
                   "station": "Duisburg-Buchholz",
                   "country": "Deutschland"
               },
+
               "CHRISTOPH8": {
                   "name": "Christoph 8",
                   "classification": "rescue",
@@ -76,6 +123,7 @@ jobs:
                   "station": "Lünen",
                   "country": "Deutschland"
               },
+
               "CHRISTOPH3": {
                   "name": "Christoph 3",
                   "classification": "rescue",
@@ -83,6 +131,7 @@ jobs:
                   "station": "Köln",
                   "country": "Deutschland"
               },
+
               "CHRISTOPHWESTFALEN": {
                   "name": "Christoph Westfalen",
                   "classification": "rescue",
@@ -90,6 +139,7 @@ jobs:
                   "station": "Greven",
                   "country": "Deutschland"
               },
+
               "CHRISTOPHDORTMUND": {
                   "name": "Christoph Dortmund",
                   "classification": "rescue",
@@ -97,32 +147,81 @@ jobs:
                   "station": "Dortmund",
                   "country": "Deutschland"
               },
+
+              "CHRISTOPHRHEINLAND": {
+                  "name": "Christoph Rheinland",
+                  "classification": "rescue",
+                  "service": "Intensivtransport-/Rettungshubschrauber",
+                  "station": "Köln/Bonn",
+                  "country": "Deutschland"
+              }
           }
 
+
+          # =====================================================
+          # HUBSCHRAUBERTYPEN
+          # =====================================================
+
           ROTOR_TYPES = (
-              "EC35", "EC45", "H135", "H145",
-              "EC135", "EC145", "BK17",
-              "B06", "B407", "AS50", "AS55",
-              "R22", "R44", "R66",
-              "AW09", "AW109", "AW139", "AW169",
-              "S76", "S92"
+              "EC35",
+              "EC45",
+              "H135",
+              "H145",
+              "EC135",
+              "EC145",
+              "BK17",
+              "B06",
+              "B407",
+              "AS50",
+              "AS55",
+              "R22",
+              "R44",
+              "R66",
+              "AW09",
+              "AW109",
+              "AW139",
+              "AW169",
+              "S76",
+              "S92"
           )
 
           ROTOR_WORDS = (
-              "HELI", "ROTOR", "CHRISTOPH",
-              "LIFELINER", "LIFELN",
-              "POLICE", "POLIZEI", "POLITIE", "SAR"
+              "HELI",
+              "ROTOR",
+              "CHRISTOPH",
+              "LIFELINER",
+              "LIFELN",
+              "POLICE",
+              "POLIZEI",
+              "POLITIE",
+              "HUMMEL",
+              "SAR"
           )
 
-          def load_json(fn, default):
+
+          # =====================================================
+          # JSON
+          # =====================================================
+
+          def load_json(filename, default):
               try:
-                  with open(fn, "r", encoding="utf-8") as f:
+                  with open(
+                      filename,
+                      "r",
+                      encoding="utf-8"
+                  ) as f:
                       return json.load(f)
+
               except Exception:
                   return default
 
-          def save_json(fn, data):
-              with open(fn, "w", encoding="utf-8") as f:
+
+          def save_json(filename, data):
+              with open(
+                  filename,
+                  "w",
+                  encoding="utf-8"
+              ) as f:
                   json.dump(
                       data,
                       f,
@@ -130,51 +229,101 @@ jobs:
                       indent=2
                   )
 
-          def parse_time(v):
+
+          # =====================================================
+          # ZEIT
+          # =====================================================
+
+          def parse_time(value):
               try:
-                  if not v:
+                  if not value:
                       return None
+
                   return datetime.fromisoformat(
-                      str(v).replace("Z", "+00:00")
+                      str(value).replace(
+                          "Z",
+                          "+00:00"
+                      )
                   )
+
               except Exception:
                   return None
 
-          def distance_km(a, b, c, d):
-              r = 6371.0
-              p1 = math.radians(a)
-              p2 = math.radians(c)
-              dp = math.radians(c - a)
-              dl = math.radians(d - b)
 
-              x = (
+          # =====================================================
+          # ENTFERNUNG
+          # =====================================================
+
+          def distance_km(lat1, lon1, lat2, lon2):
+              radius = 6371.0
+
+              p1 = math.radians(lat1)
+              p2 = math.radians(lat2)
+
+              dp = math.radians(lat2 - lat1)
+              dl = math.radians(lon2 - lon1)
+
+              a = (
                   math.sin(dp / 2) ** 2
-                  + math.cos(p1)
-                  * math.cos(p2)
-                  * math.sin(dl / 2) ** 2
-              )
-
-              return 2 * r * math.asin(math.sqrt(x))
-
-          def bearing_degrees(a, b, c, d):
-              p1 = math.radians(a)
-              p2 = math.radians(c)
-              dl = math.radians(d - b)
-
-              y = math.sin(dl) * math.cos(p2)
-
-              x = (
-                  math.cos(p1) * math.sin(p2)
-                  - math.sin(p1)
-                  * math.cos(p2)
-                  * math.cos(dl)
+                  +
+                  math.cos(p1)
+                  *
+                  math.cos(p2)
+                  *
+                  math.sin(dl / 2) ** 2
               )
 
               return (
-                  math.degrees(math.atan2(y, x)) + 360
+                  2
+                  *
+                  radius
+                  *
+                  math.asin(
+                      math.sqrt(a)
+                  )
+              )
+
+
+          # =====================================================
+          # RICHTUNG
+          # =====================================================
+
+          def bearing_degrees(lat1, lon1, lat2, lon2):
+              p1 = math.radians(lat1)
+              p2 = math.radians(lat2)
+
+              dl = math.radians(
+                  lon2 - lon1
+              )
+
+              y = (
+                  math.sin(dl)
+                  *
+                  math.cos(p2)
+              )
+
+              x = (
+                  math.cos(p1)
+                  *
+                  math.sin(p2)
+                  -
+                  math.sin(p1)
+                  *
+                  math.cos(p2)
+                  *
+                  math.cos(dl)
+              )
+
+              return (
+                  math.degrees(
+                      math.atan2(y, x)
+                  )
+                  +
+                  360
               ) % 360
 
-          def direction_name(v):
+
+          def direction_name(value):
               directions = [
                   "Nord",
                   "Nordost",
@@ -187,80 +336,122 @@ jobs:
               ]
 
               return directions[
-                  int((v + 22.5) // 45) % 8
+                  int(
+                      (value + 22.5)
+                      //
+                      45
+                  ) % 8
               ]
 
-          def normalize(v):
-              return str(v or "").strip().upper()
 
-          def compact(v):
+          # =====================================================
+          # NORMALISIERUNG
+          # =====================================================
+
+          def normalize(value):
+              return str(
+                  value or ""
+              ).strip().upper()
+
+
+          def compact(value):
               return re.sub(
                   r"[^A-Z0-9]",
                   "",
-                  normalize(v)
+                  normalize(value)
               )
+
+
+          # =====================================================
+          # STAMMDATENBANK
+          # =====================================================
 
           aircraft_db = load_json(
               DATABASE_FILE,
               {}
           )
 
-          if not isinstance(aircraft_db, dict):
+          if not isinstance(
+              aircraft_db,
+              dict
+          ):
               aircraft_db = {}
 
+
           def database_profile(ac):
-              h = str(
-                  ac.get("hex") or ""
+              hexcode = str(
+                  ac.get("hex")
+                  or ""
               ).strip().lower()
 
-              r = normalize(
+              registration = normalize(
                   ac.get("r")
               )
 
-              for key in (
-                  h,
-                  r,
-                  compact(r)
-              ):
-                  p = (
-                      aircraft_db.get(key)
-                      if key
-                      else None
+              registration_compact = compact(
+                  registration
+              )
+
+              possible_keys = (
+                  hexcode,
+                  registration,
+                  registration_compact
+              )
+
+              for key in possible_keys:
+                  if not key:
+                      continue
+
+                  profile = aircraft_db.get(
+                      key
                   )
 
                   if (
-                      isinstance(p, dict)
+                      isinstance(profile, dict)
                       and
-                      p.get("classification")
+                      profile.get("classification")
                   ):
-                      q = p.copy()
-                      q["classification_source"] = "aircraft_db"
-                      return q
+                      result = profile.copy()
+
+                      result[
+                          "classification_source"
+                      ] = "aircraft_db"
+
+                      return result
 
               return None
+
+
+          # =====================================================
+          # HUBSCHRAUBERERKENNUNG
+          # =====================================================
 
           def is_rotorcraft(ac):
               if database_profile(ac):
                   return True
 
-              if normalize(
+              category = normalize(
                   ac.get("category")
-              ) == "A7":
+              )
+
+              if category == "A7":
                   return True
 
-              t = normalize(
+              ac_type = normalize(
                   ac.get("t")
               )
 
               if any(
-                  x in t
-                  for x in ROTOR_TYPES
+                  rotor_type in ac_type
+                  for rotor_type in ROTOR_TYPES
               ):
                   return True
 
               text = " ".join(
-                  normalize(ac.get(k))
-                  for k in (
+                  normalize(
+                      ac.get(key)
+                  )
+                  for key in (
                       "flight",
                       "r",
                       "desc",
@@ -269,52 +460,256 @@ jobs:
                   )
               )
 
-              return any(
-                  x in text
-                  for x in ROTOR_WORDS
-              )
+              if any(
+                  word in text
+                  for word in ROTOR_WORDS
+              ):
+                  return True
+
+              return False
+
+
+          # =====================================================
+          # KLASSIFIZIERUNG
+          # =====================================================
 
           def classify(ac):
-              p = database_profile(ac)
+              profile = database_profile(ac)
 
-              if p:
-                  return p
+              if profile:
+                  return profile
 
-              reg = normalize(
+              registration = normalize(
                   ac.get("r")
               )
 
-              cs = normalize(
+              callsign = normalize(
                   ac.get("flight")
               )
 
-              ck = compact(cs)
+              callsign_key = compact(
+                  callsign
+              )
 
-              desc = normalize(
+              description = normalize(
                   ac.get("desc")
               )
 
-              op = normalize(
+              operator = normalize(
                   ac.get("ownOp")
               )
 
-              for key, p in KNOWN_CALLSIGNS.items():
-                  if key in ck:
-                      q = p.copy()
-                      q["classification_source"] = "callsign"
-                      return q
 
-              text = " ".join(
+              # ---------------------------------------------
+              # Bekannte Rettungshubschrauber
+              # ---------------------------------------------
+
+              for key, profile in KNOWN_CALLSIGNS.items():
+                  if key in callsign_key:
+                      result = profile.copy()
+
+                      result[
+                          "classification_source"
+                      ] = "callsign"
+
+                      return result
+
+
+              # ---------------------------------------------
+              # Allgemeiner CHRISTOPH-Rufname
+              # ---------------------------------------------
+
+              if callsign_key.startswith(
+                  "CHRISTOPH"
+              ):
+                  return {
+                      "name":
+                          callsign
+                          or
+                          "Christoph Rettungshubschrauber",
+
+                      "classification":
+                          "rescue",
+
+                      "service":
+                          "Rettungshubschrauber",
+
+                      "station":
+                          None,
+
+                      "country":
+                          "Deutschland",
+
+                      "classification_source":
+                          "callsign"
+                  }
+
+
+              # ---------------------------------------------
+              # Allgemeiner Lifeliner
+              # ---------------------------------------------
+
+              if (
+                  callsign_key.startswith(
+                      "LIFELINER"
+                  )
+                  or
+                  callsign_key.startswith(
+                      "LIFELN"
+                  )
+              ):
+                  return {
+                      "name":
+                          callsign
+                          or
+                          "Lifeliner",
+
+                      "classification":
+                          "rescue",
+
+                      "service":
+                          "Traumahelikopter",
+
+                      "station":
+                          None,
+
+                      "country":
+                          "Niederlande",
+
+                      "classification_source":
+                          "callsign"
+                  }
+
+
+              # ---------------------------------------------
+              # Polizei NRW
+              # ---------------------------------------------
+
+              if (
+                  callsign_key.startswith(
+                      "HUMMEL"
+                  )
+                  or
+                  re.fullmatch(
+                      r"NRW\d+",
+                      callsign_key
+                  )
+              ):
+                  return {
+                      "name":
+                          callsign
+                          or
+                          "Polizeihubschrauber NRW",
+
+                      "classification":
+                          "police",
+
+                      "service":
+                          "Polizeihubschrauber NRW",
+
+                      "station":
+                          "Polizeifliegerstaffel NRW",
+
+                      "country":
+                          "Deutschland",
+
+                      "classification_source":
+                          "callsign"
+                  }
+
+
+              # ---------------------------------------------
+              # Niederländische Polizei
+              # ---------------------------------------------
+
+              if (
+                  callsign_key.startswith(
+                      "POLICE"
+                  )
+                  or
+                  callsign_key.startswith(
+                      "ZXP"
+                  )
+              ):
+                  return {
+                      "name":
+                          callsign
+                          or
+                          "Politie Nederland",
+
+                      "classification":
+                          "police",
+
+                      "service":
+                          "Politiehelikopter",
+
+                      "station":
+                          "Dienst Luchtvaartpolitie",
+
+                      "country":
+                          "Niederlande",
+
+                      "classification_source":
+                          "callsign"
+                  }
+
+
+              # ---------------------------------------------
+              # Bundespolizei
+              # ---------------------------------------------
+
+              if (
+                  re.fullmatch(
+                      r"BPO\d+",
+                      callsign_key
+                  )
+                  or
+                  "BUNDESPOLIZEI"
+                  in operator
+                  or
+                  "BUNDESPOLIZEI"
+                  in description
+              ):
+                  return {
+                      "name":
+                          callsign
+                          or
+                          registration
+                          or
+                          "Bundespolizei",
+
+                      "classification":
+                          "police",
+
+                      "service":
+                          "Bundespolizei-Flugdienst",
+
+                      "station":
+                          None,
+
+                      "country":
+                          "Deutschland",
+
+                      "classification_source":
+                          "callsign/metadata"
+                  }
+
+
+              # ---------------------------------------------
+              # Sonstige Polizei
+              # ---------------------------------------------
+
+              police_text = " ".join(
                   (
-                      cs,
-                      desc,
-                      op
+                      callsign,
+                      description,
+                      operator
                   )
               )
 
               if any(
-                  x in text
-                  for x in (
+                  word in police_text
+                  for word in (
                       "POLICE",
                       "POLIZEI",
                       "BUNDESPOLIZEI",
@@ -323,9 +718,11 @@ jobs:
               ):
                   return {
                       "name":
-                          cs
-                          or reg
-                          or "Polizeihubschrauber",
+                          callsign
+                          or
+                          registration
+                          or
+                          "Polizeihubschrauber",
 
                       "classification":
                           "police",
@@ -343,9 +740,22 @@ jobs:
                           "ADSB metadata"
                   }
 
+
+              # ---------------------------------------------
+              # Militär / SAR
+              # ---------------------------------------------
+
+              military_text = " ".join(
+                  (
+                      callsign,
+                      description,
+                      operator
+                  )
+              )
+
               if any(
-                  x in text
-                  for x in (
+                  word in military_text
+                  for word in (
                       "SAR",
                       "MILITARY",
                       "ARMY",
@@ -359,9 +769,11 @@ jobs:
               ):
                   return {
                       "name":
-                          cs
-                          or reg
-                          or "Militärhubschrauber",
+                          callsign
+                          or
+                          registration
+                          or
+                          "Militärhubschrauber",
 
                       "classification":
                           "military",
@@ -379,11 +791,14 @@ jobs:
                           "ADSB metadata"
                   }
 
+
               return {
                   "name":
-                      cs
-                      or reg
-                      or "Unbekannter Hubschrauber",
+                      callsign
+                      or
+                      registration
+                      or
+                      "Unbekannter Hubschrauber",
 
                   "classification":
                       "unknown",
@@ -401,8 +816,13 @@ jobs:
                       "unknown"
               }
 
+
+          # =====================================================
+          # ADSB.LOL
+          # =====================================================
+
           try:
-              req = urllib.request.Request(
+              request = urllib.request.Request(
                   URL,
                   headers={
                       "User-Agent":
@@ -411,10 +831,12 @@ jobs:
               )
 
               with urllib.request.urlopen(
-                  req,
+                  request,
                   timeout=25
-              ) as resp:
-                  source = json.load(resp)
+              ) as response:
+                  source = json.load(
+                      response
+                  )
 
               aircraft = source.get(
                   "ac",
@@ -444,10 +866,10 @@ jobs:
                   },
 
                   "background_radius_km":
-                      80,
+                      BACKGROUND_RADIUS_KM,
 
                   "action_radius_km":
-                      30,
+                      ACTION_RADIUS_KM,
 
                   "total":
                       len(aircraft),
@@ -456,10 +878,10 @@ jobs:
                       aircraft
               }
 
-          except Exception as e:
+          except Exception as error:
               print(
                   "ADSB.lol Fehler:",
-                  repr(e)
+                  repr(error)
               )
 
               output = {
@@ -473,7 +895,7 @@ jobs:
                       "ADSB.lol",
 
                   "error":
-                      str(e),
+                      str(error),
 
                   "total":
                       0,
@@ -482,10 +904,16 @@ jobs:
                       []
               }
 
+
           save_json(
               AIRCRAFT_FILE,
               output
           )
+
+
+          # =====================================================
+          # BESTEHENDE DATEN LADEN
+          # =====================================================
 
           history = load_json(
               HISTORY_FILE,
@@ -527,12 +955,17 @@ jobs:
           if not isinstance(unknown, dict):
               unknown = {}
 
+
+          # =====================================================
+          # ALTE HISTORIE BEREINIGEN
+          # =====================================================
+
           def clean(entries, cutoff):
               cleaned = []
 
-              for x in entries:
+              for item in entries:
                   timestamp = parse_time(
-                      x.get("timestamp")
+                      item.get("timestamp")
                   )
 
                   if (
@@ -540,9 +973,12 @@ jobs:
                       and
                       timestamp >= cutoff
                   ):
-                      cleaned.append(x)
+                      cleaned.append(
+                          item
+                      )
 
               return cleaned
+
 
           history = clean(
               history,
@@ -554,18 +990,62 @@ jobs:
               now - timedelta(days=2)
           )
 
+
+          # =====================================================
+          # HILFSFUNKTION HISTORIE
+          # =====================================================
+
+          def recent_same(
+              entries,
+              identity,
+              seconds=120
+          ):
+              for old in reversed(
+                  entries
+              ):
+                  if (
+                      old.get("identity")
+                      != identity
+                  ):
+                      continue
+
+                  old_time = parse_time(
+                      old.get("timestamp")
+                  )
+
+                  return bool(
+                      old_time
+                      and
+                      (
+                          now - old_time
+                      ).total_seconds()
+                      <
+                      seconds
+                  )
+
+              return False
+
+
+          # =====================================================
+          # VERARBEITUNG
+          # =====================================================
+
           current = []
           detected = []
+
           rotor_count = 0
+
 
           for ac in output.get(
               "ac",
               []
           ):
+
               if not is_rotorcraft(ac):
                   continue
 
               rotor_count += 1
+
 
               lat = ac.get("lat")
               lon = ac.get("lon")
@@ -582,44 +1062,56 @@ jobs:
               ):
                   continue
 
-              h = str(
-                  ac.get("hex") or ""
+
+              hexcode = str(
+                  ac.get("hex")
+                  or ""
               ).strip().lower()
 
-              reg = str(
-                  ac.get("r") or ""
+              registration = str(
+                  ac.get("r")
+                  or ""
               ).strip()
 
-              cs = str(
-                  ac.get("flight") or ""
+              callsign = str(
+                  ac.get("flight")
+                  or ""
               ).strip()
 
-              ident = (
-                  h
-                  or compact(reg)
-                  or compact(cs)
+              identity = (
+                  hexcode
+                  or
+                  compact(registration)
+                  or
+                  compact(callsign)
               )
 
-              if not ident:
+              if not identity:
                   continue
 
-              typ = str(
-                  ac.get("t") or ""
+
+              ac_type = str(
+                  ac.get("t")
+                  or ""
               ).strip().upper()
 
-              cat = str(
-                  ac.get("category") or ""
+              category = str(
+                  ac.get("category")
+                  or ""
               ).strip().upper()
 
-              desc = str(
-                  ac.get("desc") or ""
+              description = str(
+                  ac.get("desc")
+                  or ""
               ).strip()
 
-              op = str(
-                  ac.get("ownOp") or ""
+              operator = str(
+                  ac.get("ownOp")
+                  or ""
               ).strip()
 
-              dist = round(
+
+              distance = round(
                   distance_km(
                       GOCH_LAT,
                       GOCH_LON,
@@ -629,7 +1121,10 @@ jobs:
                   1
               )
 
-              profile = classify(ac)
+
+              profile = classify(
+                  ac
+              )
 
               classification = profile.get(
                   "classification",
@@ -645,166 +1140,330 @@ jobs:
                   )
               )
 
-              prev = states.get(
-                  ident,
+
+              # =================================================
+              # BISHERIGER ZUSTAND
+              # =================================================
+
+              previous = states.get(
+                  identity,
                   {}
               )
 
-              prev_seen = parse_time(
-                  prev.get("last_seen")
-              )
-
-              new_segment = (
-                  not prev_seen
-                  or
-                  (
-                      now - prev_seen
-                  ).total_seconds() > 3600
-              )
-
-              if new_segment:
-                  segment_id = (
-                      ident
-                      + "-"
-                      + now.strftime(
-                          "%Y%m%dT%H%M%S"
-                      )
+              previous_seen = parse_time(
+                  previous.get(
+                      "last_seen"
                   )
+              )
 
-                  first_seen = now.isoformat()
-                  first_dist = dist
-                  minimum = dist
-                  entered = None
+
+              # =================================================
+              # NEUER FLUG?
+              # =================================================
+
+              new_flight = False
+
+              if not previous_seen:
+                  new_flight = True
 
               else:
+                  gap_seconds = (
+                      now - previous_seen
+                  ).total_seconds()
+
+                  if (
+                      gap_seconds
+                      >
+                      NEW_FLIGHT_AFTER_MINUTES
+                      *
+                      60
+                  ):
+                      new_flight = True
+
+
+              if new_flight:
                   segment_id = (
-                      prev.get("segment_id")
-                      or
-                      ident
-                      + "-"
-                      + now.strftime(
+                      identity
+                      +
+                      "-"
+                      +
+                      now.strftime(
                           "%Y%m%dT%H%M%S"
                       )
                   )
 
                   first_seen = (
-                      prev.get("first_seen")
-                      or now.isoformat()
+                      now.isoformat()
                   )
 
-                  first_dist = prev.get(
-                      "first_seen_distance_km",
-                      dist
+                  first_distance = (
+                      distance
                   )
 
-                  minimum = min(
-                      prev.get(
+                  minimum_distance = (
+                      distance
+                  )
+
+                  entered_30km = None
+
+                  # Für einen neuen Flug darf innerhalb 30 km
+                  # sofort alarmiert werden.
+                  alert_sent_for_segment = False
+
+                  # Außerhalb des Bereichs ist ein späterer
+                  # Eintritt automatisch scharf.
+                  reentry_armed = (
+                      distance
+                      >
+                      REENTRY_ARM_DISTANCE_KM
+                  )
+
+              else:
+                  segment_id = (
+                      previous.get(
+                          "segment_id"
+                      )
+                      or
+                      identity
+                      +
+                      "-"
+                      +
+                      now.strftime(
+                          "%Y%m%dT%H%M%S"
+                      )
+                  )
+
+                  first_seen = (
+                      previous.get(
+                          "first_seen"
+                      )
+                      or
+                      now.isoformat()
+                  )
+
+                  first_distance = (
+                      previous.get(
+                          "first_seen_distance_km",
+                          distance
+                      )
+                  )
+
+                  old_minimum = (
+                      previous.get(
                           "minimum_distance_km",
-                          dist
-                      ),
-                      dist
+                          distance
+                      )
                   )
 
-                  entered = prev.get(
-                      "entered_30km"
+                  if not isinstance(
+                      old_minimum,
+                      (int, float)
+                  ):
+                      old_minimum = (
+                          distance
+                      )
+
+                  minimum_distance = min(
+                      old_minimum,
+                      distance
                   )
+
+                  entered_30km = (
+                      previous.get(
+                          "entered_30km"
+                      )
+                  )
+
+                  alert_sent_for_segment = bool(
+                      previous.get(
+                          "alert_sent_for_segment",
+                          False
+                      )
+                  )
+
+                  reentry_armed = bool(
+                      previous.get(
+                          "reentry_armed",
+                          False
+                      )
+                  )
+
+
+              # =================================================
+              # 30-KM-ZUSTAND
+              # =================================================
 
               inside = (
-                  dist <= ACTION_RADIUS_KM
+                  distance
+                  <=
+                  ACTION_RADIUS_KM
               )
 
-              just_entered = (
-                  inside
-                  and
-                  not prev.get(
-                      "inside_30km",
-                      False
-                  )
-              )
+
+              # Maschine war wirklich außerhalb.
+              # Damit ist ein späterer Wiedereinflug alarmfähig.
+              if (
+                  distance
+                  >
+                  REENTRY_ARM_DISTANCE_KM
+              ):
+                  reentry_armed = True
+
 
               if (
                   inside
                   and
-                  not entered
+                  not entered_30km
               ):
-                  entered = now.isoformat()
+                  entered_30km = (
+                      now.isoformat()
+                  )
 
-              mb = None
-              md = None
-              approach = None
-              delta = None
 
-              plat = prev.get(
+              # =================================================
+              # BEWEGUNG
+              # =================================================
+
+              movement_bearing = None
+              movement_direction = None
+              approaching_goch = None
+              distance_change = None
+
+
+              previous_lat = previous.get(
                   "last_lat"
               )
 
-              plon = prev.get(
+              previous_lon = previous.get(
                   "last_lon"
               )
 
-              pdist = prev.get(
-                  "last_distance_km"
+              previous_distance = (
+                  previous.get(
+                      "last_distance_km"
+                  )
               )
+
 
               if (
                   isinstance(
-                      plat,
+                      previous_lat,
                       (int, float)
                   )
                   and
                   isinstance(
-                      plon,
+                      previous_lon,
                       (int, float)
                   )
               ):
-                  mb = round(
+                  movement_bearing = round(
                       bearing_degrees(
-                          plat,
-                          plon,
+                          previous_lat,
+                          previous_lon,
                           lat,
                           lon
                       ),
                       1
                   )
 
-                  md = direction_name(mb)
+                  movement_direction = (
+                      direction_name(
+                          movement_bearing
+                      )
+                  )
+
 
               if isinstance(
-                  pdist,
+                  previous_distance,
                   (int, float)
               ):
-                  delta = round(
-                      dist - pdist,
+                  distance_change = round(
+                      distance
+                      -
+                      previous_distance,
                       1
                   )
 
-                  if delta < -0.5:
-                      approach = True
+                  if distance_change < -0.5:
+                      approaching_goch = True
 
-                  elif delta > 0.5:
-                      approach = False
+                  elif distance_change > 0.5:
+                      approaching_goch = False
+
+
+              # =================================================
+              # PUSH-ENTSCHEIDUNG
+              # =================================================
+
+              push_reason = None
+              allow_push = False
+
+
+              if relevant and inside:
+
+                  # Fall 1:
+                  # Neuer Flug wird erstmals innerhalb
+                  # des 30-km-Gebiets gesehen.
+
+                  if (
+                      new_flight
+                      and
+                      not alert_sent_for_segment
+                  ):
+                      allow_push = True
+
+                      push_reason = (
+                          "neuer Flug erstmals "
+                          "innerhalb 30 km erkannt"
+                      )
+
+
+                  # Fall 2:
+                  # Laufender Flug war mindestens 32 km weg
+                  # und kommt wieder in den 30-km-Bereich.
+
+                  elif (
+                      reentry_armed
+                      and
+                      not previous.get(
+                          "inside_30km",
+                          False
+                      )
+                  ):
+                      allow_push = True
+
+                      push_reason = (
+                          "neuer 30-km-Eintritt"
+                      )
+
+
+              # =================================================
+              # EINTRAG
+              # =================================================
 
               entry = {
                   "timestamp":
                       now.isoformat(),
 
                   "identity":
-                      ident,
+                      identity,
 
                   "segment_id":
                       segment_id,
 
                   "hex":
-                      h,
+                      hexcode,
 
                   "registration":
-                      reg,
+                      registration,
 
                   "callsign":
-                      cs,
+                      callsign,
 
                   "name":
-                      profile.get("name"),
+                      profile.get(
+                          "name"
+                      ),
 
                   "classification":
                       classification,
@@ -815,25 +1474,31 @@ jobs:
                       ),
 
                   "service":
-                      profile.get("service"),
+                      profile.get(
+                          "service"
+                      ),
 
                   "station":
-                      profile.get("station"),
+                      profile.get(
+                          "station"
+                      ),
 
                   "country":
-                      profile.get("country"),
+                      profile.get(
+                          "country"
+                      ),
 
                   "operator":
-                      op,
+                      operator,
 
                   "description":
-                      desc,
+                      description,
 
                   "type":
-                      typ,
+                      ac_type,
 
                   "category":
-                      cat,
+                      category,
 
                   "lat":
                       lat,
@@ -842,7 +1507,7 @@ jobs:
                       lon,
 
                   "distance_km":
-                      dist,
+                      distance,
 
                   "inside_30km":
                       inside,
@@ -851,86 +1516,114 @@ jobs:
                       relevant,
 
                   "altitude_ft":
-                      ac.get("alt_baro"),
+                      ac.get(
+                          "alt_baro"
+                      ),
 
                   "ground_speed":
-                      ac.get("gs"),
+                      ac.get(
+                          "gs"
+                      ),
 
                   "track":
-                      ac.get("track"),
+                      ac.get(
+                          "track"
+                      ),
 
                   "movement_bearing":
-                      mb,
+                      movement_bearing,
 
                   "movement_direction":
-                      md,
+                      movement_direction,
 
                   "distance_change_km":
-                      delta,
+                      distance_change,
 
                   "approaching_goch":
-                      approach,
+                      approaching_goch,
 
                   "first_seen":
                       first_seen,
 
                   "first_seen_distance_km":
-                      first_dist,
+                      first_distance,
 
                   "minimum_distance_km":
-                      minimum,
+                      minimum_distance,
 
                   "entered_30km":
-                      entered,
+                      entered_30km,
+
+                  "new_flight":
+                      new_flight,
+
+                  "push_reason":
+                      push_reason,
 
                   "last_seen":
                       now.isoformat()
               }
 
-              if classification == "unknown":
-                  old = unknown.get(
-                      ident,
+
+              # =================================================
+              # UNBEKANNTE HUBSCHRAUBER
+              # =================================================
+
+              if (
+                  classification
+                  ==
+                  "unknown"
+              ):
+                  old_unknown = unknown.get(
+                      identity,
                       {}
                   )
 
-                  oldmin = old.get(
-                      "minimum_distance_km"
+                  old_minimum = (
+                      old_unknown.get(
+                          "minimum_distance_km"
+                      )
                   )
 
                   if not isinstance(
-                      oldmin,
+                      old_minimum,
                       (int, float)
                   ):
-                      oldmin = dist
+                      old_minimum = (
+                          distance
+                      )
 
-                  unknown[ident] = {
+                  unknown[identity] = {
                       "identity":
-                          ident,
+                          identity,
 
                       "hex":
-                          h,
+                          hexcode,
 
                       "registration":
-                          reg,
+                          registration,
 
                       "callsign":
-                          cs,
+                          callsign,
 
                       "type":
-                          typ,
+                          ac_type,
 
                       "category":
-                          cat,
+                          category,
 
                       "description":
-                          desc,
+                          description,
 
                       "operator":
-                          op,
+                          operator,
 
                       "first_seen":
-                          old.get("first_seen")
-                          or now.isoformat(),
+                          old_unknown.get(
+                              "first_seen"
+                          )
+                          or
+                          now.isoformat(),
 
                       "last_seen":
                           now.isoformat(),
@@ -942,12 +1635,12 @@ jobs:
                           lon,
 
                       "last_distance_km":
-                          dist,
+                          distance,
 
                       "minimum_distance_km":
                           min(
-                              oldmin,
-                              dist
+                              old_minimum,
+                              distance
                           ),
 
                       "inside_30km":
@@ -957,35 +1650,23 @@ jobs:
                           "needs_identification"
                   }
 
-              def recent_same(
-                  entries,
-                  seconds=120
-              ):
-                  for old in reversed(entries):
-                      if old.get(
-                          "identity"
-                      ) != ident:
-                          continue
 
-                      ot = parse_time(
-                          old.get("timestamp")
-                      )
-
-                      return bool(
-                          ot
-                          and
-                          (
-                              now - ot
-                          ).total_seconds()
-                          < seconds
-                      )
-
-                  return False
+              # =================================================
+              # 80-KM-HINTERGRUND
+              # =================================================
 
               if not recent_same(
-                  background
+                  background,
+                  identity
               ):
-                  background.append(entry)
+                  background.append(
+                      entry
+                  )
+
+
+              # =================================================
+              # 30-KM-HISTORIE
+              # =================================================
 
               if (
                   relevant
@@ -993,62 +1674,124 @@ jobs:
                   inside
               ):
                   if not recent_same(
-                      history
+                      history,
+                      identity
                   ):
-                      history.append(entry)
-
-                  current.append(entry)
-
-                  last_push = parse_time(
-                      pushes.get(ident)
-                  )
-
-                  allow = (
-                      just_entered
-                      or
-                      (
-                          not prev
-                          and
-                          inside
+                      history.append(
+                          entry
                       )
+
+                  current.append(
+                      entry
                   )
 
-                  if (
-                      allow
-                      and
-                      last_push
-                      and
-                      (
-                          now - last_push
-                      ).total_seconds() < 3600
-                  ):
-                      allow = False
 
-                  if allow:
-                      detected.append(entry)
+              # =================================================
+              # PUSH
+              # =================================================
 
-                      pushes[
-                          ident
-                      ] = now.isoformat()
+              if allow_push:
 
-              states[ident] = {
+                  detected.append(
+                      entry
+                  )
+
+                  alert_sent_for_segment = True
+
+                  # Nach erfolgreicher Entscheidung ist
+                  # der Wiedereinflug zunächst wieder gesperrt.
+                  reentry_armed = False
+
+                  pushes[identity] = {
+                      "timestamp":
+                          now.isoformat(),
+
+                      "segment_id":
+                          segment_id,
+
+                      "reason":
+                          push_reason,
+
+                      "name":
+                          profile.get(
+                              "name"
+                          ),
+
+                      "distance_km":
+                          distance
+                  }
+
+
+              # =================================================
+              # DIAGNOSE
+              # =================================================
+
+              if relevant:
+
+                  if allow_push:
+                      push_status = (
+                          "JA"
+                      )
+
+                  else:
+                      push_status = (
+                          "NEIN"
+                      )
+
+
+                  print(
+                      "STATUS:",
+                      profile.get(
+                          "name"
+                      ),
+                      "|",
+                      registration
+                      or
+                      callsign
+                      or
+                      identity,
+                      "|",
+                      distance,
+                      "km",
+                      "| innerhalb:",
+                      inside,
+                      "| neuer Flug:",
+                      new_flight,
+                      "| Wiedereinflug scharf:",
+                      reentry_armed,
+                      "| Push:",
+                      push_status,
+                      "| Grund:",
+                      push_reason
+                      or
+                      "-"
+                  )
+
+
+              # =================================================
+              # FLIGHT STATE
+              # =================================================
+
+              states[identity] = {
                   "identity":
-                      ident,
+                      identity,
 
                   "segment_id":
                       segment_id,
 
                   "name":
-                      profile.get("name"),
+                      profile.get(
+                          "name"
+                      ),
 
                   "registration":
-                      reg,
+                      registration,
 
                   "callsign":
-                      cs,
+                      callsign,
 
                   "type":
-                      typ,
+                      ac_type,
 
                   "classification":
                       classification,
@@ -1059,28 +1802,34 @@ jobs:
                       ),
 
                   "service":
-                      profile.get("service"),
+                      profile.get(
+                          "service"
+                      ),
 
                   "station":
-                      profile.get("station"),
+                      profile.get(
+                          "station"
+                      ),
 
                   "country":
-                      profile.get("country"),
+                      profile.get(
+                          "country"
+                      ),
 
                   "operator":
-                      op,
+                      operator,
 
                   "first_seen":
                       first_seen,
 
                   "first_seen_distance_km":
-                      first_dist,
+                      first_distance,
 
                   "minimum_distance_km":
-                      minimum,
+                      minimum_distance,
 
                   "entered_30km":
-                      entered,
+                      entered_30km,
 
                   "last_seen":
                       now.isoformat(),
@@ -1092,53 +1841,140 @@ jobs:
                       lon,
 
                   "last_distance_km":
-                      dist,
+                      distance,
 
                   "movement_bearing":
-                      mb,
+                      movement_bearing,
 
                   "movement_direction":
-                      md,
+                      movement_direction,
 
                   "distance_change_km":
-                      delta,
+                      distance_change,
 
                   "approaching_goch":
-                      approach,
+                      approaching_goch,
 
                   "inside_30km":
                       inside,
 
                   "relevant":
-                      relevant
+                      relevant,
+
+                  "alert_sent_for_segment":
+                      alert_sent_for_segment,
+
+                  "reentry_armed":
+                      reentry_armed
               }
 
-          cutoff = (
+
+          # =====================================================
+          # ALTE STATES ENTFERNEN
+          # =====================================================
+
+          state_cutoff = (
               now
-              - timedelta(days=2)
+              -
+              timedelta(days=2)
           )
 
-          states = {
-              k: v
-              for k, v in states.items()
-              if parse_time(
-                  v.get("last_seen")
+          cleaned_states = {}
+
+          for identity, state in states.items():
+              timestamp = parse_time(
+                  state.get(
+                      "last_seen"
+                  )
               )
-              and
-              parse_time(
-                  v.get("last_seen")
-              ) >= cutoff
-          }
+
+              if (
+                  timestamp
+                  and
+                  timestamp
+                  >=
+                  state_cutoff
+              ):
+                  cleaned_states[
+                      identity
+                  ] = state
+
+          states = cleaned_states
+
+
+          # =====================================================
+          # ALTE PUSH-DATEN ENTFERNEN
+          # =====================================================
+
+          push_cutoff = (
+              now
+              -
+              timedelta(days=14)
+          )
+
+          cleaned_pushes = {}
+
+          for identity, item in pushes.items():
+
+              if isinstance(
+                  item,
+                  str
+              ):
+                  timestamp = parse_time(
+                      item
+                  )
+
+              elif isinstance(
+                  item,
+                  dict
+              ):
+                  timestamp = parse_time(
+                      item.get(
+                          "timestamp"
+                      )
+                  )
+
+              else:
+                  timestamp = None
+
+              if (
+                  timestamp
+                  and
+                  timestamp
+                  >=
+                  push_cutoff
+              ):
+                  cleaned_pushes[
+                      identity
+                  ] = item
+
+          pushes = cleaned_pushes
+
+
+          # =====================================================
+          # SORTIEREN
+          # =====================================================
 
           history.sort(
-              key=lambda x:
-                  x.get("timestamp", "")
+              key=lambda item:
+                  item.get(
+                      "timestamp",
+                      ""
+                  )
           )
 
           background.sort(
-              key=lambda x:
-                  x.get("timestamp", "")
+              key=lambda item:
+                  item.get(
+                      "timestamp",
+                      ""
+                  )
           )
+
+
+          # =====================================================
+          # SPEICHERN
+          # =====================================================
 
           save_json(
               HISTORY_FILE,
@@ -1180,23 +2016,39 @@ jobs:
                       VERSION,
 
                   "action_radius_km":
-                      30,
+                      ACTION_RADIUS_KM,
 
                   "background_radius_km":
-                      80,
+                      BACKGROUND_RADIUS_KM,
 
                   "aircraft":
                       current
               }
           )
 
+
+          # =====================================================
+          # ZUSAMMENFASSUNG
+          # =====================================================
+
           print(
-              "Luftrettung Goch V4.6"
+              "=========================================="
           )
 
           print(
-              "ADSB-Luftfahrzeuge:",
-              output.get("total", 0)
+              "Luftrettung Goch V4.7"
+          )
+
+          print(
+              "=========================================="
+          )
+
+          print(
+              "ADSB-Luftfahrzeuge im 80-km-Bereich:",
+              output.get(
+                  "total",
+                  0
+              )
           )
 
           print(
@@ -1205,15 +2057,28 @@ jobs:
           )
 
           print(
-              "Relevante im 30-km-Bereich:",
-              len(current)
+              "Relevante Hubschrauber im 30-km-Bereich:",
+              len(
+                  current
+              )
           )
 
           print(
-              "Push-Kandidaten:",
-              len(detected)
+              "Telegram-Push-Kandidaten:",
+              len(
+                  detected
+              )
+          )
+
+          print(
+              "=========================================="
           )
           PY
+
+
+      # =========================================================
+      # TELEGRAM
+      # =========================================================
 
       - name: Telegram Nachricht senden
         shell: bash
@@ -1227,6 +2092,7 @@ jobs:
           import urllib.parse
           import urllib.request
 
+
           token = os.environ.get(
               "TELEGRAM_BOT_TOKEN",
               ""
@@ -1237,14 +2103,18 @@ jobs:
               ""
           ).strip()
 
+
           if not token or not chat_id:
               raise RuntimeError(
-                  "TELEGRAM_BOT_TOKEN oder TELEGRAM_CHAT_ID fehlt."
+                  "TELEGRAM_BOT_TOKEN oder "
+                  "TELEGRAM_CHAT_ID fehlt."
               )
 
+
           def send(text):
+
               url = (
-                  f"https://api.telegram.org/"
+                  "https://api.telegram.org/"
                   f"bot{token}/sendMessage"
               )
 
@@ -1259,26 +2129,68 @@ jobs:
                       "disable_web_page_preview":
                           "true"
                   }
-              ).encode()
+              ).encode(
+                  "utf-8"
+              )
 
-              req = urllib.request.Request(
+              request = urllib.request.Request(
                   url,
                   data=data,
                   method="POST"
               )
 
               with urllib.request.urlopen(
-                  req,
+                  request,
                   timeout=20
-              ) as r:
-                  result = json.load(r)
+              ) as response:
 
-              if not result.get("ok"):
-                  raise RuntimeError(
-                      str(result)
+                  http_status = (
+                      response.status
                   )
 
+                  result = json.load(
+                      response
+                  )
+
+
+              if not result.get(
+                  "ok"
+              ):
+                  raise RuntimeError(
+                      "Telegram-Fehler: "
+                      +
+                      str(
+                          result
+                      )
+                  )
+
+
+              message_id = (
+                  result
+                  .get(
+                      "result",
+                      {}
+                  )
+                  .get(
+                      "message_id"
+                  )
+              )
+
+
+              print(
+                  "Telegram HTTP:",
+                  http_status,
+                  "| message_id:",
+                  message_id
+              )
+
+
               return result
+
+
+          # =====================================================
+          # MANUELLER TEST
+          # =====================================================
 
           if (
               os.environ.get(
@@ -1287,81 +2199,126 @@ jobs:
               ==
               "workflow_dispatch"
           ):
+
               send(
-                  "🚁 Luftrettung KLE – V4.6 Test\n\n"
-                  "Version 4.6 läuft.\n"
+                  "🚁 Luftrettung KLE – V4.7 Test\n\n"
+                  "Version 4.7 läuft.\n"
                   "80-km-Hintergrundüberwachung aktiv.\n"
                   "30-km-Einsatzalarm aktiv.\n"
+                  "Neue Flugsegment-Erkennung aktiv.\n"
+                  "Wiedereinflug-Erkennung aktiv.\n"
+                  "Polizei-/Bundespolizei-Erkennung aktiv.\n"
                   "aircraft_db.json aktiv.\n"
-                  "Telegram-Benachrichtigung funktioniert."
+                  "Telegram-Verbindung funktioniert."
               )
 
               print(
-                  "Telegram-Testnachricht gesendet."
+                  "Telegram-Testnachricht "
+                  "erfolgreich gesendet."
               )
 
-              raise SystemExit(0)
+              raise SystemExit(
+                  0
+              )
+
+
+          # =====================================================
+          # AUTOMATISCHE MELDUNGEN
+          # =====================================================
 
           try:
               with open(
                   "detected.json",
                   "r",
                   encoding="utf-8"
-              ) as f:
-                  detected = json.load(f)
+              ) as file:
+                  detected = json.load(
+                      file
+                  )
 
-          except Exception as e:
+          except Exception as error:
               print(
                   "detected.json Fehler:",
-                  repr(e)
+                  repr(
+                      error
+                  )
               )
 
               detected = []
 
+
           if not detected:
               print(
-                  "Keine relevante neue Erkennung."
+                  "Keine relevante neue "
+                  "Erkennung – keine "
+                  "Telegram-Nachricht nötig."
               )
 
-              raise SystemExit(0)
+              raise SystemExit(
+                  0
+              )
+
 
           for item in detected:
+
               name = (
-                  item.get("name")
+                  item.get(
+                      "name"
+                  )
                   or
                   "Hubschrauber"
               )
 
-              reg = (
-                  item.get("registration")
+              registration = (
+                  item.get(
+                      "registration"
+                  )
                   or
                   "unbekannt"
               )
 
-              cs = (
-                  item.get("callsign")
+              callsign = (
+                  item.get(
+                      "callsign"
+                  )
                   or
                   "unbekannt"
               )
 
               service = (
-                  item.get("service")
+                  item.get(
+                      "service"
+                  )
                   or
                   "unbekannt"
               )
 
               station = (
-                  item.get("station")
+                  item.get(
+                      "station"
+                  )
                   or
                   "noch nicht bestimmt"
+              )
+
+              country = (
+                  item.get(
+                      "country"
+                  )
+                  or
+                  "unbekannt"
               )
 
               distance = item.get(
                   "distance_km"
               )
 
-              first = item.get(
+              first_distance = item.get(
                   "first_seen_distance_km"
+              )
+
+              minimum_distance = item.get(
+                  "minimum_distance_km"
               )
 
               direction = (
@@ -1375,6 +2332,15 @@ jobs:
               approaching = item.get(
                   "approaching_goch"
               )
+
+              reason = (
+                  item.get(
+                      "push_reason"
+                  )
+                  or
+                  "neue Erkennung"
+              )
+
 
               if approaching is True:
                   movement = (
@@ -1391,32 +2357,70 @@ jobs:
                       "Bewegung noch nicht bestimmbar"
                   )
 
+
               text = (
                   f"🚁 {name} im 30-km-Radius erkannt\n\n"
                   f"Art: {service}\n"
-                  f"Kennzeichen: {reg}\n"
-                  f"Rufname: {cs}\n"
+                  f"Kennzeichen: {registration}\n"
+                  f"Rufname: {callsign}\n"
                   f"Station: {station}\n"
+                  f"Land: {country}\n\n"
                   f"Jetzt: {distance} km von Goch\n"
-                  f"Erstmals erfasst: {first} km\n"
+                  f"Erstmals erfasst: {first_distance} km\n"
+                  f"Bisher nächste Entfernung: {minimum_distance} km\n"
                   f"Flugrichtung: {direction}\n"
-                  f"Status: {movement}"
+                  f"Status: {movement}\n\n"
+                  f"Alarmgrund: {reason}"
               )
 
-              send(text)
+
+              result = send(
+                  text
+              )
+
+
+              message_id = (
+                  result
+                  .get(
+                      "result",
+                      {}
+                  )
+                  .get(
+                      "message_id"
+                  )
+              )
+
 
               print(
-                  "Telegram gesendet:",
+                  "TELEGRAM GESENDET:",
                   name,
-                  reg
+                  "|",
+                  registration,
+                  "| message_id:",
+                  message_id,
+                  "| Grund:",
+                  reason
               )
+
           PY
+
+
+      # =========================================================
+      # REPOSITORY AKTUALISIEREN
+      # =========================================================
 
       - name: Neue Daten speichern
         shell: bash
         run: |
-          git config user.name "Luftrettung-Kleve Bot"
-          git config user.email "actions@github.com"
+
+          git config \
+            user.name \
+            "Luftrettung-Kleve Bot"
+
+          git config \
+            user.email \
+            "actions@github.com"
+
 
           git add \
             aircraft.json \
@@ -1429,16 +2433,23 @@ jobs:
             aircraft_db.json \
             detected.json
 
+
           if git diff --cached --quiet; then
+
             echo "Keine Änderung vorhanden."
+
           else
+
             git commit \
-              -m "Luftrettung V4.6 Flugdaten aktualisiert"
+              -m "Luftrettung V4.7 Flugdaten aktualisiert"
+
 
             git pull \
               --rebase \
               origin main
 
+
             git push \
               origin main
+
           fi
