@@ -1,54 +1,7 @@
 {
-  "updated": "2026-09-28T10:00:27.181482+00:00",
+  "updated": "2026-09-28T10:16:28.225878+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-09-28T10:00:27.181482+00:00",
-      "identity": "485e49",
-      "segment_id": "485e49-20260928T091827",
-      "hex": "485e49",
-      "registration": "PH-DOC",
-      "callsign": "LIFELN3",
-      "name": "Lifeliner 3",
-      "classification": "rescue",
-      "classification_source": "aircraft_db",
-      "service": "Traumahelikopter",
-      "station": "Volkel",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.789368,
-      "lon": 5.881249,
-      "location": {
-        "display": "Malden, Groesbeekseweg",
-        "road": "Groesbeekseweg",
-        "house_number": null,
-        "city": "Malden",
-        "postcode": "6584 DA",
-        "county": null,
-        "country": "Nederland"
-      },
-      "distance_km": 22.8,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": 775,
-      "ground_speed": 134.4,
-      "track": 345.34,
-      "movement_bearing": 344.7,
-      "movement_direction": "Nord",
-      "distance_change_km": -5.6,
-      "approaching_goch": true,
-      "first_seen": "2026-09-28T09:18:27.187070+00:00",
-      "first_seen_distance_km": 27.7,
-      "minimum_distance_km": 22.8,
-      "entered_30km": "2026-09-28T09:18:27.187070+00:00",
-      "new_flight": false,
-      "push_reason": null,
-      "last_seen": "2026-09-28T10:00:27.181482+00:00"
-    }
-  ]
+  "aircraft": []
 }
