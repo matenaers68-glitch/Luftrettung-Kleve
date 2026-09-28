@@ -970,5 +970,23 @@
     "minimum_distance_km": 60.8,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3e0ff2": {
+    "identity": "3e0ff2",
+    "hex": "3e0ff2",
+    "registration": "",
+    "callsign": "CHX55",
+    "type": "",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-28T16:21:52.550436+00:00",
+    "last_seen": "2026-09-28T16:21:52.550436+00:00",
+    "last_lat": 51.999802,
+    "last_lon": 7.098083,
+    "last_distance_km": 73.8,
+    "minimum_distance_km": 73.8,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
