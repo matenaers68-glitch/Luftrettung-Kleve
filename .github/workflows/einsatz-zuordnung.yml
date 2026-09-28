@@ -1,0 +1,705 @@
+name: Luftrettung Einsatz-Zuordnung
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: luftrettung-einsatz-zuordnung
+  cancel-in-progress: false
+
+jobs:
+  incident-match:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Presseberichte suchen und Flügen zuordnen
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, re, html, urllib.request, urllib.parse
+          import xml.etree.ElementTree as ET
+          from html.parser import HTMLParser
+          from datetime import datetime, timezone, timedelta
+          from email.utils import parsedate_to_datetime
+
+          VERSION = "1.4"
+          HISTORY_FILE = "history.json"
+          MATCH_FILE = "incident_matches.json"
+          STATE_FILE = "incident_match_state.json"
+          DETECTED_FILE = "incident_detected.json"
+
+          LOOKBACK_HOURS = 48
+          MIN_POSSIBLE_SCORE = 45
+          LIKELY_SCORE = 65
+          VERY_LIKELY_SCORE = 85
+          MAX_TIME_DIFFERENCE_HOURS = 36
+          now = datetime.now(timezone.utc)
+
+          def load_json(filename, default):
+              try:
+                  with open(filename, "r", encoding="utf-8") as f:
+                      return json.load(f)
+              except Exception:
+                  return default
+
+          def save_json(filename, data):
+              with open(filename, "w", encoding="utf-8") as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+
+          def parse_time(value):
+              try:
+                  if not value: return None
+                  return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+              except Exception:
+                  return None
+
+          def clean_text(value):
+              value = html.unescape(str(value or ""))
+              value = re.sub(r"<[^>]+>", " ", value)
+              return re.sub(r"\s+", " ", value).strip()
+
+          def norm(value):
+              value = clean_text(value).lower()
+              value = value.replace("ä","ae").replace("ö","oe").replace("ü","ue").replace("ß","ss")
+              return re.sub(r"[^a-z0-9 ]+", " ", value)
+
+          HEADERS = {"User-Agent": "Luftrettung-Kleve-Einsatzzuordnung/1.1"}
+
+          def fetch(url, timeout=20):
+              req = urllib.request.Request(url, headers=HEADERS)
+              with urllib.request.urlopen(req, timeout=timeout) as response:
+                  return response.read()
+
+          def rss_items(url, source_name):
+              items = []
+              try:
+                  root = ET.fromstring(fetch(url))
+                  for item in root.findall(".//item"):
+                      title = clean_text(item.findtext("title"))
+                      link = clean_text(item.findtext("link"))
+                      description = clean_text(item.findtext("description"))
+                      pub = clean_text(item.findtext("pubDate"))
+                      dt = None
+                      if pub:
+                          try:
+                              dt = parsedate_to_datetime(pub)
+                              if dt.tzinfo is None: dt = dt.replace(tzinfo=timezone.utc)
+                              dt = dt.astimezone(timezone.utc)
+                          except Exception:
+                              pass
+                      items.append({
+                          "source": source_name, "title": title, "url": link,
+                          "description": description,
+                          "published": dt.isoformat() if dt else None
+                      })
+              except Exception as e:
+                  print("RSS-Fehler:", source_name, repr(e))
+              return items
+
+          def google_news_items(query, source_name):
+              q = urllib.parse.quote(query)
+              return rss_items(
+                  "https://news.google.com/rss/search?" + f"q={q}&hl=de&gl=DE&ceid=DE:de",
+                  source_name
+              )
+
+          class LinkTextParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.links = []
+                  self.href = None
+                  self.parts = []
+
+              def handle_starttag(self, tag, attrs):
+                  if tag.lower() == "a":
+                      self.href = dict(attrs).get("href")
+                      self.parts = []
+
+              def handle_data(self, data):
+                  if self.href is not None:
+                      self.parts.append(data)
+
+              def handle_endtag(self, tag):
+                  if tag.lower() == "a" and self.href is not None:
+                      title = clean_text(" ".join(self.parts))
+                      if title:
+                          self.links.append((self.href, title))
+                      self.href = None
+                      self.parts = []
+
+          def direct_page_items(url, source_name, keywords=()):
+              items = []
+              try:
+                  raw = fetch(url).decode("utf-8", errors="replace")
+                  parser = LinkTextParser()
+                  parser.feed(raw)
+                  seen = set()
+
+                  for href, title in parser.links:
+                      full = urllib.parse.urljoin(url, href)
+                      txt = norm(title)
+
+                      if keywords and not any(norm(k) in txt for k in keywords):
+                          continue
+
+                      key = full + "|" + title
+                      if key in seen:
+                          continue
+                      seen.add(key)
+
+                      items.append({
+                          "source": source_name,
+                          "title": title,
+                          "url": full,
+                          "description": title,
+                          "published": None
+                      })
+
+              except Exception as e:
+                  print("Direktabruf-Fehler:", source_name, repr(e))
+
+              print("Direktquelle:", source_name, "| Treffer:", len(items))
+              return items
+
+          def collect_articles():
+              articles = []
+
+              # Deutsche Kernquellen DIREKT – keine Google-News-Abhängigkeit
+              articles += direct_page_items(
+                  "https://www.presseportal.de/blaulicht/nr/65849",
+                  "Kreispolizeibehörde Kleve / Presseportal",
+                  (
+                      "Goch","Kleve","Kevelaer","Kalkar","Bedburg-Hau","Uedem",
+                      "Weeze","Kranenburg","Rees","Geldern","Emmerich",
+                      "Rettungshubschrauber","Hubschrauber","Verkehrsunfall",
+                      "Unfall","Brand"
+                  )
+              )
+
+              articles += direct_page_items(
+                  "https://www.feuerwehr-goch.de/einsaetze",
+                  "Feuerwehr Goch",
+                  (
+                      "Verkehrsunfall","Unterstützung Rettungsdienst","Brand",
+                      "Explosion","Technische Hilfe","Rettungsdienst","Unfall"
+                  )
+              )
+
+              articles += direct_page_items(
+                  "https://tv-niederrhein.de/",
+                  "TV Niederrhein",
+                  (
+                      "Goch","Kleve","Kevelaer","Kalkar","Uedem","Weeze",
+                      "Kranenburg","Rees","Geldern","Emmerich","Unfall",
+                      "Einsatz","Hubschrauber","Feuerwehr","Polizei"
+                  )
+              )
+
+              # Lifeliner 3 / Niederlande DIREKT
+              articles += direct_page_items(
+                  "https://traumaradar.nl/",
+                  "TraumaRadar",
+                  (
+                      "Lifeliner 3","Lifeliner","Volkel","traumahelikopter",
+                      "vlucht","MMT"
+                  )
+              )
+
+              articles += direct_page_items(
+                  "https://www.alarmeringen.nl/",
+                  "NL – Alarmeringen",
+                  (
+                      "Lifeliner","traumahelikopter","ongeval","reanimatie",
+                      "ambulance","brandweer","politie"
+                  )
+              )
+
+              articles += direct_page_items(
+                  "https://www.p2000alarm.nl/",
+                  "NL – P2000",
+                  (
+                      "Lifeliner","traumahelikopter","ongeval","reanimatie",
+                      "ambulance","brandweer","politie"
+                  )
+              )
+
+              unique = {}
+              for a in articles:
+                  key = a.get("url") or (a.get("source","") + "|" + a.get("title",""))
+                  if key:
+                      unique[key] = a
+
+              print("Gefundene Direktquellen-Einträge:", len(unique))
+              return list(unique.values())
+
+          history = load_json(HISTORY_FILE, [])
+          if not isinstance(history, list): history = []
+          cutoff = now - timedelta(hours=LOOKBACK_HOURS)
+          segments = {}
+
+          for item in history:
+              ts = parse_time(item.get("timestamp"))
+              if not ts or ts < cutoff: continue
+              sid = item.get("segment_id")
+              if sid: segments.setdefault(sid, []).append(item)
+
+          flights = []
+          for sid, points in segments.items():
+              points.sort(key=lambda x: x.get("timestamp",""))
+              first, last = points[0], points[-1]
+              nearest = min(points, key=lambda x: x.get("distance_km") if isinstance(x.get("distance_km"),(int,float)) else 9999)
+              located = [p for p in points if isinstance(p.get("location"),dict) and p["location"].get("display")]
+              lp = min(located, key=lambda x: x.get("distance_km") if isinstance(x.get("distance_km"),(int,float)) else 9999) if located else nearest
+              loc = lp.get("location") or {}
+              cities = sorted(set(
+                  p.get("location",{}).get("city")
+                  for p in points if isinstance(p.get("location"),dict) and p.get("location",{}).get("city")
+              ))
+              roads = sorted(set(
+                  p.get("location",{}).get("road")
+                  for p in points if isinstance(p.get("location"),dict) and p.get("location",{}).get("road")
+              ))
+              flights.append({
+                  "segment_id": sid,
+                  "identity": last.get("identity"),
+                  "name": last.get("name") or first.get("name") or "Hubschrauber",
+                  "registration": last.get("registration") or first.get("registration"),
+                  "callsign": last.get("callsign") or first.get("callsign"),
+                  "service": last.get("service") or first.get("service"),
+                  "first_seen": first.get("timestamp"),
+                  "last_seen": last.get("timestamp"),
+                  "city": loc.get("city"),
+                  "road": loc.get("road"),
+                  "postcode": loc.get("postcode"),
+                  "location": loc.get("display"),
+                  "cities": cities,
+                  "roads": roads,
+                  "nearest_distance_km": nearest.get("distance_km"),
+                  "nearest_lat": nearest.get("lat"),
+                  "nearest_lon": nearest.get("lon"),
+                  "points": len(points)
+              })
+
+          print("Zu prüfende Flugsegmente:", len(flights))
+
+          HELI_WORDS = ("rettungshubschrauber","hubschrauber","rettungshelikopter","helikopter","christoph","lifeliner")
+          STRONG_INCIDENT_WORDS = (
+              "schwer verletzt","schwerverletzt","lebensgefahr","lebensgefährlich",
+              "rettungshubschrauber","notarzt","reanimation","eingeklemmt",
+              "arbeitsunfall","motorradunfall","verkehrsunfall"
+          )
+          INCIDENT_WORDS = (
+              "unfall","einsatz","rettungsdienst","feuerwehr","polizei","brand",
+              "motorrad","pedelec","radfahrer","fußgänger","fussgaenger","verletzte","verletzt",
+              "ongeval","verkeersongeval","gewond","ernstig gewond","reanimatie",
+              "traumahelikopter","mobiel medisch team","mmt","brandweer","politie","ambulance"
+          )
+          PRIORITY_SOURCES = {
+              "Kreispolizeibehörde Kleve / Presseportal": 10,
+              "Feuerwehr Goch": 10,
+              "TV Niederrhein": 10,
+              "Rheinische Post": 5,
+              "NRZ / WAZ": 5,
+              "TraumaRadar": 30,
+              "NL – Alarmeringen": 20,
+              "NL – P2000": 20
+          }
+
+          def score_match(flight, article):
+              text = norm(article.get("title","")+" "+article.get("description",""))
+              score, reasons = 0, []
+              cities = [norm(x) for x in flight.get("cities",[]) if x]
+              roads = [norm(x) for x in flight.get("roads",[]) if x]
+              city_hit = next((x for x in cities if len(x)>=3 and x in text), None)
+              road_hit = next((x for x in roads if len(x)>=4 and x in text), None)
+              heli_hit = any(norm(x) in text for x in HELI_WORDS)
+              strong_incident = any(norm(x) in text for x in STRONG_INCIDENT_WORDS)
+              incident_hit = any(norm(x) in text for x in INCIDENT_WORDS)
+
+              if city_hit:
+                  score += 35
+                  reasons.append("Ort des Fluges im Bericht")
+              if road_hit:
+                  score += 30
+                  reasons.append("Straße des Fluges im Bericht")
+              if heli_hit:
+                  score += 20
+                  reasons.append("Hubschrauber im Bericht erwähnt")
+              if strong_incident:
+                  score += 15
+                  reasons.append("starker Rettungs-/Unfallbezug")
+              elif incident_hit:
+                  score += 8
+                  reasons.append("Einsatz-/Unfallbezug")
+
+              name = norm(flight.get("name"))
+              callsign = norm(flight.get("callsign"))
+              if name and name not in ("hubschrauber","unbekannter hubschrauber") and name in text:
+                  score += 25
+                  reasons.append("Hubschraubername stimmt")
+              if callsign and len(callsign)>=4 and callsign in text:
+                  score += 25
+                  reasons.append("Rufname stimmt")
+
+              source_bonus = PRIORITY_SOURCES.get(article.get("source"),0)
+              if source_bonus:
+                  score += source_bonus
+                  reasons.append("priorisierte Quelle")
+
+              ft = parse_time(flight.get("last_seen"))
+              pt = parse_time(article.get("published"))
+              diff = None
+              if ft and pt:
+                  diff = (pt-ft).total_seconds()/3600
+                  # Ein Pressebericht darf später erscheinen; deutlich vor dem Flug ist verdächtig.
+                  if -1 <= diff <= 3:
+                      score += 30
+                      reasons.append("Zeitfenster passt sehr genau")
+                  elif -2 <= diff <= 8:
+                      score += 24
+                      reasons.append("Zeitfenster passt gut")
+                  elif -4 <= diff <= 24:
+                      score += 15
+                      reasons.append("zeitlich plausibel")
+                  elif -6 <= diff <= MAX_TIME_DIFFERENCE_HOURS:
+                      score += 6
+                      reasons.append("zeitlich noch möglich")
+                  else:
+                      score -= 35
+                      reasons.append("Zeitabstand spricht gegen Zuordnung")
+
+              # Ohne räumliche Übereinstimmung keine starke Zuordnung nur wegen allgemeiner Wörter.
+              if not city_hit and not road_hit:
+                  score = min(score, 44)
+
+              # Sehr gute Kombinationen extra gewichten.
+              if city_hit and heli_hit:
+                  score += 10
+                  reasons.append("Ort + Hubschrauber gemeinsam")
+              if city_hit and strong_incident:
+                  score += 8
+                  reasons.append("Ort + schwerer Einsatz gemeinsam")
+
+              return max(score,0), reasons, diff, bool(city_hit or road_hit), heli_hit
+
+          articles = collect_articles()
+          print("Gefundene Presse-/News-Einträge:", len(articles))
+
+          # Diagnose V1.2: fünf beste Artikel je Flug anzeigen,
+          # auch wenn sie die Meldeschwelle nicht erreichen.
+          print("")
+          print("==========================================")
+          print("DIAGNOSE V1.4 – DIREKTQUELLEN / TOP-5-TREFFER JE FLUG")
+          print("==========================================")
+
+          for flight in flights:
+              diagnostic_candidates = []
+
+              for article in articles:
+                  score, reasons, diff, spatial, heli_hit = score_match(
+                      flight,
+                      article
+                  )
+
+                  diagnostic_candidates.append({
+                      "score": score,
+                      "source": article.get("source"),
+                      "title": article.get("title"),
+                      "url": article.get("url"),
+                      "published": article.get("published"),
+                      "reasons": reasons,
+                      "diff": diff
+                  })
+
+              diagnostic_candidates.sort(
+                  key=lambda x: x.get("score", 0),
+                  reverse=True
+              )
+
+              print("")
+              print("------------------------------------------")
+              print(
+                  "FLUG:",
+                  flight.get("name"),
+                  "| Segment:",
+                  flight.get("segment_id")
+              )
+              print(
+                  "Zeit:",
+                  flight.get("first_seen"),
+                  "bis",
+                  flight.get("last_seen")
+              )
+              print(
+                  "Ort:",
+                  flight.get("location")
+                  or flight.get("city")
+                  or "nicht bestimmt"
+              )
+              print(
+                  "Nächste Entfernung:",
+                  flight.get("nearest_distance_km"),
+                  "km"
+              )
+
+              for number, candidate in enumerate(
+                  diagnostic_candidates[:5],
+                  start=1
+              ):
+                  diff = candidate.get("diff")
+                  diff_text = (
+                      "unbekannt"
+                      if diff is None
+                      else str(round(diff, 1)) + " h"
+                  )
+
+                  print(
+                      "TOP",
+                      number,
+                      "|",
+                      candidate.get("score", 0),
+                      "Punkte",
+                      "| Quelle:",
+                      candidate.get("source") or "-"
+                  )
+                  print(
+                      "Titel:",
+                      candidate.get("title") or "-"
+                  )
+                  print(
+                      "Veröffentlicht:",
+                      candidate.get("published") or "-",
+                      "| Zeitabstand:",
+                      diff_text
+                  )
+                  print(
+                      "Kriterien:",
+                      " · ".join(candidate.get("reasons") or [])
+                      or "keine positiven Kriterien"
+                  )
+                  print(
+                      "URL:",
+                      candidate.get("url") or "-"
+                  )
+
+          print("")
+          print("==========================================")
+          print("ENDE DIAGNOSE")
+          print("==========================================")
+          print("")
+
+          existing = load_json(MATCH_FILE, [])
+          state = load_json(STATE_FILE, {})
+          if not isinstance(existing,list): existing=[]
+          if not isinstance(state,dict): state={}
+
+          by_key = {}
+          for old in existing:
+              key = str(old.get("segment_id",""))+"|"+str(old.get("article_url",""))
+              by_key[key]=old
+
+          detected=[]
+
+          for flight in flights:
+              candidates=[]
+              for article in articles:
+                  score,reasons,diff,spatial,heli_hit = score_match(flight,article)
+                  if score < MIN_POSSIBLE_SCORE:
+                      continue
+
+                  if score >= VERY_LIKELY_SCORE:
+                      confidence = "sehr wahrscheinlicher Zusammenhang"
+                      level = "very_likely"
+                  elif score >= LIKELY_SCORE:
+                      confidence = "wahrscheinliche Zuordnung"
+                      level = "likely"
+                  else:
+                      confidence = "möglicher Zusammenhang"
+                      level = "possible"
+
+                  candidates.append({
+                      "version":VERSION,"checked_at":now.isoformat(),
+                      "segment_id":flight.get("segment_id"),
+                      "aircraft_name":flight.get("name"),
+                      "registration":flight.get("registration"),
+                      "callsign":flight.get("callsign"),
+                      "service":flight.get("service"),
+                      "flight_first_seen":flight.get("first_seen"),
+                      "flight_last_seen":flight.get("last_seen"),
+                      "flight_location":flight.get("location"),
+                      "flight_city":flight.get("city"),
+                      "flight_road":flight.get("road"),
+                      "flight_cities":flight.get("cities"),
+                      "nearest_distance_km":flight.get("nearest_distance_km"),
+                      "article_source":article.get("source"),
+                      "article_title":article.get("title"),
+                      "article_url":article.get("url"),
+                      "article_published":article.get("published"),
+                      "score":score,"confidence":confidence,"confidence_level":level,
+                      "reasons":reasons,
+                      "time_difference_hours":round(diff,1) if diff is not None else None
+                  })
+
+              candidates.sort(key=lambda x:x.get("score",0),reverse=True)
+
+              for match in candidates[:3]:
+                  key=str(match.get("segment_id",""))+"|"+str(match.get("article_url",""))
+                  by_key[key]=match
+
+              if candidates:
+                  best=candidates[0]
+                  sk=str(best.get("segment_id"))
+                  old=state.get(sk,{})
+                  old_url=old.get("article_url")
+                  old_score=old.get("score",0)
+                  old_level=old.get("confidence_level")
+
+                  should_notify = (
+                      not old_url
+                      or (
+                          best.get("article_url") != old_url
+                          and best.get("score",0) >= old_score + 10
+                      )
+                      or (
+                          best.get("confidence_level") in ("likely","very_likely")
+                          and old_level == "possible"
+                      )
+                  )
+
+                  if should_notify:
+                      detected.append(best)
+                      state[sk]={
+                          "notified_at":now.isoformat(),
+                          "article_url":best.get("article_url"),
+                          "score":best.get("score"),
+                          "confidence":best.get("confidence"),
+                          "confidence_level":best.get("confidence_level")
+                      }
+
+          matches=list(by_key.values())
+          match_cutoff=now-timedelta(days=14)
+          matches=[m for m in matches if parse_time(m.get("flight_last_seen")) and parse_time(m.get("flight_last_seen"))>=match_cutoff]
+          matches.sort(key=lambda x:(x.get("flight_last_seen",""),x.get("score",0)),reverse=True)
+
+          save_json(MATCH_FILE,matches)
+          save_json(STATE_FILE,state)
+          save_json(DETECTED_FILE,detected)
+
+          print("Gespeicherte Zuordnungen:",len(matches))
+          print("Neue Telegram-Kandidaten:",len(detected))
+          for x in detected:
+              print("TREFFER:",x.get("aircraft_name"),"|",x.get("confidence"),"| Score:",x.get("score"),"|",x.get("article_title"))
+          PY
+
+      - name: Telegram Nachricht bei Presse-Treffer
+        shell: bash
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          token=os.environ.get("TELEGRAM_BOT_TOKEN","").strip()
+          chat_id=os.environ.get("TELEGRAM_CHAT_ID","").strip()
+          if not token or not chat_id:
+              raise RuntimeError("TELEGRAM_BOT_TOKEN oder TELEGRAM_CHAT_ID fehlt.")
+
+          def send(text):
+              url=f"https://api.telegram.org/bot{token}/sendMessage"
+              data=urllib.parse.urlencode({
+                  "chat_id":chat_id,"text":text,"disable_web_page_preview":"false"
+              }).encode("utf-8")
+              req=urllib.request.Request(url,data=data,method="POST")
+              with urllib.request.urlopen(req,timeout=20) as response:
+                  result=json.load(response)
+              if not result.get("ok"):
+                  raise RuntimeError("Telegram-Fehler: "+str(result))
+              return result
+
+          try:
+              with open("incident_detected.json","r",encoding="utf-8") as f:
+                  detected=json.load(f)
+          except Exception:
+              detected=[]
+
+          if not detected:
+              print("Kein neuer Presse-Treffer.")
+              raise SystemExit(0)
+
+          def german_time(value):
+              try:
+                  d=datetime.fromisoformat(str(value).replace("Z","+00:00"))
+                  d=d.astimezone(ZoneInfo("Europe/Berlin"))
+                  return d.strftime("%d.%m.%Y %H:%M")
+              except Exception:
+                  return str(value or "unbekannt")
+
+          for item in detected:
+              name=item.get("aircraft_name") or "Hubschrauber"
+              location=item.get("flight_location") or item.get("flight_city") or "Ort noch nicht bestimmt"
+              source=item.get("article_source") or "Quelle unbekannt"
+              title=item.get("article_title") or "Einsatzbericht"
+              url=item.get("article_url") or ""
+              confidence=item.get("confidence") or "möglicher Zusammenhang"
+              level=item.get("confidence_level") or "possible"
+              score=item.get("score") or 0
+              flight_time=german_time(item.get("flight_last_seen"))
+              reasons=item.get("reasons") or []
+              reason_text=" · ".join(reasons[:6])
+
+              if level=="very_likely":
+                  heading=f"🚁 {name} – sehr wahrscheinlicher Einsatz gefunden"
+              elif level=="likely":
+                  heading=f"🚁 {name} – wahrscheinliche Zuordnung gefunden"
+              else:
+                  heading=f"🔎 {name} – möglicher Zusammenhang gefunden"
+
+              text=(
+                  f"{heading}\n\n"
+                  f"Flug: {flight_time} Uhr\n"
+                  f"Bereich: {location}\n\n"
+                  f"🚨 {title}\n\n"
+                  f"Quelle: {source}\n"
+                  f"Zuordnung: {confidence}\n"
+                  f"Bewertung: {score} Punkte\n"
+              )
+              if reason_text:
+                  text+=f"Übereinstimmung: {reason_text}\n"
+              if url:
+                  text+=f"\nBericht öffnen:\n{url}"
+
+              send(text)
+              print("Telegram Presse-Treffer gesendet:",name,"|",confidence,"|",source,"|",score)
+          PY
+
+      - name: Ergebnisse speichern
+        shell: bash
+        run: |
+          git config user.name "Luftrettung-Kleve Bot"
+          git config user.email "actions@github.com"
+
+          git add \
+            incident_matches.json \
+            incident_match_state.json \
+            incident_detected.json
+
+          if git diff --cached --quiet; then
+            echo "Keine neuen Einsatz-Zuordnungen."
+          else
+            git commit -m "Einsatz-Zuordnung V1.1 aktualisiert"
+            git pull --rebase origin main
+            git push origin main
+          fi
