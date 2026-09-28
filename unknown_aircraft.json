@@ -844,5 +844,23 @@
     "minimum_distance_km": 41.8,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3de884": {
+    "identity": "3de884",
+    "hex": "3de884",
+    "registration": "D-HIHO",
+    "callsign": "DHIHO",
+    "type": "R44",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-28T06:39:03.986863+00:00",
+    "last_seen": "2026-09-28T06:39:03.986863+00:00",
+    "last_lat": 51.266619,
+    "last_lon": 6.433898,
+    "last_distance_km": 49.5,
+    "minimum_distance_km": 49.5,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
