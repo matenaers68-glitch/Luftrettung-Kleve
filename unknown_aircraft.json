@@ -63,12 +63,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-25T12:02:29.220996+00:00",
-    "last_seen": "2026-09-27T10:12:43.732877+00:00",
-    "last_lat": 52.231425,
-    "last_lon": 5.73863,
-    "last_distance_km": 67.9,
-    "minimum_distance_km": 60.6,
-    "inside_30km": false,
+    "last_seen": "2026-09-28T07:39:45.827602+00:00",
+    "last_lat": 51.73825,
+    "last_lon": 5.761261,
+    "last_distance_km": 28.2,
+    "minimum_distance_km": 28.2,
+    "inside_30km": true,
     "status": "needs_identification"
   },
   "3ddd3b": {
