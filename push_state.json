@@ -21,5 +21,21 @@
   "484ac0": "2026-09-22T19:12:18.829997+00:00",
   "3e1678": "2026-09-24T18:41:56.404485+00:00",
   "3e0a3c": "2026-09-24T19:59:37.701761+00:00",
-  "3e0a46": "2026-09-25T08:46:42.154947+00:00"
+  "3e0a46": "2026-09-25T08:46:42.154947+00:00",
+  "484a91": {
+    "timestamp": "2026-09-28T14:54:02.682815+00:00",
+    "segment_id": "484a91-20260928T135257",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "Politie 01",
+    "distance_km": 11.7,
+    "location": {
+      "display": "Heijen, Diekendaal 23",
+      "road": "Diekendaal",
+      "house_number": "23",
+      "city": "Heijen",
+      "postcode": "6598 AG",
+      "county": null,
+      "country": "Nederland"
+    }
+  }
 }
