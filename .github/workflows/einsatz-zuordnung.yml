@@ -1,0 +1,681 @@
+name: Luftrettung Einsatz-Zuordnung V1.7
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: luftrettung-einsatz-zuordnung
+  cancel-in-progress: false
+
+jobs:
+  incident-match:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Presseberichte suchen, Einsätze extrahieren und Flügen zuordnen
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, re, html, urllib.request, urllib.parse
+          from datetime import datetime, timezone, timedelta
+          from difflib import SequenceMatcher
+
+          VERSION = "1.7"
+          HISTORY_FILE = "history.json"
+          MATCH_FILE = "incident_matches.json"
+          STATE_FILE = "incident_match_state.json"
+          DETECTED_FILE = "incident_detected.json"
+
+          LOOKBACK_HOURS = 72
+          MIN_SCORE = 75
+          VERY_LIKELY_SCORE = 90
+          now = datetime.now(timezone.utc)
+
+          HEADERS = {
+              "User-Agent": "Mozilla/5.0 (compatible; Luftrettung-Kleve/1.5; +GitHub-Actions)"
+          }
+
+          def load_json(fn, default):
+              try:
+                  with open(fn, "r", encoding="utf-8") as f:
+                      return json.load(f)
+              except Exception:
+                  return default
+
+          def save_json(fn, data):
+              with open(fn, "w", encoding="utf-8") as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+
+          def parse_time(v):
+              try:
+                  if not v:
+                      return None
+                  d = datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+                  # Manche Webseiten liefern Zeitstempel ohne Zeitzone.
+                  # Für Vergleiche werden alle Zeiten timezone-aware gemacht.
+                  if d.tzinfo is None:
+                      d = d.replace(tzinfo=timezone.utc)
+                  return d.astimezone(timezone.utc)
+              except Exception:
+                  return None
+
+          def clean_text(v):
+              v = html.unescape(str(v or ""))
+              v = re.sub(r"<script.*?</script>|<style.*?</style>", " ", v, flags=re.I|re.S)
+              v = re.sub(r"<[^>]+>", " ", v)
+              return re.sub(r"\s+", " ", v).strip()
+
+          def norm(v):
+              v = clean_text(v).lower()
+              v = v.replace("ä","ae").replace("ö","oe").replace("ü","ue").replace("ß","ss")
+              return re.sub(r"[^a-z0-9 ]+", " ", v)
+
+          def fetch(url, timeout=25):
+              req = urllib.request.Request(url, headers=HEADERS)
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  return r.read().decode("utf-8", errors="ignore")
+
+          # --------------------------------------------------
+          # DIREKTQUELLEN
+          # --------------------------------------------------
+          def page_links(url, source, allowed_pattern=None):
+              out = []
+              try:
+                  raw = fetch(url)
+                  for href, title in re.findall(
+                      r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+                      raw, flags=re.I|re.S
+                  ):
+                      title = clean_text(title)
+                      if len(title) < 12:
+                          continue
+                      full = urllib.parse.urljoin(url, html.unescape(href))
+                      if allowed_pattern and not re.search(allowed_pattern, full, re.I):
+                          continue
+                      out.append({
+                          "source": source,
+                          "title": title,
+                          "description": "",
+                          "url": full,
+                          "published": None
+                      })
+              except Exception as e:
+                  print("Direktabruf-Fehler:", source, repr(e))
+              unique = {}
+              for x in out:
+                  unique[x["url"]] = x
+              result = list(unique.values())
+              print("Direktquelle:", source, "| Treffer:", len(result))
+              return result
+
+          def collect_articles():
+              a = []
+              a += page_links(
+                  "https://www.presseportal.de/blaulicht/nr/65849",
+                  "Kreispolizeibehörde Kleve / Presseportal",
+                  r"presseportal\.de/blaulicht/pm/"
+              )
+              a += page_links(
+                  "https://www.feuerwehr-goch.de/",
+                  "Feuerwehr Goch"
+              )
+              a += page_links(
+                  "https://tv-niederrhein.de/",
+                  "TV Niederrhein"
+              )
+              # TraumaRadar: direkte Flug-/Einsatzquelle für NL
+              a += page_links(
+                  "https://traumaradar.nl/",
+                  "TraumaRadar",
+                  r"traumaradar\.nl/vlucht/"
+              )
+              unique = {}
+              for x in a:
+                  key = x.get("url") or x.get("title")
+                  if key: unique[key] = x
+              return list(unique.values())
+
+          # --------------------------------------------------
+          # ARTIKELDETAILS / EINSATZINFORMATION
+          # --------------------------------------------------
+          def enrich_article(a):
+              try:
+                  raw = fetch(a["url"])
+                  # meta description bevorzugen
+                  m = re.search(
+                      r'<meta[^>]+(?:name|property)=["\'](?:description|og:description)["\'][^>]+content=["\']([^"\']+)',
+                      raw, re.I
+                  )
+                  if not m:
+                      m = re.search(
+                          r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:name|property)=["\'](?:description|og:description)["\']',
+                          raw, re.I
+                      )
+                  desc = clean_text(m.group(1)) if m else ""
+                  body = clean_text(raw)
+                  # Begrenzen, damit irrelevante Navigation nicht alles dominiert
+                  a["description"] = desc
+                  a["body_excerpt"] = body[:12000]
+
+                  # Datum, soweit maschinenlesbar vorhanden
+                  dm = re.search(
+                      r'(?:datePublished|article:published_time)["\']?\s*(?:content=|:)\s*["\']([^"\']+)',
+                      raw, re.I
+                  )
+                  if dm:
+                      a["published"] = dm.group(1)
+              except Exception as e:
+                  print("Detailabruf-Fehler:", a.get("source"), a.get("url"), repr(e))
+              return a
+
+          # --------------------------------------------------
+          # EINSATZART + FAKTEN (nur belegte Angaben)
+          # --------------------------------------------------
+          CATEGORY_PATTERNS = [
+              ("Reanimation / medizinischer Notfall", r"\breanimation\b|\breanimiert\b|hartstilstand|reanimatie|medisch noodgeval"),
+              ("Brand", r"\bbrand\b|\bfeuer\b|woningbrand|gebouwbrand|schuurbrand"),
+              ("Arbeitsunfall", r"arbeitsunfall|bedrijfsongeval|arbeidsongeval"),
+              ("Motorradunfall", r"motorrad|motorfiets|motorrijder"),
+              ("Fahrrad-/Pedelec-Unfall", r"pedelec|e-?bike|fahrrad|radfahrer|fietser"),
+              ("Fußgängerunfall", r"fußgänger|fussgaenger|voetganger"),
+              ("Verkehrsunfall", r"verkehrsunfall|unfall|aanrijding|verkeersongeval|botsing"),
+              ("Ertrinkungs-/Wasserrettung", r"ertrink|wasserrettung|drenkeling|te water"),
+              ("Personensuche", r"personensuche|vermisst|vermissing|zoekactie"),
+              ("Kindernotfall", r"kindernotfall|kind gewond|baby|kleinkind"),
+          ]
+
+          def classify(text):
+              n = norm(text)
+              for label, pat in CATEGORY_PATTERNS:
+                  if re.search(pat, n, re.I):
+                      return label
+              return "Rettungsdiensteinsatz"
+
+          def extract_people(text):
+              t = clean_text(text)
+              nt = norm(t)
+              facts = []
+
+              # Nur ausdrücklich vorhandene Zahlen/Bezeichnungen übernehmen.
+              patterns = [
+                  (r'(\d+)\s+(?:personen?|menschen|inzittenden?)\s+(?:wurden?\s+)?(?:verletzt|gewond)', "Verletzte"),
+                  (r'(\d+)\s+(?:schwerverletzte|zwaargewonden)', "Schwerverletzte"),
+                  (r'(\d+)\s+(?:leichtverletzte|lichtgewonden)', "Leichtverletzte"),
+                  (r'(\d+)\s+(?:tote|todesopfer|doden)', "Todesopfer"),
+              ]
+              for pat, label in patterns:
+                  m = re.search(pat, nt, re.I)
+                  if m:
+                      facts.append(f"{m.group(1)} {label}")
+
+              # Wortzahlen nur, wenn eindeutig.
+              wordnums = {
+                  "eine person": "1 Person",
+                  "ein mann": "1 Mann",
+                  "eine frau": "1 Frau",
+                  "twee personen": "2 Personen",
+                  "drie personen": "3 Personen"
+              }
+              if not facts:
+                  for needle, label in wordnums.items():
+                      if needle in nt and ("verletzt" in nt or "gewond" in nt):
+                          severity = ""
+                          if "schwer verletzt" in nt or "zwaargewond" in nt:
+                              severity = ", schwer verletzt"
+                          facts.append(label + severity)
+                          break
+              return "; ".join(facts) if facts else "keine gesicherte Angabe"
+
+          def extract_destination(text):
+              t = clean_text(text)
+              patterns = [
+                  r'(?:in|naar)\s+(?:das|die|den|het)?\s*([A-ZÄÖÜ][^.,;]{3,70}(?:Klinik|Krankenhaus|Hospital|UMC|Medisch Centrum)[^.,;]{0,40})',
+                  r'(?:gebracht|geflogen|vervoerd)\s+(?:naar|in)\s+([^.,;]{4,90})'
+              ]
+              for p in patterns:
+                  m = re.search(p, t, re.I)
+                  if m:
+                      return clean_text(m.group(1))[:100]
+              return None
+
+          def short_summary(article):
+              # Keine freie Erfindung: Titel + vorhandene Meta-Beschreibung.
+              title = clean_text(article.get("title"))
+              desc = clean_text(article.get("description"))
+              if desc and desc.lower() not in title.lower():
+                  s = desc
+              else:
+                  s = title
+              return s[:420]
+
+          # --------------------------------------------------
+          # FLÜGE
+          # --------------------------------------------------
+          history = load_json(HISTORY_FILE, [])
+          if not isinstance(history, list): history = []
+          cutoff = now - timedelta(hours=LOOKBACK_HOURS)
+          segments = {}
+
+          for item in history:
+              ts = parse_time(item.get("timestamp"))
+              if not ts or ts < cutoff: continue
+              sid = item.get("segment_id")
+              if sid: segments.setdefault(sid, []).append(item)
+
+          flights = []
+          for sid, points in segments.items():
+              points.sort(key=lambda x: x.get("timestamp",""))
+              first, last = points[0], points[-1]
+              nearest = min(points, key=lambda x: x.get("distance_km") if isinstance(x.get("distance_km"),(int,float)) else 9999)
+              located = [p for p in points if isinstance(p.get("location"),dict) and p["location"].get("display")]
+              lp = min(located, key=lambda x: x.get("distance_km") if isinstance(x.get("distance_km"),(int,float)) else 9999) if located else nearest
+              loc = lp.get("location") or {}
+              flights.append({
+                  "segment_id": sid,
+                  "name": last.get("name") or first.get("name") or "Hubschrauber",
+                  "registration": last.get("registration") or first.get("registration"),
+                  "callsign": last.get("callsign") or first.get("callsign"),
+                  "service": last.get("service") or first.get("service"),
+                  "first_seen": first.get("timestamp"),
+                  "last_seen": last.get("timestamp"),
+                  "city": loc.get("city"),
+                  "road": loc.get("road"),
+                  "location": loc.get("display"),
+                  "nearest_distance_km": nearest.get("distance_km"),
+                  "nearest_lat": nearest.get("lat"),
+                  "nearest_lon": nearest.get("lon"),
+                  "country": loc.get("country") or loc.get("country_code")
+              })
+
+          print("Zu prüfende Flugsegmente:", len(flights))
+
+          articles = [enrich_article(x) for x in collect_articles()]
+          print("Gefundene Presse-/News-Einträge:", len(articles))
+
+          # --------------------------------------------------
+          # STRENGE ZUORDNUNG
+          # --------------------------------------------------
+          PRIORITY = {
+              "Kreispolizeibehörde Kleve / Presseportal": 15,
+              "Feuerwehr Goch": 15,
+              "TV Niederrhein": 12,
+              "TraumaRadar": 12
+          }
+
+          def lifeliner_number(s):
+              m = re.search(r'lifeliner\s*([1-4])', norm(s))
+              return m.group(1) if m else None
+
+          def trauma_event_time(a):
+              """Zeit eines TraumaRadar-Flugeintrags aus URL-Datum + Uhrzeit im Titel."""
+              if a.get("source") != "TraumaRadar":
+                  return None
+              url = str(a.get("url") or "")
+              title = str(a.get("title") or "")
+              dm = re.search(r'/((?:20)\d{2})/(\d{2})/(\d{2})/', url)
+              tm = re.search(r'\b([01]?\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?\b', title)
+              if not (dm and tm):
+                  return None
+              try:
+                  # TraumaRadar-Zeit ist niederländische Ortszeit; Ende September = CEST (UTC+2).
+                  local = datetime(
+                      int(dm.group(1)), int(dm.group(2)), int(dm.group(3)),
+                      int(tm.group(1)), int(tm.group(2)), int(tm.group(3) or 0),
+                      tzinfo=timezone(timedelta(hours=2))
+                  )
+                  return local.astimezone(timezone.utc)
+              except Exception:
+                  return None
+
+          NL_CITY_HINTS = {
+              "malden", "groesbeek", "bergen", "gennep", "mook", "cuijk",
+              "nijmegen", "venlo", "boxmeer", "heijen", "ottersum", "millingen"
+          }
+
+          def flight_country(f):
+              explicit = norm(f.get("country"))
+              if explicit in ("nl", "nederland", "netherlands", "niederlande"):
+                  return "NL"
+              if explicit in ("de", "deutschland", "germany"):
+                  return "DE"
+              city = norm(f.get("city"))
+              road = norm(f.get("road"))
+              name = norm((f.get("name") or "") + " " + (f.get("callsign") or ""))
+              if city in NL_CITY_HINTS:
+                  return "NL"
+              if re.search(r"\b(weg|straat|laan|plein|dijk|singel|kade)\b", road) or road.endswith(("weg","straat","laan","plein","dijk","singel","kade")):
+                  return "NL"
+              # Politie-Flüge sind niederländisch, solange der erkannte Einsatzort nicht explizit deutsch ist.
+              if "politie" in name:
+                  return "NL"
+              return "UNKNOWN"
+
+          def score_match(f, a):
+              text = norm(
+                  (a.get("title") or "") + " " +
+                  (a.get("description") or "") + " " +
+                  (a.get("body_excerpt") or "")
+              )
+              score, reasons = 0, []
+              fname = norm(f.get("name"))
+              city = norm(f.get("city"))
+              road = norm(f.get("road"))
+              callsign = norm(f.get("callsign"))
+              source = a.get("source")
+              fcountry = flight_country(f)
+
+              # Harte Ländertrennung: Ein in NL lokalisierter Flug darf nicht mit
+              # deutschen Pressequellen gekoppelt werden. Das verhindert z. B.
+              # Bergen/Ceresweg -> Geldern/Kevelaer.
+              german_sources = ("Kreispolizeibehörde Kleve / Presseportal", "Feuerwehr Goch", "TV Niederrhein")
+              if fcountry == "NL" and source in german_sources:
+                  return -999, ["NL-Flug: deutsche Quelle ausgeschlossen"], None
+
+              flight_ll = lifeliner_number(fname + " " + callsign)
+              article_ll = lifeliner_number(text)
+
+              # Harte Sperre: falscher Lifeliner.
+              if flight_ll and article_ll and flight_ll != article_ll:
+                  return -999, ["anderer Lifeliner"], None
+
+              city_hit = bool(city and city in text)
+              road_hit = bool(road and len(road) >= 4 and road in text)
+              callsign_hit = bool(callsign and len(callsign) >= 4 and callsign in text)
+
+              if flight_ll and article_ll == flight_ll:
+                  score += 35; reasons.append("Lifeliner-Nummer stimmt")
+              if city_hit:
+                  score += 45; reasons.append("Ort stimmt")
+              if road_hit:
+                  score += 35; reasons.append("Straße stimmt")
+              if callsign_hit:
+                  score += 30; reasons.append("Rufname stimmt")
+
+              heli = bool(re.search(r"rettungshubschrauber|hubschrauber|helikopter|lifeliner|christoph", text))
+              incident = bool(re.search(r"unfall|verkehrsunfall|brand|reanimation|rettungsdienst|polizei|feuerwehr|aanrijding|ongeval|gewond", text))
+              if heli:
+                  score += 8; reasons.append("Hubschrauberbezug")
+              if incident:
+                  score += 8; reasons.append("Einsatzbezug")
+
+              score += PRIORITY.get(source,0)
+              if PRIORITY.get(source,0): reasons.append("priorisierte Quelle")
+
+              ft = parse_time(f.get("last_seen"))
+              at = parse_time(a.get("published"))
+              diff = None
+
+              # TraumaRadar: nicht Veröffentlichungszeit, sondern konkrete Flugzeit verwenden.
+              if source == "TraumaRadar":
+                  if not flight_ll or article_ll != flight_ll:
+                      return -999, ["TraumaRadar: falscher/fehlender Lifeliner"], None
+                  at = trauma_event_time(a)
+                  if not (ft and at):
+                      return -999, ["TraumaRadar: konkrete Flugzeit nicht bestimmbar"], None
+                  diff = abs((at-ft).total_seconds())/3600
+                  # Ein TraumaRadar-Flug ist nur dann derselbe Flug, wenn die Zeiten eng zusammenliegen.
+                  if diff <= 0.50:
+                      score += 45; reasons.append("TraumaRadar-Zeit ±30 min")
+                  elif diff <= 1.00:
+                      score += 30; reasons.append("TraumaRadar-Zeit ±60 min")
+                  elif diff <= 1.50:
+                      score += 15; reasons.append("TraumaRadar-Zeit ±90 min")
+                  else:
+                      return -999, [f"TraumaRadar: Zeitabstand {diff:.1f} h zu groß"], diff
+
+                  # Ohne Ortsbezug braucht TraumaRadar eine besonders enge Zeitübereinstimmung.
+                  if not city_hit and not road_hit and diff > 0.50:
+                      return -999, ["TraumaRadar: kein Ortsbezug und Zeit nicht eng genug"], diff
+
+              elif ft and at:
+                  diff = abs((at-ft).total_seconds())/3600
+                  if diff <= 3: score += 25; reasons.append("Zeit ±3 h")
+                  elif diff <= 8: score += 15; reasons.append("Zeit ±8 h")
+                  elif diff <= 24: score += 5; reasons.append("Zeit ±24 h")
+                  elif diff > 36: return -999, ["Pressebericht zeitlich zu weit entfernt"], diff
+
+              # Presseberichte brauchen einen echten geografischen Bezug. Allgemeine Polizei-/
+              # Unfallmeldungen dürfen nicht allein wegen Quelle und Stichworten gewinnen.
+              if source != "TraumaRadar" and not (city_hit or road_hit):
+                  # Ausnahme nur bei eindeutig genanntem Rufnamen UND enger Zeitlage.
+                  if not (callsign_hit and diff is not None and diff <= 3):
+                      return -999, ["kein passender Orts-/Straßenbezug"], diff
+
+              # Niederländischer Polizeihubschrauber: deutsche Meldung nur mit explizitem Ortsbezug.
+              is_police = bool(re.search(r"politie|polizei", fname + " " + callsign))
+              if is_police and source in ("Kreispolizeibehörde Kleve / Presseportal", "Feuerwehr Goch", "TV Niederrhein"):
+                  if not (city_hit or road_hit):
+                      return -999, ["Polizeihubschrauber: deutsche Quelle ohne Ortsbezug"], diff
+
+              return score, reasons, diff
+
+          existing = load_json(MATCH_FILE, [])
+          state = load_json(STATE_FILE, {})
+          if not isinstance(existing,list): existing=[]
+          if not isinstance(state,dict): state={}
+          current_segment_ids = {str(f.get("segment_id")) for f in flights}
+          # Alte V1.5/V1.6-Treffer der aktuell neu bewerteten Segmente entfernen,
+          # damit falsche Alt-Zuordnungen nicht in incident_matches.json stehen bleiben.
+          bykey = {
+              str(x.get("segment_id"))+"|"+str(x.get("article_url")):x
+              for x in existing
+              if str(x.get("segment_id")) not in current_segment_ids
+          }
+          detected=[]
+
+          for f in flights:
+              candidates=[]
+              for a in articles:
+                  score,reasons,diff=score_match(f,a)
+                  if score < MIN_SCORE: continue
+                  fulltext = " ".join([
+                      a.get("title") or "",
+                      a.get("description") or "",
+                      a.get("body_excerpt") or ""
+                  ])
+                  confidence = "möglicher Zusammenhang"
+                  if score >= VERY_LIKELY_SCORE: confidence="sehr wahrscheinlicher Zusammenhang"
+                  elif score >= 75: confidence="wahrscheinlicher Zusammenhang"
+
+                  m = {
+                      "version":VERSION,
+                      "checked_at":now.isoformat(),
+                      "segment_id":f.get("segment_id"),
+                      "aircraft_name":f.get("name"),
+                      "registration":f.get("registration"),
+                      "callsign":f.get("callsign"),
+                      "service":f.get("service"),
+                      "flight_first_seen":f.get("first_seen"),
+                      "flight_last_seen":f.get("last_seen"),
+                      "flight_location":f.get("location"),
+                      "flight_city":f.get("city"),
+                      "flight_road":f.get("road"),
+                      "nearest_distance_km":f.get("nearest_distance_km"),
+                      "article_source":a.get("source"),
+                      "article_title":a.get("title"),
+                      "article_url":a.get("url"),
+                      "article_published":a.get("published"),
+                      "score":score,
+                      "confidence":confidence,
+                      "reasons":reasons,
+                      "time_difference_hours":round(diff,1) if diff is not None else None,
+                      "incident_type":classify(fulltext),
+                      "affected":extract_people(fulltext),
+                      "destination":extract_destination(fulltext),
+                      "what_happened":short_summary(a),
+                      "language":"nl" if a.get("source")=="TraumaRadar" else "de"
+                  }
+                  # TraumaRadar ist primär eine Flugbewegungsquelle. Es darf die
+                  # Zuordnung stützen, löst aber allein keine Einsatz-Telegrammeldung aus.
+                  m["notify_eligible"] = (a.get("source") != "TraumaRadar")
+                  candidates.append(m)
+
+              candidates.sort(key=lambda x:x["score"], reverse=True)
+              print("\nFLUG:", f.get("name"), "|", f.get("location") or "Ort nicht bestimmt")
+              for i,c in enumerate(candidates[:5],1):
+                  print("TOP",i,"|",c["score"],"|",c["article_source"],"|",c["article_title"][:150])
+
+              for m in candidates[:3]:
+                  bykey[str(m["segment_id"])+"|"+str(m["article_url"])] = m
+
+              notify_candidates = [c for c in candidates if c.get("notify_eligible")]
+              if notify_candidates:
+                  best=notify_candidates[0]
+                  sk=str(best["segment_id"])
+                  old=state.get(sk,{})
+                  notify=(not old.get("article_url") or
+                          (best["article_url"] != old.get("article_url") and
+                           best["score"] >= old.get("score",0)+10))
+                  if notify:
+                      detected.append(best)
+                      state[sk]={
+                          "notified_at":now.isoformat(),
+                          "article_url":best["article_url"],
+                          "score":best["score"],
+                          "confidence":best["confidence"]
+                      }
+
+          mc=now-timedelta(days=14)
+          cleaned=[]
+          for m in bykey.values():
+              t=parse_time(m.get("flight_last_seen"))
+              if t and t>=mc: cleaned.append(m)
+          cleaned.sort(key=lambda x:(x.get("flight_last_seen",""),x.get("score",0)),reverse=True)
+
+          save_json(MATCH_FILE,cleaned)
+          save_json(STATE_FILE,state)
+          save_json(DETECTED_FILE,detected)
+          print("\nGespeicherte Zuordnungen:",len(cleaned))
+          print("Neue Telegram-Kandidaten:",len(detected))
+          PY
+
+      - name: Telegram Nachricht bei Presse-Treffer
+        shell: bash
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request, re
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+
+          token=os.environ.get("TELEGRAM_BOT_TOKEN","").strip()
+          chat_id=os.environ.get("TELEGRAM_CHAT_ID","").strip()
+          if not token or not chat_id:
+              raise RuntimeError("TELEGRAM_BOT_TOKEN oder TELEGRAM_CHAT_ID fehlt.")
+
+          try:
+              with open("incident_detected.json","r",encoding="utf-8") as f:
+                  detected=json.load(f)
+          except Exception:
+              detected=[]
+
+          if not detected:
+              print("Kein neuer belastbarer Presse-Treffer.")
+              raise SystemExit(0)
+
+          def german_time(v):
+              try:
+                  d=datetime.fromisoformat(str(v).replace("Z","+00:00"))
+                  if d.tzinfo is None: d=d.replace(tzinfo=timezone.utc)
+                  d=d.astimezone(ZoneInfo("Europe/Berlin"))
+                  return d.strftime("%d.%m.%Y %H:%M")
+              except Exception:
+                  return str(v or "unbekannt")
+
+          # Kleine, deterministische NL->DE Übersetzung für typische Einsatztexte.
+          # Es wird nichts ergänzt, nur bekannte Begriffe ersetzt.
+          NL_DE = [
+              (r"\bnaar\b","nach"),(r"\bvanuit\b","von"),(r"\bongeval\b","Unfall"),
+              (r"\bverkeersongeval\b","Verkehrsunfall"),(r"\baanrijding\b","Zusammenstoß"),
+              (r"\bgewond\b","verletzt"),(r"\bzwaargewond\b","schwer verletzt"),
+              (r"\blichtgewond\b","leicht verletzt"),(r"\bbrand\b","Brand"),
+              (r"\breanimatie\b","Reanimation"),(r"\bhartstilstand\b","Herzstillstand"),
+              (r"\bziekenhuis\b","Krankenhaus"),(r"\bhelikopter\b","Hubschrauber"),
+              (r"\bduur\b","Dauer"),(r"\bafstand\b","Entfernung"),
+              (r"\bvlieghoogte\b","Flughöhe"),(r"\bsnelheid\b","Geschwindigkeit")
+          ]
+          def translate_basic(s):
+              out=str(s or "")
+              for p,r in NL_DE:
+                  out=re.sub(p,r,out,flags=re.I)
+              return out
+
+          def send(text):
+              url=f"https://api.telegram.org/bot{token}/sendMessage"
+              data=urllib.parse.urlencode({
+                  "chat_id":chat_id,
+                  "text":text,
+                  "disable_web_page_preview":"false"
+              }).encode()
+              req=urllib.request.Request(url,data=data,method="POST")
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  result=json.load(r)
+              if not result.get("ok"):
+                  raise RuntimeError("Telegram-Fehler: "+str(result))
+
+          for item in detected:
+              name=item.get("aircraft_name") or "Hubschrauber"
+              location=item.get("flight_location") or item.get("flight_city") or "Ort noch nicht sicher bestimmt"
+              incident=item.get("incident_type") or "Rettungsdiensteinsatz"
+              affected=item.get("affected") or "keine gesicherte Angabe"
+              happened=item.get("what_happened") or "Keine nähere gesicherte Beschreibung."
+              if item.get("language")=="nl":
+                  happened=translate_basic(happened)
+              destination=item.get("destination")
+              source=item.get("article_source") or "Quelle unbekannt"
+              confidence=item.get("confidence") or "möglicher Zusammenhang"
+              score=item.get("score") or 0
+              reasons=" · ".join((item.get("reasons") or [])[:5])
+              url=item.get("article_url") or ""
+
+              text=(
+                  f"🚁 {name} – Einsatz zugeordnet\n\n"
+                  f"📍 Ort: {location}\n"
+                  f"🕒 Zeit: {german_time(item.get('flight_last_seen'))} Uhr\n\n"
+                  f"🚨 Einsatz: {incident}\n"
+                  f"👥 Betroffene: {affected}\n"
+              )
+              if destination:
+                  text += f"🏥 Transportziel: {translate_basic(destination)}\n"
+              text += (
+                  f"\nWas ist passiert?\n{happened}\n\n"
+                  f"📰 Quelle: {source}\n"
+                  f"🎯 Zuordnung: {confidence} ({score} Punkte)\n"
+              )
+              if reasons:
+                  text += f"Abgleich: {reasons}\n"
+              if item.get("language")=="nl":
+                  text += "🇳🇱 Quelle niederländisch – Inhalt für die Nachricht auf Deutsch wiedergegeben.\n"
+              if url:
+                  text += f"\nOriginalbericht:\n{url}"
+              send(text)
+              print("Telegram gesendet:",name,"|",incident,"|",source,"|",score)
+          PY
+
+      - name: Ergebnisse speichern
+        shell: bash
+        run: |
+          git config user.name "Luftrettung-Kleve Bot"
+          git config user.email "actions@github.com"
+
+          git add incident_matches.json incident_match_state.json incident_detected.json
+
+          if git diff --cached --quiet; then
+            echo "Keine neuen Einsatz-Zuordnungen."
+          else
+            git commit -m "Einsatz-Zuordnung V1.5.1 aktualisiert"
+            git pull --rebase origin main
+            git push origin main
+          fi
