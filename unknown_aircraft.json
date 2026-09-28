@@ -981,11 +981,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-28T16:21:52.550436+00:00",
-    "last_seen": "2026-09-28T16:21:52.550436+00:00",
-    "last_lat": 51.999802,
-    "last_lon": 7.098083,
-    "last_distance_km": 73.8,
-    "minimum_distance_km": 73.8,
+    "last_seen": "2026-09-28T16:36:23.565854+00:00",
+    "last_lat": 51.481189,
+    "last_lon": 6.89743,
+    "last_distance_km": 55.5,
+    "minimum_distance_km": 55.5,
     "inside_30km": false,
     "status": "needs_identification"
   }
