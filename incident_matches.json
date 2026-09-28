@@ -1,7 +1,7 @@
 [
   {
     "version": "1.7",
-    "checked_at": "2026-09-28T17:09:02.328366+00:00",
+    "checked_at": "2026-09-28T17:19:09.700878+00:00",
     "segment_id": "485e49-20260928T091827",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -17,11 +17,11 @@
     "article_title": "Lifeliner 3 naar Vliegbasis Volkel 12:45:19 | duur: 8 min. | afstand: 24 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515342/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
     "article_published": null,
-    "score": 145,
+    "score": 150,
     "confidence": "sehr wahrscheinlicher Zusammenhang",
     "reasons": [
       "Lifeliner-Nummer stimmt",
-      "Ort stimmt",
+      "Ort/Ortsteil stimmt",
       "Hubschrauberbezug",
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.7",
-    "checked_at": "2026-09-28T17:09:02.328366+00:00",
+    "checked_at": "2026-09-28T17:19:09.700878+00:00",
     "segment_id": "485e49-20260928T091827",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -52,11 +52,11 @@
     "article_title": "Lifeliner 3 naar Radboud University Medical Center Heliport 11:46:07 | duur: 17 min. | afstand: 61 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515262/lifeliner-3-ph-doc-vanuit-belfeld.html",
     "article_published": null,
-    "score": 115,
+    "score": 120,
     "confidence": "sehr wahrscheinlicher Zusammenhang",
     "reasons": [
       "Lifeliner-Nummer stimmt",
-      "Ort stimmt",
+      "Ort/Ortsteil stimmt",
       "Hubschrauberbezug",
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±90 min"
