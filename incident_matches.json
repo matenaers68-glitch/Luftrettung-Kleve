@@ -1,7 +1,7 @@
 [
   {
     "version": "1.7",
-    "checked_at": "2026-09-28T22:52:24.208722+00:00",
+    "checked_at": "2026-09-28T23:07:43.691158+00:00",
     "segment_id": "485e49-20260928T091827",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.0,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Groningen Airport Eelde 28 sep 18:15 Lifeliner 4 naar Isala Hospital Zwolle Heliport 28 sep 17:42 Me",
+    "destination": null,
     "what_happened": "Op maandag 28 september 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 8 minuten en legde een afstand af van 24 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.7",
-    "checked_at": "2026-09-28T22:52:24.208722+00:00",
+    "checked_at": "2026-09-28T23:07:43.691158+00:00",
     "segment_id": "485e49-20260928T091827",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -64,14 +64,14 @@
     "time_difference_hours": 1.0,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Groningen Airport Eelde 28 sep 18:15 Lifeliner 4 naar Isala Hospital Zwolle Heliport 28 sep 17:42 Me",
+    "destination": null,
     "what_happened": "Op maandag 28 september 2026 is er een Lifeliner 3 vertrokken van Belfeld naar Radboud University Medical Center Heliport. De vlucht duurde 17 minuten en legde een afstand af van 61 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.7",
-    "checked_at": "2026-09-28T22:52:24.208722+00:00",
+    "checked_at": "2026-09-28T23:07:43.691158+00:00",
     "segment_id": "485e49-20260928T091827",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -98,7 +98,7 @@
     "time_difference_hours": 0.4,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Groningen Airport Eelde 28 sep 18:15 Lifeliner 4 naar Isala Hospital Zwolle Heliport 28 sep 17:42 Me",
+    "destination": null,
     "what_happened": "Op maandag 28 september 2026 is er een Ambulancehelikopter vertrokken van Ameland Vliegveld Ballum naar Leeuwarden Medical Center Heliport. De vlucht duurde 10 minuten en legde een afstand af van 36 kilometer.",
     "language": "nl",
     "notify_eligible": false
