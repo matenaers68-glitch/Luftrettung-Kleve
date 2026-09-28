@@ -826,5 +826,23 @@
     "minimum_distance_km": 60.2,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3d257b": {
+    "identity": "3d257b",
+    "hex": "3d257b",
+    "registration": "D-EMLF",
+    "callsign": "DEMLF",
+    "type": "SR22",
+    "category": "A1",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-28T05:38:25.515901+00:00",
+    "last_seen": "2026-09-28T05:38:25.515901+00:00",
+    "last_lat": 51.72326,
+    "last_lon": 7.27005,
+    "last_distance_km": 76.7,
+    "minimum_distance_km": 76.7,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
