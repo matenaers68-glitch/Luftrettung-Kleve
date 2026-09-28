@@ -837,11 +837,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-28T05:38:25.515901+00:00",
-    "last_seen": "2026-09-28T05:38:25.515901+00:00",
-    "last_lat": 51.72326,
-    "last_lon": 7.27005,
-    "last_distance_km": 76.7,
-    "minimum_distance_km": 76.7,
+    "last_seen": "2026-09-28T05:49:56.765110+00:00",
+    "last_lat": 51.476208,
+    "last_lon": 6.66954,
+    "last_distance_km": 41.8,
+    "minimum_distance_km": 41.8,
     "inside_30km": false,
     "status": "needs_identification"
   }
