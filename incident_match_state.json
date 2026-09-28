@@ -1,1 +1,38 @@
-{}
+{
+  "485e49-20260925T172041": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515736/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
+    "score": 67,
+    "confidence": "möglicher Zusammenhang"
+  },
+  "485e49-20260926T181257": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515736/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
+    "score": 67,
+    "confidence": "möglicher Zusammenhang"
+  },
+  "485e49-20260926T231429": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515736/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
+    "score": 67,
+    "confidence": "möglicher Zusammenhang"
+  },
+  "485e49-20260927T135217": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515736/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
+    "score": 67,
+    "confidence": "möglicher Zusammenhang"
+  },
+  "485e49-20260928T091827": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://traumaradar.nl/vlucht/2026/09/28/515736/lifeliner-3-ph-doc-vanuit-radboud-universitair-medisch-centrum.html",
+    "score": 102,
+    "confidence": "sehr wahrscheinlicher Zusammenhang"
+  },
+  "484a91-20260928T135257": {
+    "notified_at": "2026-09-28T16:47:03.384863+00:00",
+    "article_url": "https://www.presseportal.de/blaulicht/pm/65849/6360806",
+    "score": 90,
+    "confidence": "sehr wahrscheinlicher Zusammenhang"
+  }
+}
