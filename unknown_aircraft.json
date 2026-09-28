@@ -81,12 +81,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-25T12:11:26.332517+00:00",
-    "last_seen": "2026-09-28T14:22:46.654366+00:00",
-    "last_lat": 51.666513,
-    "last_lon": 6.740341,
-    "last_distance_km": 40.1,
+    "last_seen": "2026-09-28T14:38:04.538181+00:00",
+    "last_lat": 51.622559,
+    "last_lon": 6.508657,
+    "last_distance_km": 24.9,
     "minimum_distance_km": 7.3,
-    "inside_30km": false,
+    "inside_30km": true,
     "status": "needs_identification"
   },
   "485c7c": {
