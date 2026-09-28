@@ -1,7 +1,54 @@
 {
-  "updated": "2026-09-28T09:35:41.984803+00:00",
+  "updated": "2026-09-28T09:50:06.746224+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": []
+  "aircraft": [
+    {
+      "timestamp": "2026-09-28T09:50:06.746224+00:00",
+      "identity": "485e49",
+      "segment_id": "485e49-20260928T091827",
+      "hex": "485e49",
+      "registration": "PH-DOC",
+      "callsign": "LIFELN3",
+      "name": "Lifeliner 3",
+      "classification": "rescue",
+      "classification_source": "aircraft_db",
+      "service": "Traumahelikopter",
+      "station": "Volkel",
+      "country": "Niederlande",
+      "operator": "",
+      "description": "",
+      "type": "EC35",
+      "category": "A7",
+      "lat": 51.434235,
+      "lon": 6.038101,
+      "location": {
+        "display": "Hegelsom, Schoutenweg 4",
+        "road": "Schoutenweg",
+        "house_number": "4",
+        "city": "Hegelsom",
+        "postcode": "5963 NN",
+        "county": null,
+        "country": "Nederland"
+      },
+      "distance_km": 28.4,
+      "inside_30km": true,
+      "relevant": true,
+      "altitude_ft": 825,
+      "ground_speed": 130.9,
+      "track": 337.55,
+      "movement_bearing": 124.7,
+      "movement_direction": "Südost",
+      "distance_change_km": 0.7,
+      "approaching_goch": false,
+      "first_seen": "2026-09-28T09:18:27.187070+00:00",
+      "first_seen_distance_km": 27.7,
+      "minimum_distance_km": 27.7,
+      "entered_30km": "2026-09-28T09:18:27.187070+00:00",
+      "new_flight": false,
+      "push_reason": null,
+      "last_seen": "2026-09-28T09:50:06.746224+00:00"
+    }
+  ]
 }
