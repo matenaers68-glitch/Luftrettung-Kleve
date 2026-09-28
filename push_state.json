@@ -1,7 +1,22 @@
 {
   "3e167d": "2026-09-22T13:40:32.294273+00:00",
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
-  "485e49": "2026-09-27T15:44:30.749700+00:00",
+  "485e49": {
+    "timestamp": "2026-09-28T09:18:27.187070+00:00",
+    "segment_id": "485e49-20260928T091827",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Lifeliner 3",
+    "distance_km": 27.7,
+    "location": {
+      "display": "Ysselsteyn, Meerselsepeel",
+      "road": "Meerselsepeel",
+      "house_number": null,
+      "city": "Ysselsteyn",
+      "postcode": "5813 AG",
+      "county": null,
+      "country": "Nederland"
+    }
+  },
   "3e0a45": "2026-09-21T19:34:13.421123+00:00",
   "484ac0": "2026-09-22T19:12:18.829997+00:00",
   "3e1678": "2026-09-24T18:41:56.404485+00:00",
