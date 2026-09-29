@@ -38,17 +38,17 @@
   "3e0a3c": "2026-09-24T19:59:37.701761+00:00",
   "3e0a46": "2026-09-25T08:46:42.154947+00:00",
   "484a91": {
-    "timestamp": "2026-09-28T18:37:23.096176+00:00",
-    "segment_id": "484a91-20260928T183723",
+    "timestamp": "2026-09-29T14:10:00.181723+00:00",
+    "segment_id": "484a91-20260929T141000",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Politie 01",
-    "distance_km": 29.8,
+    "distance_km": 28.6,
     "location": {
-      "display": "Bemmel, het Nevelveld 3",
-      "road": "het Nevelveld",
-      "house_number": "3",
-      "city": "Bemmel",
-      "postcode": "6681 KL",
+      "display": "Nijmegen, Plutostraat 2",
+      "road": "Plutostraat",
+      "house_number": "2",
+      "city": "Nijmegen",
+      "postcode": "6543 WP",
       "county": null,
       "country": "Nederland"
     }

@@ -1017,12 +1017,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-29T07:35:01.081535+00:00",
-    "last_seen": "2026-09-29T13:27:42.380073+00:00",
-    "last_lat": 51.583191,
-    "last_lon": 6.533822,
-    "last_distance_km": 27.9,
+    "last_seen": "2026-09-29T14:10:00.181723+00:00",
+    "last_lat": 51.598343,
+    "last_lon": 6.603451,
+    "last_distance_km": 31.9,
     "minimum_distance_km": 9.8,
-    "inside_30km": true,
+    "inside_30km": false,
     "status": "needs_identification"
   },
   "440a59": {
