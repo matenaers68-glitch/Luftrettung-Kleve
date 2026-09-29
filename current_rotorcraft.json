@@ -1,7 +1,54 @@
 {
-  "updated": "2026-09-29T11:34:13.291730+00:00",
+  "updated": "2026-09-29T11:48:33.374964+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": []
+  "aircraft": [
+    {
+      "timestamp": "2026-09-29T11:48:33.374964+00:00",
+      "identity": "3e167d",
+      "segment_id": "3e167d-20260929T105557",
+      "hex": "3e167d",
+      "registration": "D-HZSF",
+      "callsign": "CHX9",
+      "name": "Christoph 9",
+      "classification": "rescue",
+      "classification_source": "aircraft_db",
+      "service": "Rettungshubschrauber",
+      "station": "Duisburg-Buchholz",
+      "country": "Deutschland",
+      "operator": "",
+      "description": "",
+      "type": "EC35",
+      "category": "A7",
+      "lat": 51.610045,
+      "lon": 6.207047,
+      "location": {
+        "display": "Weeze, Laar 18",
+        "road": "Laar",
+        "house_number": "18",
+        "city": "Weeze",
+        "postcode": "47652",
+        "county": "Kreis Kleve",
+        "country": "Deutschland"
+      },
+      "distance_km": 8.3,
+      "inside_30km": true,
+      "relevant": true,
+      "altitude_ft": 725,
+      "ground_speed": 79.6,
+      "track": 122.69,
+      "movement_bearing": 127.9,
+      "movement_direction": "Südost",
+      "distance_change_km": 2.0,
+      "approaching_goch": false,
+      "first_seen": "2026-09-29T10:55:57.508160+00:00",
+      "first_seen_distance_km": 41.6,
+      "minimum_distance_km": 6.3,
+      "entered_30km": "2026-09-29T11:05:40.535495+00:00",
+      "new_flight": false,
+      "push_reason": null,
+      "last_seen": "2026-09-29T11:48:33.374964+00:00"
+    }
+  ]
 }
