@@ -1,54 +1,7 @@
 {
-  "updated": "2026-09-29T09:58:48.042766+00:00",
+  "updated": "2026-09-29T10:12:13.355974+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-09-29T09:58:48.042766+00:00",
-      "identity": "485e49",
-      "segment_id": "485e49-20260929T091416",
-      "hex": "485e49",
-      "registration": "PH-DOC",
-      "callsign": "LIFELN3",
-      "name": "Lifeliner 3",
-      "classification": "rescue",
-      "classification_source": "aircraft_db",
-      "service": "Traumahelikopter",
-      "station": "Volkel",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.848812,
-      "lon": 5.848999,
-      "location": {
-        "display": "Nijmegen, Bronsgeeststraat 57",
-        "road": "Bronsgeeststraat",
-        "house_number": "57",
-        "city": "Nijmegen",
-        "postcode": "6541 ZK",
-        "county": null,
-        "country": "Nederland"
-      },
-      "distance_km": 28.6,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": 825,
-      "ground_speed": 116.8,
-      "track": 204.81,
-      "movement_bearing": 206.4,
-      "movement_direction": "Südwest",
-      "distance_change_km": -27.6,
-      "approaching_goch": true,
-      "first_seen": "2026-09-29T09:14:16.832194+00:00",
-      "first_seen_distance_km": 39.3,
-      "minimum_distance_km": 28.6,
-      "entered_30km": "2026-09-29T09:58:48.042766+00:00",
-      "new_flight": false,
-      "push_reason": "neuer 30-km-Eintritt",
-      "last_seen": "2026-09-29T09:58:48.042766+00:00"
-    }
-  ]
+  "aircraft": []
 }
