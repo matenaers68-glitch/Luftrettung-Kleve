@@ -988,5 +988,23 @@
     "minimum_distance_km": 55.5,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3deb84": {
+    "identity": "3deb84",
+    "hex": "3deb84",
+    "registration": "D-HJLC",
+    "callsign": "CHX90",
+    "type": "EC45",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-29T01:14:47.182469+00:00",
+    "last_seen": "2026-09-29T01:14:47.182469+00:00",
+    "last_lat": 51.565588,
+    "last_lon": 7.08252,
+    "last_distance_km": 65.0,
+    "minimum_distance_km": 65.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
