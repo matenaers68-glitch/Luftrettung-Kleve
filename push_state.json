@@ -1,5 +1,20 @@
 {
-  "3e167d": "2026-09-22T13:40:32.294273+00:00",
+  "3e167d": {
+    "timestamp": "2026-09-29T11:05:40.535495+00:00",
+    "segment_id": "3e167d-20260929T105557",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "Christoph 9",
+    "distance_km": 6.3,
+    "location": {
+      "display": "Weeze, Marienwasserweg",
+      "road": "Marienwasserweg",
+      "house_number": null,
+      "city": "Weeze",
+      "postcode": "47652",
+      "county": "Kreis Kleve",
+      "country": "Deutschland"
+    }
+  },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
     "timestamp": "2026-09-29T09:58:48.042766+00:00",
