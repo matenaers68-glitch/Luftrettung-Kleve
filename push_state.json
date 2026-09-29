@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-09-29T09:58:48.042766+00:00",
-    "segment_id": "485e49-20260929T091416",
+    "timestamp": "2026-09-29T21:12:54.210892+00:00",
+    "segment_id": "485e49-20260929T174735",
     "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 28.6,
+    "distance_km": 27.7,
     "location": {
-      "display": "Nijmegen, Bronsgeeststraat 57",
-      "road": "Bronsgeeststraat",
-      "house_number": "57",
+      "display": "Nijmegen, Waalkade 102",
+      "road": "Waalkade",
+      "house_number": "102",
       "city": "Nijmegen",
-      "postcode": "6541 ZK",
+      "postcode": "6511 XP",
       "county": null,
       "country": "Nederland"
     }
