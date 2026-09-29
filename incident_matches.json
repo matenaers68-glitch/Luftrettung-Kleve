@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-09-29T19:10:56.825309+00:00",
+    "checked_at": "2026-09-29T19:29:04.652813+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -35,7 +35,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-09-29T19:10:56.825309+00:00",
+    "checked_at": "2026-09-29T19:29:04.652813+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -68,7 +68,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-09-29T19:10:56.825309+00:00",
+    "checked_at": "2026-09-29T19:29:04.652813+00:00",
     "segment_id": "485e49-20260929T091416",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -96,14 +96,14 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Universitair Medisch Centrum Groningen 20:26:52 Meer",
+    "destination": "Isala Hospital Zwolle Heliport 15 sep 17:14 Lifeliner",
     "what_happened": "Op dinsdag 29 september 2026 is er een Lifeliner 3 vertrokken van Raalte naar Vliegbasis Volkel. De vlucht duurde 27 minuten en legde een afstand af van 94 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-09-29T19:10:56.825309+00:00",
+    "checked_at": "2026-09-29T19:29:04.652813+00:00",
     "segment_id": "485e49-20260929T091416",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -131,7 +131,7 @@
     "time_difference_hours": 0.9,
     "incident_type": "Reanimation / medizinischer Notfall",
     "affected": "keine gesicherte Angabe",
-    "destination": "Universitair Medisch Centrum Groningen 20:26:52 Meer",
+    "destination": "Isala Hospital Zwolle Heliport 15 sep 17:14 Lifeliner",
     "what_happened": "Op dinsdag 29 september 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Raalte, Burgemeester Zuidwijklaan. De vlucht duurde 24 minuten en legde een afstand af van 93 kilometer.",
     "language": "nl",
     "notify_eligible": false
