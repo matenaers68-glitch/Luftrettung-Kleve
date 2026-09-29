@@ -2,17 +2,17 @@
   "3e167d": "2026-09-22T13:40:32.294273+00:00",
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-09-28T09:18:27.187070+00:00",
-    "segment_id": "485e49-20260928T091827",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-09-29T09:58:48.042766+00:00",
+    "segment_id": "485e49-20260929T091416",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 27.7,
+    "distance_km": 28.6,
     "location": {
-      "display": "Ysselsteyn, Meerselsepeel",
-      "road": "Meerselsepeel",
-      "house_number": null,
-      "city": "Ysselsteyn",
-      "postcode": "5813 AG",
+      "display": "Nijmegen, Bronsgeeststraat 57",
+      "road": "Bronsgeeststraat",
+      "house_number": "57",
+      "city": "Nijmegen",
+      "postcode": "6541 ZK",
       "county": null,
       "country": "Nederland"
     }
