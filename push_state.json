@@ -38,17 +38,17 @@
   "3e0a3c": "2026-09-24T19:59:37.701761+00:00",
   "3e0a46": "2026-09-25T08:46:42.154947+00:00",
   "484a91": {
-    "timestamp": "2026-09-29T14:10:00.181723+00:00",
-    "segment_id": "484a91-20260929T141000",
+    "timestamp": "2026-09-29T18:51:50.664375+00:00",
+    "segment_id": "484a91-20260929T185150",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Politie 01",
-    "distance_km": 28.6,
+    "distance_km": 22.0,
     "location": {
-      "display": "Nijmegen, Plutostraat 2",
-      "road": "Plutostraat",
-      "house_number": "2",
-      "city": "Nijmegen",
-      "postcode": "6543 WP",
+      "display": "Cuijk, Keerkade 25",
+      "road": "Keerkade",
+      "house_number": "25",
+      "city": "Cuijk",
+      "postcode": "5432 KA",
       "county": null,
       "country": "Nederland"
     }
