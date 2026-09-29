@@ -34,5 +34,11 @@
     "article_url": "https://www.presseportal.de/blaulicht/pm/65849/6360806",
     "score": 90,
     "confidence": "sehr wahrscheinlicher Zusammenhang"
+  },
+  "3e167d-20260929T105557": {
+    "notified_at": "2026-09-29T11:08:45.501290+00:00",
+    "article_url": "https://www.feuerwehr-goch.de/",
+    "score": 80,
+    "confidence": "wahrscheinlicher Zusammenhang"
   }
 }
