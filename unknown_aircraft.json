@@ -1276,5 +1276,23 @@
     "minimum_distance_km": 52.9,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "48104e": {
+    "identity": "48104e",
+    "hex": "48104e",
+    "registration": "N-317",
+    "callsign": "NEPTN62",
+    "type": "NH90",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-30T17:53:21.779541+00:00",
+    "last_seen": "2026-09-30T17:53:21.779541+00:00",
+    "last_lat": 52.097168,
+    "last_lon": 5.350813,
+    "last_distance_km": 72.4,
+    "minimum_distance_km": 72.4,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
