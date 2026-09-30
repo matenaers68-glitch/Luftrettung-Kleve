@@ -1186,5 +1186,23 @@
     "minimum_distance_km": 69.1,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3dd54f": {
+    "identity": "3dd54f",
+    "hex": "3dd54f",
+    "registration": "D-HBAL",
+    "callsign": "DHBAL",
+    "type": "R44",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-09-30T08:38:00.349531+00:00",
+    "last_seen": "2026-09-30T08:38:00.349531+00:00",
+    "last_lat": 51.293655,
+    "last_lon": 7.030582,
+    "last_distance_km": 73.9,
+    "minimum_distance_km": 73.9,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
