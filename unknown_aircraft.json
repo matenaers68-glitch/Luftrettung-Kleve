@@ -1384,5 +1384,23 @@
     "minimum_distance_km": 79.0,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "486749": {
+    "identity": "486749",
+    "hex": "486749",
+    "registration": "PH-BWS",
+    "callsign": "PHBWS",
+    "type": "AS55",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-01T12:58:32.259855+00:00",
+    "last_seen": "2026-10-01T12:58:32.259855+00:00",
+    "last_lat": 52.206008,
+    "last_lon": 6.051551,
+    "last_distance_km": 59.2,
+    "minimum_distance_km": 59.2,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
