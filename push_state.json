@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-09-29T21:12:54.210892+00:00",
-    "segment_id": "485e49-20260929T174735",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-01T11:31:52.712101+00:00",
+    "segment_id": "485e49-20261001T113152",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 27.7,
+    "distance_km": 29.8,
     "location": {
-      "display": "Nijmegen, Waalkade 102",
-      "road": "Waalkade",
-      "house_number": "102",
-      "city": "Nijmegen",
-      "postcode": "6511 XP",
+      "display": "Venhorst, Hoogstraat",
+      "road": "Hoogstraat",
+      "house_number": null,
+      "city": "Venhorst",
+      "postcode": "5428 NE",
       "county": null,
       "country": "Nederland"
     }

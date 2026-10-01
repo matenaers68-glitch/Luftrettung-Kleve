@@ -1348,5 +1348,23 @@
     "minimum_distance_km": 42.6,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "485ea6": {
+    "identity": "485ea6",
+    "hex": "485ea6",
+    "registration": "PH-ANK",
+    "callsign": "PHANK",
+    "type": "R44",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-01T11:31:52.712101+00:00",
+    "last_seen": "2026-10-01T11:31:52.712101+00:00",
+    "last_lat": 52.08944,
+    "last_lon": 5.341945,
+    "last_distance_km": 72.4,
+    "minimum_distance_km": 72.4,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
