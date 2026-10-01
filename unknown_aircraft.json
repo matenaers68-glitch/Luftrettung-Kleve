@@ -1294,5 +1294,23 @@
     "minimum_distance_km": 70.7,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "481053": {
+    "identity": "481053",
+    "hex": "481053",
+    "registration": "N-326",
+    "callsign": "NAFN099",
+    "type": "NH90",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-01T08:53:29.615070+00:00",
+    "last_seen": "2026-10-01T08:53:29.615070+00:00",
+    "last_lat": 52.201767,
+    "last_lon": 5.922012,
+    "last_distance_km": 60.5,
+    "minimum_distance_km": 60.5,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
