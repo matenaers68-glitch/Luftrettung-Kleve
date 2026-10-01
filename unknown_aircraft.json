@@ -1449,11 +1449,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-01T18:46:19.669979+00:00",
-    "last_seen": "2026-10-01T18:58:55.501133+00:00",
-    "last_lat": 52.097401,
-    "last_lon": 5.352225,
-    "last_distance_km": 72.4,
-    "minimum_distance_km": 72.4,
+    "last_seen": "2026-10-01T19:12:39.668204+00:00",
+    "last_lat": 52.167229,
+    "last_lon": 5.498029,
+    "last_distance_km": 70.8,
+    "minimum_distance_km": 70.8,
     "inside_30km": false,
     "status": "needs_identification"
   }
