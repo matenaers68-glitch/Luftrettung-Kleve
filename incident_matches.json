@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T13:42:50.322749+00:00",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
     "segment_id": "485e49-20261001T113152",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T13:42:50.322749+00:00",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
     "segment_id": "485e49-20261001T113152",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -70,7 +70,41 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T13:42:50.322749+00:00",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
+    "segment_id": "485e49-20261001T113152",
+    "aircraft_name": "Lifeliner 3",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "service": "Traumahelikopter",
+    "flight_first_seen": "2026-10-01T11:31:52.712101+00:00",
+    "flight_last_seen": "2026-10-01T11:46:57.926179+00:00",
+    "flight_location": "De Rips, Blaarpeelweg",
+    "flight_city": "De Rips",
+    "flight_road": "Blaarpeelweg",
+    "nearest_distance_km": 26.7,
+    "article_source": "TraumaRadar",
+    "article_title": "Politiehelikopter naar Militair vliegveld De Kooy / Den Helder Airport 13:33:46 | duur: 21 min. | afstand: 74 km",
+    "article_url": "https://traumaradar.nl/vlucht/2026/10/01/518373/politiehelikopter-ph-pxx-vanuit-amsterdam-vliegveld-schiphol.html",
+    "article_published": null,
+    "score": 100,
+    "confidence": "sehr wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Lifeliner-Nummer stimmt",
+      "Hubschrauberbezug",
+      "priorisierte Quelle",
+      "TraumaRadar-Zeit ±30 min"
+    ],
+    "time_difference_hours": 0.2,
+    "incident_type": "Personensuche",
+    "affected": "keine gesicherte Angabe",
+    "destination": null,
+    "what_happened": "Op donderdag 1 oktober 2026 is er een Politiehelikopter vertrokken van Amsterdam Vliegveld Schiphol naar Militair vliegveld De Kooy / Den Helder Airport. De vlucht duurde 21 minuten en legde een afstand af van 74 kilometer.",
+    "language": "nl",
+    "notify_eligible": false
+  },
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -104,7 +138,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T13:42:50.322749+00:00",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -137,7 +171,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T13:42:50.322749+00:00",
+    "checked_at": "2026-10-01T13:59:00.657479+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
