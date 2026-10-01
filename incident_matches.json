@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T16:12:31.022618+00:00",
+    "checked_at": "2026-10-01T16:30:35.618981+00:00",
     "segment_id": "485e49-20261001T113152",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam UMC Helipad 16:19:47 Meer",
+    "destination": null,
     "what_happened": "Op donderdag 1 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Vliegbasis Volkel. De vlucht duurde 22 minuten en legde een afstand af van 80 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T16:12:31.022618+00:00",
+    "checked_at": "2026-10-01T16:30:35.618981+00:00",
     "segment_id": "485e49-20261001T113152",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -63,14 +63,14 @@
     "time_difference_hours": 0.4,
     "incident_type": "Reanimation / medizinischer Notfall",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam UMC Helipad 16:19:47 Meer",
+    "destination": null,
     "what_happened": "Op donderdag 1 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Vliegbasis Volkel. De vlucht duurde 5 minuten en legde een afstand af van 13 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T16:12:31.022618+00:00",
+    "checked_at": "2026-10-01T16:30:35.618981+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -104,7 +104,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T16:12:31.022618+00:00",
+    "checked_at": "2026-10-01T16:30:35.618981+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -137,7 +137,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-01T16:12:31.022618+00:00",
+    "checked_at": "2026-10-01T16:30:35.618981+00:00",
     "segment_id": "3e167d-20260929T105557",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
