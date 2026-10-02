@@ -38,17 +38,17 @@
   "3e0a3c": "2026-09-24T19:59:37.701761+00:00",
   "3e0a46": "2026-09-25T08:46:42.154947+00:00",
   "484a91": {
-    "timestamp": "2026-09-29T18:51:50.664375+00:00",
-    "segment_id": "484a91-20260929T185150",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-10-02T17:14:25.357638+00:00",
+    "segment_id": "484a91-20261002T165956",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Politie 01",
-    "distance_km": 22.0,
+    "distance_km": 28.1,
     "location": {
-      "display": "Cuijk, Keerkade 25",
-      "road": "Keerkade",
-      "house_number": "25",
-      "city": "Cuijk",
-      "postcode": "5432 KA",
+      "display": "Nijmegen, Malvert 3318",
+      "road": "Malvert",
+      "house_number": "3318",
+      "city": "Nijmegen",
+      "postcode": "6538 BV",
       "county": null,
       "country": "Nederland"
     }
