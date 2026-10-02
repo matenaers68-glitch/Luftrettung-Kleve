@@ -1,54 +1,7 @@
 {
-  "updated": "2026-10-02T14:35:16.724499+00:00",
+  "updated": "2026-10-02T14:51:46.306178+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-10-02T14:35:16.724499+00:00",
-      "identity": "485e49",
-      "segment_id": "485e49-20261002T143516",
-      "hex": "485e49",
-      "registration": "PH-DOC",
-      "callsign": "LIFELN3",
-      "name": "Lifeliner 3",
-      "classification": "rescue",
-      "classification_source": "aircraft_db",
-      "service": "Traumahelikopter",
-      "station": "Volkel",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.749004,
-      "lon": 5.865555,
-      "location": {
-        "display": "Katwijk NB, Nielt",
-        "road": "Nielt",
-        "house_number": null,
-        "city": "Katwijk NB",
-        "postcode": "5432 MG",
-        "county": null,
-        "country": "Nederland"
-      },
-      "distance_km": 21.7,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": -25,
-      "ground_speed": 127.4,
-      "track": 46.91,
-      "movement_bearing": 268.9,
-      "movement_direction": "West",
-      "distance_change_km": 3.2,
-      "approaching_goch": false,
-      "first_seen": "2026-10-02T14:35:16.724499+00:00",
-      "first_seen_distance_km": 21.7,
-      "minimum_distance_km": 21.7,
-      "entered_30km": "2026-10-02T14:35:16.724499+00:00",
-      "new_flight": true,
-      "push_reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-      "last_seen": "2026-10-02T14:35:16.724499+00:00"
-    }
-  ]
+  "aircraft": []
 }
