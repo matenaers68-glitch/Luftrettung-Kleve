@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T143516",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T143516",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -70,7 +70,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T105906",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -105,7 +105,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T105906",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -140,7 +140,41 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
+    "segment_id": "485e49-20261002T105906",
+    "aircraft_name": "Lifeliner 3",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "service": "Traumahelikopter",
+    "flight_first_seen": "2026-10-02T12:02:58.237692+00:00",
+    "flight_last_seen": "2026-10-02T12:44:06.068735+00:00",
+    "flight_location": "Groesbeek, Boersteeg",
+    "flight_city": "Groesbeek",
+    "flight_road": "Boersteeg",
+    "nearest_distance_km": 16.9,
+    "article_source": "TraumaRadar",
+    "article_title": "Ambulancehelikopter naar Vliegbasis Leeuwarden 14:58:15 | duur: 23 min. | afstand: 54 km",
+    "article_url": "https://traumaradar.nl/vlucht/2026/10/02/519312/ambulancehelikopter-ph-oop-vanuit-leeuwarden-medical-center-heliport.html",
+    "article_published": null,
+    "score": 100,
+    "confidence": "sehr wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Lifeliner-Nummer stimmt",
+      "Hubschrauberbezug",
+      "priorisierte Quelle",
+      "TraumaRadar-Zeit ±30 min"
+    ],
+    "time_difference_hours": 0.2,
+    "incident_type": "Rettungsdiensteinsatz",
+    "affected": "keine gesicherte Angabe",
+    "destination": null,
+    "what_happened": "Op vrijdag 2 oktober 2026 is er een Ambulancehelikopter vertrokken van Leeuwarden Medical Center Heliport naar Vliegbasis Leeuwarden. De vlucht duurde 23 minuten en legde een afstand af van 54 kilometer.",
+    "language": "nl",
+    "notify_eligible": false
+  },
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T064443",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -175,7 +209,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T064443",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -210,7 +244,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "485e49-20261002T064443",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -245,7 +279,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
@@ -280,7 +314,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
@@ -314,7 +348,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-02T15:43:04.311558+00:00",
+    "checked_at": "2026-10-02T15:57:43.762863+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
