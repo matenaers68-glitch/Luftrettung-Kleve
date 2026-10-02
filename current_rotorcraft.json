@@ -1,54 +1,7 @@
 {
-  "updated": "2026-10-02T17:14:25.357638+00:00",
+  "updated": "2026-10-02T17:30:22.359525+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-10-02T17:14:25.357638+00:00",
-      "identity": "484a91",
-      "segment_id": "484a91-20261002T165956",
-      "hex": "484a91",
-      "registration": "PH-PXA",
-      "callsign": "ZXP01",
-      "name": "Politie 01",
-      "classification": "police",
-      "classification_source": "aircraft_db",
-      "service": "Politiehelikopter EC135",
-      "station": "Dienst Luchtvaartpolitie",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.807194,
-      "lon": 5.808945,
-      "location": {
-        "display": "Nijmegen, Malvert 3318",
-        "road": "Malvert",
-        "house_number": "3318",
-        "city": "Nijmegen",
-        "postcode": "6538 BV",
-        "county": null,
-        "country": "Nederland"
-      },
-      "distance_km": 28.1,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": 750,
-      "ground_speed": 94.3,
-      "track": 4.26,
-      "movement_bearing": 37.9,
-      "movement_direction": "Nordost",
-      "distance_change_km": -6.5,
-      "approaching_goch": true,
-      "first_seen": "2026-10-02T16:59:56.958049+00:00",
-      "first_seen_distance_km": 34.6,
-      "minimum_distance_km": 28.1,
-      "entered_30km": "2026-10-02T17:14:25.357638+00:00",
-      "new_flight": false,
-      "push_reason": "neuer 30-km-Eintritt",
-      "last_seen": "2026-10-02T17:14:25.357638+00:00"
-    }
-  ]
+  "aircraft": []
 }
