@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-10-02T14:35:16.724499+00:00",
-    "segment_id": "485e49-20261002T143516",
+    "timestamp": "2026-10-02T19:23:11.377619+00:00",
+    "segment_id": "485e49-20261002T192311",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 21.7,
+    "distance_km": 28.2,
     "location": {
-      "display": "Katwijk NB, Nielt",
-      "road": "Nielt",
-      "house_number": null,
-      "city": "Katwijk NB",
-      "postcode": "5432 MG",
+      "display": "Escharen, Heesakkerweg 2",
+      "road": "Heesakkerweg",
+      "house_number": "2",
+      "city": "Escharen",
+      "postcode": "5364 PG",
       "county": null,
       "country": "Nederland"
     }
