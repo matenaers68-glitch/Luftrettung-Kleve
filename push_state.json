@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-10-02T12:02:58.237692+00:00",
-    "segment_id": "485e49-20261002T105906",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-02T14:35:16.724499+00:00",
+    "segment_id": "485e49-20261002T143516",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 16.9,
+    "distance_km": 21.7,
     "location": {
-      "display": "Groesbeek, Boersteeg",
-      "road": "Boersteeg",
+      "display": "Katwijk NB, Nielt",
+      "road": "Nielt",
       "house_number": null,
-      "city": "Groesbeek",
-      "postcode": "6562 LX",
+      "city": "Katwijk NB",
+      "postcode": "5432 MG",
       "county": null,
       "country": "Nederland"
     }
