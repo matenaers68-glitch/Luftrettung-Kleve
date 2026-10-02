@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-10-01T11:31:52.712101+00:00",
-    "segment_id": "485e49-20261001T113152",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-10-02T07:59:09.113303+00:00",
+    "segment_id": "485e49-20261002T064443",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 29.8,
+    "distance_km": 22.3,
     "location": {
-      "display": "Venhorst, Hoogstraat",
-      "road": "Hoogstraat",
+      "display": "Cuijk, Tulpenboom",
+      "road": "Tulpenboom",
       "house_number": null,
-      "city": "Venhorst",
-      "postcode": "5428 NE",
+      "city": "Cuijk",
+      "postcode": "5432 KL",
       "county": null,
       "country": "Nederland"
     }
@@ -66,6 +66,22 @@
       "city": "Sonsbeck",
       "postcode": "47665",
       "county": "Kreis Wesel",
+      "country": "Deutschland"
+    }
+  },
+  "3e0a3f": {
+    "timestamp": "2026-10-02T07:59:09.113303+00:00",
+    "segment_id": "3e0a3f-20261002T071505",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "BPO316",
+    "distance_km": 8.6,
+    "location": {
+      "display": "Wemb, Wember Straße",
+      "road": "Wember Straße",
+      "house_number": null,
+      "city": "Wemb",
+      "postcode": "47652",
+      "county": "Kreis Kleve",
       "country": "Deutschland"
     }
   }
