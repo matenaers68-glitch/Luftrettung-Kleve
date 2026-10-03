@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-03T13:18:44.391819+00:00",
+    "checked_at": "2026-10-03T18:23:29.872880+00:00",
     "segment_id": "485e49-20261002T192311",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leeuwarden Medical Center Heliport 14:35:03 Lifeliner 1 naar Amsterdam UMC Helipad 14:29:13 Lifeline",
+    "destination": null,
     "what_happened": "Op vrijdag 2 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Nijmegen, Steinweglaan. De vlucht duurde 8 minuten en legde een afstand af van 25 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-03T13:18:44.391819+00:00",
+    "checked_at": "2026-10-03T18:23:29.872880+00:00",
     "segment_id": "485e49-20261002T192311",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.7,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leeuwarden Medical Center Heliport 14:35:03 Lifeliner 1 naar Amsterdam UMC Helipad 14:29:13 Lifeline",
+    "destination": null,
     "what_happened": "Op vrijdag 2 oktober 2026 is er een Lifeliner 3 vertrokken van Nijmegen naar Vliegbasis Volkel. De vlucht duurde 9 minuten en legde een afstand af van 24 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-03T13:18:44.391819+00:00",
+    "checked_at": "2026-10-03T18:23:29.872880+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
@@ -106,7 +106,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-03T13:18:44.391819+00:00",
+    "checked_at": "2026-10-03T18:23:29.872880+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
@@ -140,7 +140,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-03T13:18:44.391819+00:00",
+    "checked_at": "2026-10-03T18:23:29.872880+00:00",
     "segment_id": "3e0a3f-20261002T071505",
     "aircraft_name": "BPO316",
     "registration": "D-HVBR",
