@@ -45,10 +45,10 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-09-25T11:46:20.637107+00:00",
-    "last_seen": "2026-10-03T10:21:25.805800+00:00",
-    "last_lat": 51.23735,
-    "last_lon": 6.490544,
-    "last_distance_km": 54.1,
+    "last_seen": "2026-10-03T10:37:48.881845+00:00",
+    "last_lat": 51.243167,
+    "last_lon": 6.515045,
+    "last_distance_km": 54.3,
     "minimum_distance_km": 40.0,
     "inside_30km": false,
     "status": "needs_identification"
@@ -1593,12 +1593,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-03T10:21:25.805800+00:00",
-    "last_seen": "2026-10-03T10:21:25.805800+00:00",
-    "last_lat": 51.16901,
-    "last_lon": 6.774284,
-    "last_distance_km": 70.9,
-    "minimum_distance_km": 70.9,
-    "inside_30km": false,
+    "last_seen": "2026-10-03T10:37:48.881845+00:00",
+    "last_lat": 51.860481,
+    "last_lon": 6.47131,
+    "last_distance_km": 29.6,
+    "minimum_distance_km": 29.6,
+    "inside_30km": true,
     "status": "needs_identification"
   }
 }
