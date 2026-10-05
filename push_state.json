@@ -17,17 +17,17 @@
   },
   "485ea6": "2026-09-21T09:45:13.897017+00:00",
   "485e49": {
-    "timestamp": "2026-10-02T19:23:11.377619+00:00",
-    "segment_id": "485e49-20261002T192311",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-10-05T09:08:19.336355+00:00",
+    "segment_id": "485e49-20261005T084103",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 28.2,
+    "distance_km": 26.8,
     "location": {
-      "display": "Escharen, Heesakkerweg 2",
-      "road": "Heesakkerweg",
-      "house_number": "2",
-      "city": "Escharen",
-      "postcode": "5364 PG",
+      "display": "Ooij, Langstraat",
+      "road": "Langstraat",
+      "house_number": null,
+      "city": "Ooij",
+      "postcode": "6576 JP",
       "county": null,
       "country": "Nederland"
     }
