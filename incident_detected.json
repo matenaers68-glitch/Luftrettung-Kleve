@@ -1,1 +1,36 @@
-[]
+[
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-05T16:56:30.781078+00:00",
+    "segment_id": "3e167d-20261005T144054",
+    "aircraft_name": "Christoph 9",
+    "registration": "D-HZSF",
+    "callsign": "CHX9",
+    "service": "Rettungshubschrauber",
+    "flight_first_seen": "2026-10-05T15:49:10.089565+00:00",
+    "flight_last_seen": "2026-10-05T16:35:32.344489+00:00",
+    "flight_location": "Kleve, Grunewaldstraße",
+    "flight_city": "Kleve",
+    "flight_road": "Grunewaldstraße",
+    "nearest_distance_km": 9.6,
+    "article_source": "Kreispolizeibehörde Kleve / Presseportal",
+    "article_title": "POL-KLE: Goch - Geparkter Dacia am Denkmal der Boxteler Bahn beschädigt / Polizei sucht Zeugen",
+    "article_url": "https://www.presseportal.de/blaulicht/pm/65849/6365226",
+    "article_published": "2026-10-05T14:35:36",
+    "score": 108,
+    "confidence": "sehr wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Ort/Ortsteil stimmt",
+      "Einsatzbezug",
+      "priorisierte Quelle",
+      "Zeit ±3 h"
+    ],
+    "time_difference_hours": 2.0,
+    "incident_type": "Motorradunfall",
+    "affected": "keine gesicherte Angabe",
+    "destination": null,
+    "what_happened": "Kreispolizeibehörde Kleve - Goch - Am Parkplatz im Kalbecker Forst vor dem Denkmal der Boxteler Bahn ...✚ Mehr lesen",
+    "language": "de",
+    "notify_eligible": true
+  }
+]
