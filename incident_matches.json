@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T15:57:17.243237+00:00",
+    "checked_at": "2026-10-05T16:14:19.284749+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -29,14 +29,14 @@
     "time_difference_hours": 1.0,
     "incident_type": "Reanimation / medizinischer Notfall",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Amsterdam Heliport 17:54:04 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 17:46:34",
     "what_happened": "Op maandag 5 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Heeten, IJzerweg. De vlucht duurde 23 minuten en legde een afstand af van 87 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T15:57:17.243237+00:00",
+    "checked_at": "2026-10-05T16:14:19.284749+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -63,7 +63,7 @@
     "time_difference_hours": 0.4,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Amsterdam Heliport 17:54:04 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 17:46:34",
     "what_happened": "Op maandag 5 oktober 2026 is er een Lifeliner 3 vertrokken van Heeten naar Vliegbasis Volkel. De vlucht duurde 25 minuten en legde een afstand af van 87 kilometer.",
     "language": "nl",
     "notify_eligible": false
