@@ -16,17 +16,17 @@
     }
   },
   "485e49": {
-    "timestamp": "2026-10-05T09:08:19.336355+00:00",
+    "timestamp": "2026-10-05T10:00:21.518091+00:00",
     "segment_id": "485e49-20261005T084103",
     "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 26.8,
+    "distance_km": 29.4,
     "location": {
-      "display": "Ooij, Langstraat",
-      "road": "Langstraat",
+      "display": "Odiliapeel, Spottersweg",
+      "road": "Spottersweg",
       "house_number": null,
-      "city": "Ooij",
-      "postcode": "6576 JP",
+      "city": "Odiliapeel",
+      "postcode": "5411 VC",
       "county": null,
       "country": "Nederland"
     }
