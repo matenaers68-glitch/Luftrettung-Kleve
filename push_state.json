@@ -1,17 +1,17 @@
 {
   "3e167d": {
-    "timestamp": "2026-09-29T11:05:40.535495+00:00",
-    "segment_id": "3e167d-20260929T105557",
+    "timestamp": "2026-10-05T15:49:10.089565+00:00",
+    "segment_id": "3e167d-20261005T144054",
     "reason": "neuer 30-km-Eintritt",
     "name": "Christoph 9",
-    "distance_km": 6.3,
+    "distance_km": 18.1,
     "location": {
-      "display": "Weeze, Marienwasserweg",
-      "road": "Marienwasserweg",
+      "display": "Sonsbeck, Weseler Straße",
+      "road": "Weseler Straße",
       "house_number": null,
-      "city": "Weeze",
-      "postcode": "47652",
-      "county": "Kreis Kleve",
+      "city": "Sonsbeck",
+      "postcode": "47665",
+      "county": "Kreis Wesel",
       "country": "Deutschland"
     }
   },
