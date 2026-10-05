@@ -1,14 +1,14 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T17:47:01.999476+00:00",
+    "checked_at": "2026-10-05T18:11:45.965720+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
     "callsign": "CHX9",
     "service": "Rettungshubschrauber",
     "flight_first_seen": "2026-10-05T15:49:10.089565+00:00",
-    "flight_last_seen": "2026-10-05T17:16:50.378610+00:00",
+    "flight_last_seen": "2026-10-05T17:48:10.476814+00:00",
     "flight_location": "Weeze, Hülmer Leitgraben",
     "flight_city": "Weeze",
     "flight_road": "Hülmer Leitgraben",
@@ -34,7 +34,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T17:47:01.999476+00:00",
+    "checked_at": "2026-10-05T18:11:45.965720+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -69,7 +69,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T17:47:01.999476+00:00",
+    "checked_at": "2026-10-05T18:11:45.965720+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -103,7 +103,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T17:47:01.999476+00:00",
+    "checked_at": "2026-10-05T18:11:45.965720+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
