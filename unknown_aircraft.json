@@ -1618,5 +1618,23 @@
     "minimum_distance_km": 79.1,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3de5b4": {
+    "identity": "3de5b4",
+    "hex": "3de5b4",
+    "registration": "D-HHFW",
+    "callsign": "DHHFW",
+    "type": "B06",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-05T07:36:09.674664+00:00",
+    "last_seen": "2026-10-05T07:36:09.674664+00:00",
+    "last_lat": 51.548492,
+    "last_lon": 7.092491,
+    "last_distance_km": 66.0,
+    "minimum_distance_km": 66.0,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
