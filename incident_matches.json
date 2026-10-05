@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T18:11:45.965720+00:00",
+    "checked_at": "2026-10-05T18:35:40.168679+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -34,7 +34,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T18:11:45.965720+00:00",
+    "checked_at": "2026-10-05T18:35:40.168679+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -62,14 +62,14 @@
     "time_difference_hours": 1.0,
     "incident_type": "Reanimation / medizinischer Notfall",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam Heliport 17:54:04 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 17:46:34",
+    "destination": null,
     "what_happened": "Op maandag 5 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Heeten, IJzerweg. De vlucht duurde 23 minuten en legde een afstand af van 87 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T18:11:45.965720+00:00",
+    "checked_at": "2026-10-05T18:35:40.168679+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -96,14 +96,14 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam Heliport 17:54:04 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 17:46:34",
+    "destination": "Universitair Medisch Centrum Groningen",
     "what_happened": "Op maandag 5 oktober 2026 is er een Ambulancehelikopter vertrokken van Scheemda naar Vliegbasis Leeuwarden. De vlucht duurde 30 minuten en legde een afstand af van 92 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T18:11:45.965720+00:00",
+    "checked_at": "2026-10-05T18:35:40.168679+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -130,7 +130,7 @@
     "time_difference_hours": 0.3,
     "incident_type": "Personensuche",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam Heliport 17:54:04 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 17:46:34",
+    "destination": null,
     "what_happened": "Op maandag 5 oktober 2026 is er een Politiehelikopter vertrokken van Weert naar Amsterdam Vliegveld Schiphol. De vlucht duurde 41 minuten en legde een afstand af van 146 kilometer.",
     "language": "nl",
     "notify_eligible": false
