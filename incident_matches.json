@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T23:07:29.951644+00:00",
+    "checked_at": "2026-10-05T23:24:49.786856+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -34,7 +34,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T23:07:29.951644+00:00",
+    "checked_at": "2026-10-05T23:24:49.786856+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -69,7 +69,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-05T23:07:29.951644+00:00",
+    "checked_at": "2026-10-05T23:24:49.786856+00:00",
     "segment_id": "485e49-20261005T084103",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
