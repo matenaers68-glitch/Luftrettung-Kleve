@@ -83,5 +83,21 @@
       "county": "Kreis Kleve",
       "country": "Deutschland"
     }
+  },
+  "484ac1": {
+    "timestamp": "2026-10-05T18:00:01.976534+00:00",
+    "segment_id": "484ac1-20261005T174810",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "Politie 25",
+    "distance_km": 25.1,
+    "location": {
+      "display": "Heumen, Blankenbergseweg",
+      "road": "Blankenbergseweg",
+      "house_number": null,
+      "city": "Heumen",
+      "postcode": "6582 BV",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
