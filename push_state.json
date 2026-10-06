@@ -16,17 +16,17 @@
     }
   },
   "485e49": {
-    "timestamp": "2026-10-06T13:05:16.765850+00:00",
+    "timestamp": "2026-10-06T14:24:45.908252+00:00",
     "segment_id": "485e49-20261006T130516",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 20.2,
+    "distance_km": 23.9,
     "location": {
-      "display": "Mook, Avilaweg 15",
-      "road": "Avilaweg",
-      "house_number": "15",
-      "city": "Mook",
-      "postcode": "6585 KK",
+      "display": "Beek, Boterweg",
+      "road": "Boterweg",
+      "house_number": null,
+      "city": "Beek",
+      "postcode": "7037 CL",
       "county": null,
       "country": "Nederland"
     }
