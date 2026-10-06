@@ -1,54 +1,7 @@
 {
-  "updated": "2026-10-06T16:53:50.870098+00:00",
+  "updated": "2026-10-06T17:03:02.779260+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-10-06T16:53:50.870098+00:00",
-      "identity": "485e49",
-      "segment_id": "485e49-20261006T162128",
-      "hex": "485e49",
-      "registration": "PH-DOC",
-      "callsign": "LIFELN3",
-      "name": "Lifeliner 3",
-      "classification": "rescue",
-      "classification_source": "aircraft_db",
-      "service": "Traumahelikopter",
-      "station": "Volkel",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.766088,
-      "lon": 6.115723,
-      "location": {
-        "display": "Kleve, Gertrud-Boss-Straße",
-        "road": "Gertrud-Boss-Straße",
-        "house_number": null,
-        "city": "Kleve",
-        "postcode": "47533",
-        "county": "Kreis Kleve",
-        "country": "Deutschland"
-      },
-      "distance_km": 10.2,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": 925,
-      "ground_speed": 127.2,
-      "track": 66.86,
-      "movement_bearing": 72.7,
-      "movement_direction": "Ost",
-      "distance_change_km": -20.3,
-      "approaching_goch": true,
-      "first_seen": "2026-10-06T16:21:28.202612+00:00",
-      "first_seen_distance_km": 30.5,
-      "minimum_distance_km": 10.2,
-      "entered_30km": "2026-10-06T16:53:50.870098+00:00",
-      "new_flight": false,
-      "push_reason": null,
-      "last_seen": "2026-10-06T16:53:50.870098+00:00"
-    }
-  ]
+  "aircraft": []
 }
