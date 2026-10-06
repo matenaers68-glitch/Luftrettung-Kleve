@@ -114,5 +114,21 @@
       "county": "Kreis Kleve",
       "country": "Deutschland"
     }
+  },
+  "484a92": {
+    "timestamp": "2026-10-06T11:30:59.380449+00:00",
+    "segment_id": "484a92-20261006T103501",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "Politie 02",
+    "distance_km": 24.1,
+    "location": {
+      "display": "Persingen, Leuthsestraat 6",
+      "road": "Leuthsestraat",
+      "house_number": "6",
+      "city": "Persingen",
+      "postcode": "6575 JE",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
