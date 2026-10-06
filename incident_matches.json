@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -71,7 +71,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -105,7 +105,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "485e49-20261006T130516",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -140,7 +140,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "485e49-20261006T130516",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -175,7 +175,41 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-06T23:26:30.056856+00:00",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
+    "segment_id": "485e49-20261006T130516",
+    "aircraft_name": "Lifeliner 3",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "service": "Traumahelikopter",
+    "flight_first_seen": "2026-10-06T13:05:16.765850+00:00",
+    "flight_last_seen": "2026-10-06T14:24:45.908252+00:00",
+    "flight_location": "Mook, Avilaweg 15",
+    "flight_city": "Mook",
+    "flight_road": "Avilaweg",
+    "nearest_distance_km": 20.2,
+    "article_source": "TraumaRadar",
+    "article_title": "Ambulancehelikopter naar Leeuwarden Medical Center Heliport 6 okt 16:27 | duur: 11 min. | afstand: 34 km",
+    "article_url": "https://traumaradar.nl/vlucht/2026/10/06/522801/ambulancehelikopter-ph-how-vanuit-ameland-vliegveld-ballum.html",
+    "article_published": null,
+    "score": 100,
+    "confidence": "sehr wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Lifeliner-Nummer stimmt",
+      "Hubschrauberbezug",
+      "priorisierte Quelle",
+      "TraumaRadar-Zeit ±30 min"
+    ],
+    "time_difference_hours": 0.0,
+    "incident_type": "Rettungsdiensteinsatz",
+    "affected": "keine gesicherte Angabe",
+    "destination": null,
+    "what_happened": "Op dinsdag 6 oktober 2026 is er een Ambulancehelikopter vertrokken van Ameland Vliegveld Ballum naar Leeuwarden Medical Center Heliport. De vlucht duurde 11 minuten en legde een afstand af van 34 kilometer.",
+    "language": "nl",
+    "notify_eligible": false
+  },
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-06T23:41:33.520230+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
