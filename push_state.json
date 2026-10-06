@@ -16,17 +16,17 @@
     }
   },
   "485e49": {
-    "timestamp": "2026-10-05T10:00:21.518091+00:00",
-    "segment_id": "485e49-20261005T084103",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-06T13:05:16.765850+00:00",
+    "segment_id": "485e49-20261006T130516",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 29.4,
+    "distance_km": 20.2,
     "location": {
-      "display": "Odiliapeel, Spottersweg",
-      "road": "Spottersweg",
-      "house_number": null,
-      "city": "Odiliapeel",
-      "postcode": "5411 VC",
+      "display": "Mook, Avilaweg 15",
+      "road": "Avilaweg",
+      "house_number": "15",
+      "city": "Mook",
+      "postcode": "6585 KK",
       "county": null,
       "country": "Nederland"
     }
