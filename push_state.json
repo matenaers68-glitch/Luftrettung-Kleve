@@ -98,5 +98,21 @@
       "county": null,
       "country": "Nederland"
     }
+  },
+  "3df1a4": {
+    "timestamp": "2026-10-06T07:36:52.622411+00:00",
+    "segment_id": "3df1a4-20261006T072120",
+    "reason": "neuer 30-km-Eintritt",
+    "name": "BPO160",
+    "distance_km": 13.3,
+    "location": {
+      "display": "Kevelaer, Offenbachstraße 6",
+      "road": "Offenbachstraße",
+      "house_number": "6",
+      "city": "Kevelaer",
+      "postcode": "47623",
+      "county": "Kreis Kleve",
+      "country": "Deutschland"
+    }
   }
 }
