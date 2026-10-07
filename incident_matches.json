@@ -1,7 +1,42 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
+    "segment_id": "485e49-20261007T162929",
+    "aircraft_name": "Lifeliner 3",
+    "registration": "PH-DOC",
+    "callsign": "LIFELN3",
+    "service": "Traumahelikopter",
+    "flight_first_seen": "2026-10-07T16:29:29.474107+00:00",
+    "flight_last_seen": "2026-10-07T16:29:29.474107+00:00",
+    "flight_location": "Odiliapeel, Ontginningsweg 4",
+    "flight_city": "Odiliapeel",
+    "flight_road": "Ontginningsweg",
+    "nearest_distance_km": 29.4,
+    "article_source": "TraumaRadar",
+    "article_title": "Politiehelikopter naar Amsterdam Vliegveld Schiphol 17:47:35 | duur: 30 min. | afstand: 97 km",
+    "article_url": "https://traumaradar.nl/vlucht/2026/10/07/523913/politiehelikopter-ph-pxc-vanuit-zwolle.html",
+    "article_published": null,
+    "score": 135,
+    "confidence": "sehr wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Lifeliner-Nummer stimmt",
+      "Ort/Ortsteil stimmt",
+      "Hubschrauberbezug",
+      "priorisierte Quelle",
+      "TraumaRadar-Zeit ±60 min"
+    ],
+    "time_difference_hours": 0.7,
+    "incident_type": "Personensuche",
+    "affected": "keine gesicherte Angabe",
+    "destination": "Amsterdam Vliegveld Schiphol 16:45:50 Lifeliner 1 naar Amsterdam UMC Helipad 16:41:16 Politiehelikop",
+    "what_happened": "Op woensdag 7 oktober 2026 is er een Politiehelikopter vertrokken van Zwolle naar Amsterdam Vliegveld Schiphol. De vlucht duurde 30 minuten en legde een afstand af van 97 kilometer.",
+    "language": "nl",
+    "notify_eligible": false
+  },
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -35,7 +70,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -69,7 +104,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -103,7 +138,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -136,7 +171,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -169,7 +204,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -202,7 +237,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T16:12:19.449786+00:00",
+    "checked_at": "2026-10-07T16:34:42.628162+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
