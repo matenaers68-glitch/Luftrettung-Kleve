@@ -16,17 +16,17 @@
     }
   },
   "485e49": {
-    "timestamp": "2026-10-06T14:24:45.908252+00:00",
-    "segment_id": "485e49-20261006T130516",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-07T16:29:29.474107+00:00",
+    "segment_id": "485e49-20261007T162929",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 23.9,
+    "distance_km": 29.4,
     "location": {
-      "display": "Beek, Boterweg",
-      "road": "Boterweg",
-      "house_number": null,
-      "city": "Beek",
-      "postcode": "7037 CL",
+      "display": "Odiliapeel, Ontginningsweg 4",
+      "road": "Ontginningsweg",
+      "house_number": "4",
+      "city": "Odiliapeel",
+      "postcode": "5409 TC",
       "county": null,
       "country": "Nederland"
     }
