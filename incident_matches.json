@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T09:56:50.021062+00:00",
+    "checked_at": "2026-10-07T10:13:22.848534+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -35,7 +35,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T09:56:50.021062+00:00",
+    "checked_at": "2026-10-07T10:13:22.848534+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -69,7 +69,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T09:56:50.021062+00:00",
+    "checked_at": "2026-10-07T10:13:22.848534+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -103,7 +103,40 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-07T09:56:50.021062+00:00",
+    "checked_at": "2026-10-07T10:13:22.848534+00:00",
+    "segment_id": "3df1a4-20261006T072120",
+    "aircraft_name": "BPO160",
+    "registration": "D-HLTK",
+    "callsign": "BPO160",
+    "service": "Bundespolizei-Flugdienst",
+    "flight_first_seen": "2026-10-06T07:36:52.622411+00:00",
+    "flight_last_seen": "2026-10-06T08:01:34.145290+00:00",
+    "flight_location": "Kevelaer, Offenbachstraße 6",
+    "flight_city": "Kevelaer",
+    "flight_road": "Offenbachstraße",
+    "nearest_distance_km": 13.3,
+    "article_source": "Kreispolizeibehörde Kleve / Presseportal",
+    "article_title": "POL-KLE: Kevelaer - Schwerer Diebstahl / Industrieschredder von Betriebsgelände entwendet",
+    "article_url": "https://www.presseportal.de/blaulicht/pm/65849/6366647",
+    "article_published": "2026-10-07T12:03:04",
+    "score": 83,
+    "confidence": "wahrscheinlicher Zusammenhang",
+    "reasons": [
+      "Ort/Ortsteil stimmt",
+      "Einsatzbezug",
+      "priorisierte Quelle"
+    ],
+    "time_difference_hours": 28.0,
+    "incident_type": "Fahrrad-/Pedelec-Unfall",
+    "affected": "keine gesicherte Angabe",
+    "destination": "Rettungswagen brachte sie in ein Krankenhaus",
+    "what_happened": "Kreispolizeibehörde Kleve - Kevelaer-Wetten - Zwischen Freitagnachmittag und Dienstagmorgen (6. ...✚ Mehr lesen",
+    "language": "de",
+    "notify_eligible": true
+  },
+  {
+    "version": "1.9",
+    "checked_at": "2026-10-07T10:13:22.848534+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
