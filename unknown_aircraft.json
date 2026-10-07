@@ -1737,12 +1737,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-05T10:36:19.786547+00:00",
-    "last_seen": "2026-10-07T08:21:56.209157+00:00",
-    "last_lat": 51.484727,
-    "last_lon": 6.250839,
-    "last_distance_km": 22.4,
+    "last_seen": "2026-10-07T08:39:25.658874+00:00",
+    "last_lat": 51.453964,
+    "last_lon": 6.453577,
+    "last_distance_km": 32.2,
     "minimum_distance_km": 11.9,
-    "inside_30km": true,
+    "inside_30km": false,
     "status": "needs_identification"
   },
   "49d2d1": {
