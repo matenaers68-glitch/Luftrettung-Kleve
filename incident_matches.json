@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.2,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Noordzee 13:50:13 Lifeliner 1 naar Isala Hospital Zwolle Heliport 13:43:56 Politiehelikop",
+    "destination": "Amsterdam Heliport 15:10:43 Lifeliner 3 naar Isala Hospital Zwolle Heliport 14:57:20 Kustwachthelik",
     "what_happened": "Op donderdag 8 oktober 2026 is er een Lifeliner 3 vertrokken van Haaksbergen naar Vliegbasis Volkel. De vlucht duurde 24 minuten en legde een afstand af van 87 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.8,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Noordzee 13:50:13 Lifeliner 1 naar Isala Hospital Zwolle Heliport 13:43:56 Politiehelikop",
+    "destination": "Amsterdam Heliport 15:10:43 Lifeliner 3 naar Isala Hospital Zwolle Heliport 14:57:20 Kustwachthelik",
     "what_happened": "Op donderdag 8 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Haaksbergen, Assinkweg. De vlucht duurde 26 minuten en legde een afstand af van 89 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -84,8 +84,8 @@
     "flight_road": "Graafsedijk",
     "nearest_distance_km": 23.4,
     "article_source": "TraumaRadar",
-    "article_title": "Kustwachthelikopter naar Noordzee 13:50:13 | duur: 15 min. | afstand: 56 km",
-    "article_url": "https://traumaradar.nl/vlucht/2026/10/08/524550/kustwachthelikopter-ph-ncg-vanuit-noordzee.html",
+    "article_title": "Kustwachthelikopter naar Amsterdam UMC Helipad 14:01:17 | duur: 87 min. | afstand: 233 km",
+    "article_url": "https://traumaradar.nl/vlucht/2026/10/08/524566/kustwachthelikopter-ph-sar-vanuit-militair-vliegveld-de-kooy-den-helder-airport.html",
     "article_published": null,
     "score": 100,
     "confidence": "sehr wahrscheinlicher Zusammenhang",
@@ -95,17 +95,17 @@
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
     ],
-    "time_difference_hours": 0.2,
+    "time_difference_hours": 0.4,
     "incident_type": "Personensuche",
     "affected": "keine gesicherte Angabe",
-    "destination": "Noordzee 13:50:13 Lifeliner 1 naar Isala Hospital Zwolle Heliport 13:43:56 Politiehelikop",
-    "what_happened": "Op donderdag 8 oktober 2026 is er een Kustwachthelikopter vertrokken van Noordzee naar Noordzee. De vlucht duurde 15 minuten en legde een afstand af van 56 kilometer.",
+    "destination": "Amsterdam UMC Helipad 14:01:17 | duur: 87 min",
+    "what_happened": "Op donderdag 8 oktober 2026 is er een Kustwachthelikopter vertrokken van Militair vliegveld De Kooy / Den Helder Airport naar Amsterdam UMC Helipad. De vlucht duurde 87 minuten en legde een afstand af van 233 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -139,7 +139,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -173,7 +173,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -207,7 +207,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -240,7 +240,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -273,7 +273,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -306,7 +306,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -339,7 +339,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T13:04:15.575253+00:00",
+    "checked_at": "2026-10-08T13:33:25.938496+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
