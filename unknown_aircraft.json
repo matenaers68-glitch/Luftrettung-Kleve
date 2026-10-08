@@ -1971,12 +1971,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-08T08:42:47.376044+00:00",
-    "last_seen": "2026-10-08T08:42:47.376044+00:00",
-    "last_lat": 51.253921,
-    "last_lon": 6.324692,
-    "last_distance_km": 48.5,
-    "minimum_distance_km": 48.5,
-    "inside_30km": false,
+    "last_seen": "2026-10-08T08:58:18.319927+00:00",
+    "last_lat": 51.677267,
+    "last_lon": 6.129608,
+    "last_distance_km": 2.0,
+    "minimum_distance_km": 2.0,
+    "inside_30km": true,
     "status": "needs_identification"
   }
 }
