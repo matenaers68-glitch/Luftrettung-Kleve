@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-08T01:04:45.292032+00:00",
+  "updated": "2026-10-08T01:21:50.073893+00:00",
   "version": "4.8",
   "source": "ADSB.lol",
   "center": {
@@ -9,6 +9,35 @@
   },
   "background_radius_km": 80,
   "action_radius_km": 30,
-  "total": 0,
-  "ac": []
+  "total": 1,
+  "ac": [
+    {
+      "hex": "48597d",
+      "type": "adsb_icao",
+      "r": "PH-HXN",
+      "t": "B738",
+      "alt_baro": "ground",
+      "gs": 0.0,
+      "squawk": "2000",
+      "emergency": "none",
+      "lat": 51.458227,
+      "lon": 5.390148,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 4.05,
+      "version": 2,
+      "nac_p": 9,
+      "nac_v": 1,
+      "sil": 3,
+      "sil_type": "perhour",
+      "sda": 2,
+      "mlat": [],
+      "tisb": [],
+      "messages": 1133,
+      "seen": 0.8,
+      "rssi": -22.2,
+      "dst": 31.53,
+      "dir": 245.6
+    }
+  ]
 }
