@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.2,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Universitair Medisch Centrum Groningen 19:20:05 Politiehelikopter na",
+    "destination": "Universitair Medisch Centrum Groningen 19:20:05 Meer",
     "what_happened": "Op donderdag 8 oktober 2026 is er een Lifeliner 3 vertrokken van Haaksbergen naar Vliegbasis Volkel. De vlucht duurde 24 minuten en legde een afstand af van 87 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.8,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Universitair Medisch Centrum Groningen 19:20:05 Politiehelikopter na",
+    "destination": "Universitair Medisch Centrum Groningen 19:20:05 Meer",
     "what_happened": "Op donderdag 8 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Haaksbergen, Assinkweg. De vlucht duurde 26 minuten en legde een afstand af van 89 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -105,7 +105,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -139,7 +139,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -173,7 +173,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -206,7 +206,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -239,7 +239,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T18:10:13.764970+00:00",
+    "checked_at": "2026-10-08T18:33:13.809527+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
