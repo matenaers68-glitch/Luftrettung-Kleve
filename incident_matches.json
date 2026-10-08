@@ -1,14 +1,14 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "486a31-20261008T105337",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
     "callsign": "LIFELN3",
     "service": "Traumahelikopter",
     "flight_first_seen": "2026-10-08T10:53:37.763945+00:00",
-    "flight_last_seen": "2026-10-08T10:53:37.763945+00:00",
+    "flight_last_seen": "2026-10-08T11:02:51.362304+00:00",
     "flight_location": "Beers NB, Graafsedijk 6",
     "flight_city": "Beers NB",
     "flight_road": "Graafsedijk",
@@ -25,7 +25,7 @@
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
     ],
-    "time_difference_hours": 0.3,
+    "time_difference_hours": 0.5,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
     "destination": null,
@@ -35,7 +35,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -69,7 +69,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -103,7 +103,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "485e49-20261006T162128",
     "aircraft_name": "Lifeliner 3",
     "registration": "PH-DOC",
@@ -137,7 +137,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -170,7 +170,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -203,7 +203,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "3df1a4-20261006T072120",
     "aircraft_name": "BPO160",
     "registration": "D-HLTK",
@@ -236,7 +236,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-08T10:56:35.619179+00:00",
+    "checked_at": "2026-10-08T11:12:52.205375+00:00",
     "segment_id": "3e167d-20261005T144054",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
