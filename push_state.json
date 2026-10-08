@@ -129,5 +129,21 @@
       "county": null,
       "country": "Nederland"
     }
+  },
+  "486a31": {
+    "timestamp": "2026-10-08T10:53:37.763945+00:00",
+    "segment_id": "486a31-20261008T105337",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Lifeliner 3",
+    "distance_km": 23.4,
+    "location": {
+      "display": "Beers NB, Graafsedijk 6",
+      "road": "Graafsedijk",
+      "house_number": "6",
+      "city": "Beers NB",
+      "postcode": "5437 NG",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
