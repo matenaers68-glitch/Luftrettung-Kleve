@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-09T22:09:00.119360+00:00",
+    "checked_at": "2026-10-09T22:28:44.684778+00:00",
     "segment_id": "486a31-20261009T070542",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam Heliport 9 okt 23:55 Lifeliner 1 naar Amsterdam UMC Helipad 9 okt 23:41 Lifeliner 1 naar A",
+    "destination": "Rotterdam The Hague Airport 9 okt 23:48 Lifeliner 1 naar Amsterdam UMC Helipad 9 okt 23:41 Lifeliner",
     "what_happened": "Op vrijdag 9 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 13 minuten en legde een afstand af van 23 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-09T22:09:00.119360+00:00",
+    "checked_at": "2026-10-09T22:28:44.684778+00:00",
     "segment_id": "486a31-20261009T070542",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,7 +64,7 @@
     "time_difference_hours": 0.8,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Amsterdam Heliport 9 okt 23:55 Lifeliner 1 naar Amsterdam UMC Helipad 9 okt 23:41 Lifeliner 1 naar A",
+    "destination": "Rotterdam The Hague Airport 9 okt 23:48 Lifeliner 1 naar Amsterdam UMC Helipad 9 okt 23:41 Lifeliner",
     "what_happened": "Op vrijdag 9 oktober 2026 is er een Lifeliner 3 vertrokken van Hoogeloon naar Radboud University Medical Center Heliport. De vlucht duurde 20 minuten en legde een afstand af van 65 kilometer.",
     "language": "nl",
     "notify_eligible": false
