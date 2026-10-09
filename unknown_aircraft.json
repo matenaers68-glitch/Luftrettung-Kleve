@@ -2068,5 +2068,23 @@
     "minimum_distance_km": 64.8,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "48433c": {
+    "identity": "48433c",
+    "hex": "48433c",
+    "registration": "P4-KBG",
+    "callsign": "P4AKR2O",
+    "type": "A320",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-09T06:49:01.926665+00:00",
+    "last_seen": "2026-10-09T06:49:01.926665+00:00",
+    "last_lat": 52.208084,
+    "last_lon": 6.937103,
+    "last_distance_km": 79.5,
+    "minimum_distance_km": 79.5,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
