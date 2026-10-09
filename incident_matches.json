@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-09T20:45:54.769598+00:00",
+    "checked_at": "2026-10-09T21:08:56.196738+00:00",
     "segment_id": "486a31-20261009T070542",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Vliegbasis Volkel 18:15:08 Lifeliner 3 naar Universitair Medisch Centrum Utrecht 17:43:06 Lifeliner ",
+    "destination": "Amsterdam UMC Helipad 22:35:20 Lifeliner 1 naar Limme",
     "what_happened": "Op vrijdag 9 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 13 minuten en legde een afstand af van 23 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-09T20:45:54.769598+00:00",
+    "checked_at": "2026-10-09T21:08:56.196738+00:00",
     "segment_id": "486a31-20261009T070542",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.8,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Vliegbasis Volkel 18:15:08 Lifeliner 3 naar Universitair Medisch Centrum Utrecht 17:43:06 Lifeliner ",
+    "destination": "Amsterdam UMC Helipad 22:35:20 Lifeliner 1 naar Limme",
     "what_happened": "Op vrijdag 9 oktober 2026 is er een Lifeliner 3 vertrokken van Hoogeloon naar Radboud University Medical Center Heliport. De vlucht duurde 20 minuten en legde een afstand af van 65 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-09T20:45:54.769598+00:00",
+    "checked_at": "2026-10-09T21:08:56.196738+00:00",
     "segment_id": "486a31-20261008T184159",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -99,7 +99,7 @@
     "time_difference_hours": 0.7,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Vliegbasis Volkel 18:15:08 Lifeliner 3 naar Universitair Medisch Centrum Utrecht 17:43:06 Lifeliner ",
+    "destination": "Amsterdam UMC Helipad 22:35:20 Lifeliner 1 naar Limme",
     "what_happened": "Op donderdag 8 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Moergestel, Oirschotseweg. De vlucht duurde 32 minuten en legde een afstand af van 94 kilometer.",
     "language": "nl",
     "notify_eligible": false
