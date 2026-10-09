@@ -2086,5 +2086,41 @@
     "minimum_distance_km": 51.7,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "480443": {
+    "identity": "480443",
+    "hex": "480443",
+    "registration": "D-482",
+    "callsign": "NAF298B",
+    "type": "H47",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-09T08:27:30.286067+00:00",
+    "last_seen": "2026-10-09T08:27:30.286067+00:00",
+    "last_lat": 52.030746,
+    "last_lon": 5.493927,
+    "last_distance_km": 60.2,
+    "minimum_distance_km": 60.2,
+    "inside_30km": false,
+    "status": "needs_identification"
+  },
+  "480849": {
+    "identity": "480849",
+    "hex": "480849",
+    "registration": "D-472",
+    "callsign": "NAF298A",
+    "type": "H47",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-09T08:27:30.286067+00:00",
+    "last_seen": "2026-10-09T08:27:30.286067+00:00",
+    "last_lat": 52.03331,
+    "last_lon": 5.495911,
+    "last_distance_km": 60.3,
+    "minimum_distance_km": 60.3,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
