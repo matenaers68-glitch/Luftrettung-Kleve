@@ -129,17 +129,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-08T18:41:59.414946+00:00",
-    "segment_id": "486a31-20261008T184159",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-10-09T07:41:09.244947+00:00",
+    "segment_id": "486a31-20261009T070542",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 29.8,
+    "distance_km": 27.5,
     "location": {
-      "display": "Zeeland, Witte Dellen 4a",
-      "road": "Witte Dellen",
-      "house_number": "4a",
-      "city": "Zeeland",
-      "postcode": "5411 LG",
+      "display": "Gassel, Hoeve 34",
+      "road": "Hoeve",
+      "house_number": "34",
+      "city": "Gassel",
+      "postcode": "5438 ND",
       "county": null,
       "country": "Nederland"
     }
