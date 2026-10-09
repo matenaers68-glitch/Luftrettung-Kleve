@@ -2079,11 +2079,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-09T06:49:01.926665+00:00",
-    "last_seen": "2026-10-09T06:49:01.926665+00:00",
-    "last_lat": 52.208084,
-    "last_lon": 6.937103,
-    "last_distance_km": 79.5,
-    "minimum_distance_km": 79.5,
+    "last_seen": "2026-10-09T07:05:42.546278+00:00",
+    "last_lat": 51.73233,
+    "last_lon": 6.904016,
+    "last_distance_km": 51.7,
+    "minimum_distance_km": 51.7,
     "inside_30km": false,
     "status": "needs_identification"
   }
