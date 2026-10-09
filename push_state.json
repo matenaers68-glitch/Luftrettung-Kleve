@@ -142,5 +142,21 @@
       "county": null,
       "country": "Nederland"
     }
+  },
+  "484a93": {
+    "timestamp": "2026-10-09T15:54:10.501895+00:00",
+    "segment_id": "484a93-20261009T155410",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Politie 03",
+    "distance_km": 28.6,
+    "location": {
+      "display": "Bemmel, Waaldijk 1",
+      "road": "Waaldijk",
+      "house_number": "1",
+      "city": "Bemmel",
+      "postcode": "6681 KH",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
