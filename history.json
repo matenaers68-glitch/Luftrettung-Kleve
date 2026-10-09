@@ -1,20 +1,5 @@
 [
   {
-    "timestamp": "2026-09-25T08:46:42.154947+00:00",
-    "identity": "3e0a46",
-    "hex": "3e0a46",
-    "registration": "D-HVBY",
-    "callsign": "BPO314",
-    "type": "EC35",
-    "category": "A7",
-    "lat": 51.639999,
-    "lon": 6.097783,
-    "distance_km": 6.0,
-    "altitude_ft": 3775,
-    "ground_speed": 111.4,
-    "track": 152.74
-  },
-  {
     "timestamp": "2026-09-25T11:13:18.641745+00:00",
     "identity": "480807",
     "segment_id": "480807-20260925T111318",
