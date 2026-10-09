@@ -2187,11 +2187,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-09T11:49:49.466176+00:00",
-    "last_seen": "2026-10-09T11:49:49.466176+00:00",
-    "last_lat": 51.670843,
-    "last_lon": 7.048569,
-    "last_distance_km": 61.3,
-    "minimum_distance_km": 61.3,
+    "last_seen": "2026-10-09T12:00:57.922400+00:00",
+    "last_lat": 51.492268,
+    "last_lon": 6.678467,
+    "last_distance_km": 41.4,
+    "minimum_distance_km": 41.4,
     "inside_30km": false,
     "status": "needs_identification"
   }
