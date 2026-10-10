@@ -2205,12 +2205,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-10T07:57:28.458879+00:00",
-    "last_seen": "2026-10-10T07:57:28.458879+00:00",
-    "last_lat": 51.475113,
-    "last_lon": 5.783188,
-    "last_distance_km": 34.4,
-    "minimum_distance_km": 34.4,
-    "inside_30km": false,
+    "last_seen": "2026-10-10T08:08:19.096960+00:00",
+    "last_lat": 51.867188,
+    "last_lon": 5.972257,
+    "last_distance_km": 24.7,
+    "minimum_distance_km": 24.7,
+    "inside_30km": true,
     "status": "needs_identification"
   }
 }
