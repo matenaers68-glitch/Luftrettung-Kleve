@@ -1,54 +1,7 @@
 {
-  "updated": "2026-10-11T20:08:17.817872+00:00",
+  "updated": "2026-10-11T20:23:39.036275+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": [
-    {
-      "timestamp": "2026-10-11T20:08:17.817872+00:00",
-      "identity": "484a91",
-      "segment_id": "484a91-20261011T193429",
-      "hex": "484a91",
-      "registration": "PH-PXA",
-      "callsign": "ZXP01",
-      "name": "Politie 01",
-      "classification": "police",
-      "classification_source": "aircraft_db",
-      "service": "Politiehelikopter EC135",
-      "station": "Dienst Luchtvaartpolitie",
-      "country": "Niederlande",
-      "operator": "",
-      "description": "",
-      "type": "EC35",
-      "category": "A7",
-      "lat": 51.496399,
-      "lon": 5.898842,
-      "location": {
-        "display": "Ysselsteyn, Deurneseweg 147",
-        "road": "Deurneseweg",
-        "house_number": "147",
-        "city": "Ysselsteyn",
-        "postcode": "5813 AA",
-        "county": null,
-        "country": "Nederland"
-      },
-      "distance_km": 27.0,
-      "inside_30km": true,
-      "relevant": true,
-      "altitude_ft": 1525,
-      "ground_speed": 73.8,
-      "track": 153.43,
-      "movement_bearing": 160.7,
-      "movement_direction": "Süd",
-      "distance_change_km": 0.9,
-      "approaching_goch": false,
-      "first_seen": "2026-10-11T19:34:29.557316+00:00",
-      "first_seen_distance_km": 79.9,
-      "minimum_distance_km": 26.1,
-      "entered_30km": "2026-10-11T19:57:37.753137+00:00",
-      "new_flight": false,
-      "push_reason": null,
-      "last_seen": "2026-10-11T20:08:17.817872+00:00"
-    }
-  ]
+  "aircraft": []
 }
