@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-11T10:08:10.079081+00:00",
+    "checked_at": "2026-10-11T10:27:22.814786+00:00",
     "segment_id": "486a31-20261011T014039",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,7 +29,7 @@
     "time_difference_hours": 0.4,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Universitair Medisch Centrum Groningen 11:04:56 Lifeliner 3 naar Vli",
+    "destination": "Amsterdam Vliegveld Schiphol 11:19:31 Lifeliner 4 naar Universitair Medisch Centrum Groningen 11:04:",
     "what_happened": "Op zondag 11 oktober 2026 is er een Lifeliner 3 vertrokken van Medisch Spectrum Twente Hospital Heliport naar Vliegbasis Volkel. De vlucht duurde 34 minuten en legde een afstand af van 104 kilometer.",
     "language": "nl",
     "notify_eligible": false
