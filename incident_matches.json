@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-11T02:15:15.929953+00:00",
+    "checked_at": "2026-10-11T02:43:22.837258+00:00",
     "segment_id": "486a31-20261011T014039",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Medisch Spectrum Twente Hospital Heliport 04:14:28 Lifeliner 1 naar Amst",
     "what_happened": "Op zondag 11 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Ruurlo, De Huikert. De vlucht duurde 19 minuten en legde een afstand af van 76 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-11T02:15:15.929953+00:00",
+    "checked_at": "2026-10-11T02:43:22.837258+00:00",
     "segment_id": "486a31-20261011T014039",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -69,7 +69,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-11T02:15:15.929953+00:00",
+    "checked_at": "2026-10-11T02:43:22.837258+00:00",
     "segment_id": "486a31-20261011T014039",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
