@@ -128,19 +128,19 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-11T01:40:39.941566+00:00",
+    "timestamp": "2026-10-11T03:15:59.840568+00:00",
     "segment_id": "486a31-20261011T014039",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 18.7,
+    "distance_km": 17.3,
     "location": {
-      "display": "Kleve, Dingdung",
-      "road": "Dingdung",
+      "display": "Groesbeek, Hoge Horst",
+      "road": "Hoge Horst",
       "house_number": null,
-      "city": "Kleve",
-      "postcode": "47533",
-      "county": "Kreis Kleve",
-      "country": "Deutschland"
+      "city": "Groesbeek",
+      "postcode": "6562 LB",
+      "county": null,
+      "country": "Nederland"
     }
   },
   "484a93": {
