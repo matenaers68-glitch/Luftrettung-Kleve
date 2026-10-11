@@ -64,5 +64,11 @@
     "article_url": "https://www.presseportal.de/blaulicht/pm/65849/6366604",
     "score": 118,
     "confidence": "sehr wahrscheinlicher Zusammenhang"
+  },
+  "486a31-20261011T014039": {
+    "notified_at": "2026-10-11T01:44:53.435956+00:00",
+    "article_url": "https://www.feuerwehr-goch.de/standorte/lz-goch-mitte",
+    "score": 80,
+    "confidence": "wahrscheinlicher Zusammenhang"
   }
 }
