@@ -1899,12 +1899,12 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-07T10:53:20.250800+00:00",
-    "last_seen": "2026-10-11T11:39:53.030592+00:00",
-    "last_lat": 51.434921,
-    "last_lon": 6.303332,
-    "last_distance_km": 28.8,
+    "last_seen": "2026-10-11T11:52:34.599672+00:00",
+    "last_lat": 51.227371,
+    "last_lon": 6.357521,
+    "last_distance_km": 52.0,
     "minimum_distance_km": 7.1,
-    "inside_30km": true,
+    "inside_30km": false,
     "status": "needs_identification"
   },
   "3e0971": {
