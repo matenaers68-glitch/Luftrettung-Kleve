@@ -1,7 +1,54 @@
 {
-  "updated": "2026-10-11T09:12:57.379243+00:00",
+  "updated": "2026-10-11T09:29:11.093917+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": []
+  "aircraft": [
+    {
+      "timestamp": "2026-10-11T09:29:11.093917+00:00",
+      "identity": "484a94",
+      "segment_id": "484a94-20261011T075145",
+      "hex": "484a94",
+      "registration": "PH-PXD",
+      "callsign": "ZXP04",
+      "name": "Politie 04",
+      "classification": "police",
+      "classification_source": "aircraft_db",
+      "service": "Politiehelikopter EC135",
+      "station": "Dienst Luchtvaartpolitie",
+      "country": "Niederlande",
+      "operator": "",
+      "description": "",
+      "type": "EC35",
+      "category": "A7",
+      "lat": 51.804634,
+      "lon": 5.791168,
+      "location": {
+        "display": "Nijmegen, Wout Wagtmanspad",
+        "road": "Wout Wagtmanspad",
+        "house_number": null,
+        "city": "Nijmegen",
+        "postcode": "6537 CL",
+        "county": null,
+        "country": "Nederland"
+      },
+      "distance_km": 29.0,
+      "inside_30km": true,
+      "relevant": true,
+      "altitude_ft": 925,
+      "ground_speed": 80.1,
+      "track": 285.95,
+      "movement_bearing": 20.3,
+      "movement_direction": "Nord",
+      "distance_change_km": -2.6,
+      "approaching_goch": true,
+      "first_seen": "2026-10-11T07:51:45.222334+00:00",
+      "first_seen_distance_km": 28.5,
+      "minimum_distance_km": 20.2,
+      "entered_30km": "2026-10-11T07:51:45.222334+00:00",
+      "new_flight": false,
+      "push_reason": null,
+      "last_seen": "2026-10-11T09:29:11.093917+00:00"
+    }
+  ]
 }
