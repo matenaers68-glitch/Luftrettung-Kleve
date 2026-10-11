@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-11T03:15:59.840568+00:00",
-    "segment_id": "486a31-20261011T014039",
+    "timestamp": "2026-10-11T17:43:35.341554+00:00",
+    "segment_id": "486a31-20261011T160443",
     "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 17.3,
+    "distance_km": 26.4,
     "location": {
-      "display": "Groesbeek, Hoge Horst",
-      "road": "Hoge Horst",
-      "house_number": null,
-      "city": "Groesbeek",
-      "postcode": "6562 LB",
+      "display": "Nijmegen, Professor Huijbersstraat 18",
+      "road": "Professor Huijbersstraat",
+      "house_number": "18",
+      "city": "Nijmegen",
+      "postcode": "6524 PC",
       "county": null,
       "country": "Nederland"
     }
