@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-11T17:43:35.341554+00:00",
-    "segment_id": "486a31-20261011T160443",
+    "timestamp": "2026-10-11T21:57:57.375744+00:00",
+    "segment_id": "486a31-20261011T210051",
     "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 26.4,
+    "distance_km": 26.6,
     "location": {
-      "display": "Nijmegen, Professor Huijbersstraat 18",
-      "road": "Professor Huijbersstraat",
-      "house_number": "18",
-      "city": "Nijmegen",
-      "postcode": "6524 PC",
+      "display": "Ooij, Langstraat 10",
+      "road": "Langstraat",
+      "house_number": "10",
+      "city": "Ooij",
+      "postcode": "6576 JP",
       "county": null,
       "country": "Nederland"
     }

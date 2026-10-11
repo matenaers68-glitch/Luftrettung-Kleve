@@ -1,7 +1,54 @@
 {
-  "updated": "2026-10-11T21:46:05.927824+00:00",
+  "updated": "2026-10-11T21:57:57.375744+00:00",
   "version": "4.8",
   "action_radius_km": 30,
   "background_radius_km": 80,
-  "aircraft": []
+  "aircraft": [
+    {
+      "timestamp": "2026-10-11T21:57:57.375744+00:00",
+      "identity": "486a31",
+      "segment_id": "486a31-20261011T210051",
+      "hex": "486a31",
+      "registration": "",
+      "callsign": "LIFELN3",
+      "name": "Lifeliner 3",
+      "classification": "rescue",
+      "classification_source": "callsign",
+      "service": "Traumahelikopter",
+      "station": "Volkel",
+      "country": "Niederlande",
+      "operator": "",
+      "description": "",
+      "type": "",
+      "category": "A7",
+      "lat": 51.865677,
+      "lon": 5.919107,
+      "location": {
+        "display": "Ooij, Langstraat 10",
+        "road": "Langstraat",
+        "house_number": "10",
+        "city": "Ooij",
+        "postcode": "6576 JP",
+        "county": null,
+        "country": "Nederland"
+      },
+      "distance_km": 26.6,
+      "inside_30km": true,
+      "relevant": true,
+      "altitude_ft": 1450,
+      "ground_speed": 134.0,
+      "track": 30.01,
+      "movement_bearing": 32.0,
+      "movement_direction": "Nordost",
+      "distance_change_km": -4.3,
+      "approaching_goch": true,
+      "first_seen": "2026-10-11T21:00:51.550408+00:00",
+      "first_seen_distance_km": 37.5,
+      "minimum_distance_km": 26.6,
+      "entered_30km": "2026-10-11T21:57:57.375744+00:00",
+      "new_flight": false,
+      "push_reason": "neuer 30-km-Eintritt",
+      "last_seen": "2026-10-11T21:57:57.375744+00:00"
+    }
+  ]
 }
