@@ -70,5 +70,11 @@
     "article_url": "https://www.feuerwehr-goch.de/standorte/lz-goch-mitte",
     "score": 80,
     "confidence": "wahrscheinlicher Zusammenhang"
+  },
+  "3e167d-20261012T074757": {
+    "notified_at": "2026-10-12T08:35:26.586384+00:00",
+    "article_url": "https://www.feuerwehr-goch.de/die-feuerwehr",
+    "score": 80,
+    "confidence": "wahrscheinlicher Zusammenhang"
   }
 }
