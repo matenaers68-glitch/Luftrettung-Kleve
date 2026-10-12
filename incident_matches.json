@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-12T15:13:57.991013+00:00",
+    "checked_at": "2026-10-12T15:37:02.068999+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -34,7 +34,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-12T15:13:57.991013+00:00",
+    "checked_at": "2026-10-12T15:37:02.068999+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -67,7 +67,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-12T15:13:57.991013+00:00",
+    "checked_at": "2026-10-12T15:37:02.068999+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -100,7 +100,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-12T15:13:57.991013+00:00",
+    "checked_at": "2026-10-12T15:37:02.068999+00:00",
     "segment_id": "486a31-20261011T210051",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -128,7 +128,7 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Noordzee 14:54:23 Lifeliner 2 naar Erasmus Medisch Centrum Heliport 14:41:57 Lifeliner 3 naar Vlie",
+    "destination": "Noordzee 14:54:23 Lifeliner 2 naar Erasmus Medisch Centrum Heliport 14:41:57 Meer",
     "what_happened": "Op zondag 11 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Vliegbasis Volkel. De vlucht duurde 26 minuten en legde een afstand af van 92 kilometer.",
     "language": "nl",
     "notify_eligible": false
