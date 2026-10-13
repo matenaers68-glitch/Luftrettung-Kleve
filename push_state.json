@@ -174,5 +174,21 @@
       "county": null,
       "country": "Nederland"
     }
+  },
+  "3df742": {
+    "timestamp": "2026-10-13T08:58:27.458658+00:00",
+    "segment_id": "3df742-20261013T085827",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Hummel 2",
+    "distance_km": 28.9,
+    "location": {
+      "display": "Nieukerk, Petersweg",
+      "road": "Petersweg",
+      "house_number": null,
+      "city": "Nieukerk",
+      "postcode": "47647",
+      "county": "Kreis Kleve",
+      "country": "Deutschland"
+    }
   }
 }
