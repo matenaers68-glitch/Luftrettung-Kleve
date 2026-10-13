@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T13:50:51.026787+00:00",
+    "checked_at": "2026-10-13T14:14:05.998870+00:00",
     "segment_id": "486a31-20261013T034723",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.4,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Lelystad Airport 15:28:23 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 15:27:33 P",
     "what_happened": "Op dinsdag 13 oktober 2026 is er een Lifeliner 3 vertrokken van Lent naar Vliegbasis Volkel. De vlucht duurde 10 minuten en legde een afstand af van 26 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T13:50:51.026787+00:00",
+    "checked_at": "2026-10-13T14:14:05.998870+00:00",
     "segment_id": "486a31-20261013T034723",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.0,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Lelystad Airport 15:28:23 Ambulancehelikopter naar Universitair Medisch Centrum Groningen 15:27:33 P",
     "what_happened": "Op dinsdag 13 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Nijmegen, Waalkade. De vlucht duurde 8 minuten en legde een afstand af van 27 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T13:50:51.026787+00:00",
+    "checked_at": "2026-10-13T14:14:05.998870+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -104,7 +104,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T13:50:51.026787+00:00",
+    "checked_at": "2026-10-13T14:14:05.998870+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -137,7 +137,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T13:50:51.026787+00:00",
+    "checked_at": "2026-10-13T14:14:05.998870+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
