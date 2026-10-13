@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T21:56:01.858428+00:00",
+    "checked_at": "2026-10-13T22:18:50.186661+00:00",
     "segment_id": "486a31-20261013T034723",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -14,7 +14,7 @@
     "flight_road": "Heidestraat",
     "nearest_distance_km": 27.4,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 06:13:15 | duur: 10 min. | afstand: 26 km",
+    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 13 okt 06:13 | duur: 10 min. | afstand: 26 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/13/528105/lifeliner-3-ph-hip-vanuit-lent.html",
     "article_published": null,
     "score": 150,
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T21:56:01.858428+00:00",
+    "checked_at": "2026-10-13T22:18:50.186661+00:00",
     "segment_id": "486a31-20261013T034723",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -49,7 +49,7 @@
     "flight_road": "Heidestraat",
     "nearest_distance_km": 27.4,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Nijmegen 05:44:47 | duur: 8 min. | afstand: 27 km",
+    "article_title": "Lifeliner 3 naar Nijmegen 13 okt 05:44 | duur: 8 min. | afstand: 27 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/13/528102/lifeliner-3-ph-hip-vanuit-vliegbasis-volkel.html",
     "article_published": null,
     "score": 150,
@@ -61,7 +61,7 @@
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
     ],
-    "time_difference_hours": 0.0,
+    "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
     "destination": null,
@@ -71,7 +71,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T21:56:01.858428+00:00",
+    "checked_at": "2026-10-13T22:18:50.186661+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -104,7 +104,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T21:56:01.858428+00:00",
+    "checked_at": "2026-10-13T22:18:50.186661+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -137,7 +137,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-13T21:56:01.858428+00:00",
+    "checked_at": "2026-10-13T22:18:50.186661+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
