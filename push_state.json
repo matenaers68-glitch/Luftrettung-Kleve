@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-11T21:57:57.375744+00:00",
-    "segment_id": "486a31-20261011T210051",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-13T03:47:23.067188+00:00",
+    "segment_id": "486a31-20261013T034723",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 26.6,
+    "distance_km": 27.4,
     "location": {
-      "display": "Ooij, Langstraat 10",
-      "road": "Langstraat",
-      "house_number": "10",
-      "city": "Ooij",
-      "postcode": "6576 JP",
+      "display": "Gassel, Heidestraat 4",
+      "road": "Heidestraat",
+      "house_number": "4",
+      "city": "Gassel",
+      "postcode": "5438 NG",
       "county": null,
       "country": "Nederland"
     }
