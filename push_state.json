@@ -190,5 +190,21 @@
       "county": "Kreis Kleve",
       "country": "Deutschland"
     }
+  },
+  "485b2f": {
+    "timestamp": "2026-10-13T17:15:37.481551+00:00",
+    "segment_id": "485b2f-20261013T171537",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Politie 24",
+    "distance_km": 23.6,
+    "location": {
+      "display": "Groesbeek, Biesseltsebaan",
+      "road": "Biesseltsebaan",
+      "house_number": null,
+      "city": "Groesbeek",
+      "postcode": "6581 KV",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
