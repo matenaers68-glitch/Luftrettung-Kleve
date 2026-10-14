@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T125536",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": "Radboud Universitair Medisch Centrum",
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Pannerden, Berghoofdseweg. De vlucht duurde 11 minuten en legde een afstand af van 39 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T111819",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": null,
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 9 minuten en legde een afstand af van 24 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T111819",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -99,14 +99,14 @@
     "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": null,
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Kempen Airport Budel naar Radboud University Medical Center Heliport. De vlucht duurde 20 minuten en legde een afstand af van 71 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T111819",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -134,14 +134,14 @@
     "time_difference_hours": 1.5,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": "Radboud Universitair Medisch Centrum",
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Pannerden, Berghoofdseweg. De vlucht duurde 11 minuten en legde een afstand af van 39 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T085807",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -169,14 +169,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": null,
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Weert, Graswinkellaan. De vlucht duurde 21 minuten en legde een afstand af van 71 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "486a31-20261014T085807",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -204,14 +204,14 @@
     "time_difference_hours": 1.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Leids Universitair Medisch Centrum (LUMC) 20:17:10 Meer",
+    "destination": null,
     "what_happened": "Op woensdag 14 oktober 2026 is er een Lifeliner 3 vertrokken van Kempen Airport Budel naar Radboud University Medical Center Heliport. De vlucht duurde 20 minuten en legde een afstand af van 71 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -245,7 +245,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
@@ -278,7 +278,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-14T19:59:25.029491+00:00",
+    "checked_at": "2026-10-14T20:27:47.627433+00:00",
     "segment_id": "3e167d-20261012T074757",
     "aircraft_name": "Christoph 9",
     "registration": "D-HZSF",
