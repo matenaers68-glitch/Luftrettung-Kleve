@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-13T03:47:23.067188+00:00",
-    "segment_id": "486a31-20261013T034723",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "timestamp": "2026-10-14T09:56:59.925071+00:00",
+    "segment_id": "486a31-20261014T085807",
+    "reason": "neuer 30-km-Eintritt",
     "name": "Lifeliner 3",
-    "distance_km": 27.4,
+    "distance_km": 27.9,
     "location": {
-      "display": "Gassel, Heidestraat 4",
-      "road": "Heidestraat",
-      "house_number": "4",
-      "city": "Gassel",
-      "postcode": "5438 NG",
+      "display": "Mill, Pauwstraat 6",
+      "road": "Pauwstraat",
+      "house_number": "6",
+      "city": "Mill",
+      "postcode": "5451 PZ",
       "county": null,
       "country": "Nederland"
     }
