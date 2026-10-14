@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-14T11:18:19.514936+00:00",
-    "segment_id": "486a31-20261014T111819",
+    "timestamp": "2026-10-14T12:55:36.452667+00:00",
+    "segment_id": "486a31-20261014T125536",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 25.0,
+    "distance_km": 25.1,
     "location": {
-      "display": "Malden, Broekkant 92",
-      "road": "Broekkant",
-      "house_number": "92",
-      "city": "Malden",
-      "postcode": "6581 AH",
+      "display": "Ooij, Erlecomsedam 36",
+      "road": "Erlecomsedam",
+      "house_number": "36",
+      "city": "Ooij",
+      "postcode": "6576 JW",
       "county": null,
       "country": "Nederland"
     }
