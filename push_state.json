@@ -128,17 +128,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-14T09:56:59.925071+00:00",
-    "segment_id": "486a31-20261014T085807",
-    "reason": "neuer 30-km-Eintritt",
+    "timestamp": "2026-10-14T11:18:19.514936+00:00",
+    "segment_id": "486a31-20261014T111819",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 27.9,
+    "distance_km": 25.0,
     "location": {
-      "display": "Mill, Pauwstraat 6",
-      "road": "Pauwstraat",
-      "house_number": "6",
-      "city": "Mill",
-      "postcode": "5451 PZ",
+      "display": "Malden, Broekkant 92",
+      "road": "Broekkant",
+      "house_number": "92",
+      "city": "Malden",
+      "postcode": "6581 AH",
       "county": null,
       "country": "Nederland"
     }
