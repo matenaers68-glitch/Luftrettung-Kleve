@@ -2511,11 +2511,11 @@
     "description": "",
     "operator": "",
     "first_seen": "2026-10-15T13:26:36.522852+00:00",
-    "last_seen": "2026-10-15T13:26:36.522852+00:00",
-    "last_lat": 52.242004,
-    "last_lon": 6.056576,
-    "last_distance_km": 63.1,
-    "minimum_distance_km": 63.1,
+    "last_seen": "2026-10-15T14:05:29.444621+00:00",
+    "last_lat": 52.240223,
+    "last_lon": 6.075204,
+    "last_distance_km": 62.8,
+    "minimum_distance_km": 62.8,
     "inside_30km": false,
     "status": "needs_identification"
   }
