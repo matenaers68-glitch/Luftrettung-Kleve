@@ -47,22 +47,6 @@
       "country": "Nederland"
     }
   },
-  "3df741": {
-    "timestamp": "2026-10-01T07:41:45.676266+00:00",
-    "segment_id": "3df741-20261001T074145",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-    "name": "Hummel 1",
-    "distance_km": 17.2,
-    "location": {
-      "display": "Sonsbeck, Lichtweg 25",
-      "road": "Lichtweg",
-      "house_number": "25",
-      "city": "Sonsbeck",
-      "postcode": "47665",
-      "county": "Kreis Wesel",
-      "country": "Deutschland"
-    }
-  },
   "3e0a3f": {
     "timestamp": "2026-10-02T07:59:09.113303+00:00",
     "segment_id": "3e0a3f-20261002T071505",
