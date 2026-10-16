@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-16T21:39:22.522050+00:00",
+    "checked_at": "2026-10-16T22:07:49.450320+00:00",
     "segment_id": "486a31-20261016T082808",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -14,7 +14,7 @@
     "flight_road": "Beukenlaan",
     "nearest_distance_km": 29.9,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 10:25:21 | duur: 5 min. | afstand: 12 km",
+    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 16 okt 10:25 | duur: 5 min. | afstand: 12 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/16/531204/lifeliner-3-ph-hip-vanuit-oploo.html",
     "article_published": null,
     "score": 150,
@@ -26,7 +26,7 @@
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
     ],
-    "time_difference_hours": 0.0,
+    "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
     "destination": null,
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-16T21:39:22.522050+00:00",
+    "checked_at": "2026-10-16T22:07:49.450320+00:00",
     "segment_id": "486a31-20261016T082808",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -49,7 +49,7 @@
     "flight_road": "Beukenlaan",
     "nearest_distance_km": 29.9,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Oploo 09:33:28 | duur: 23 min. | afstand: 85 km",
+    "article_title": "Lifeliner 3 naar Oploo 16 okt 09:33 | duur: 23 min. | afstand: 85 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/16/531164/lifeliner-3-ph-hip-vanuit-vliegbasis-volkel.html",
     "article_published": null,
     "score": 135,
