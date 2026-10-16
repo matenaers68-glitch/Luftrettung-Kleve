@@ -2536,5 +2536,23 @@
     "minimum_distance_km": 52.2,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "44d1e1": {
+    "identity": "44d1e1",
+    "hex": "44d1e1",
+    "registration": "OO-TOA",
+    "callsign": "OOTOA",
+    "type": "R44",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-16T08:00:34.181040+00:00",
+    "last_seen": "2026-10-16T08:00:34.181040+00:00",
+    "last_lat": 51.969746,
+    "last_lon": 5.293819,
+    "last_distance_km": 67.7,
+    "minimum_distance_km": 67.7,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }

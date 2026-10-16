@@ -47,22 +47,6 @@
       "country": "Nederland"
     }
   },
-  "3e0a3f": {
-    "timestamp": "2026-10-02T07:59:09.113303+00:00",
-    "segment_id": "3e0a3f-20261002T071505",
-    "reason": "neuer 30-km-Eintritt",
-    "name": "BPO316",
-    "distance_km": 8.6,
-    "location": {
-      "display": "Wemb, Wember Straße",
-      "road": "Wember Straße",
-      "house_number": null,
-      "city": "Wemb",
-      "postcode": "47652",
-      "county": "Kreis Kleve",
-      "country": "Deutschland"
-    }
-  },
   "484ac1": {
     "timestamp": "2026-10-05T18:00:01.976534+00:00",
     "segment_id": "484ac1-20261005T174810",
