@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-16T09:40:51.363537+00:00",
+    "checked_at": "2026-10-16T10:12:07.529859+00:00",
     "segment_id": "486a31-20261016T082808",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.0,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Universitair Medisch Centrum Utrecht 11:54:33 Lifeliner 2 naar Berge",
     "what_happened": "Op vrijdag 16 oktober 2026 is er een Lifeliner 3 vertrokken van Oploo naar Vliegbasis Volkel. De vlucht duurde 5 minuten en legde een afstand af van 12 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-16T09:40:51.363537+00:00",
+    "checked_at": "2026-10-16T10:12:07.529859+00:00",
     "segment_id": "486a31-20261016T082808",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,7 +64,7 @@
     "time_difference_hours": 0.9,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Universitair Medisch Centrum Utrecht 11:54:33 Lifeliner 2 naar Berge",
     "what_happened": "Op vrijdag 16 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Oploo, Tweede Stichting. De vlucht duurde 23 minuten en legde een afstand af van 85 kilometer.",
     "language": "nl",
     "notify_eligible": false
