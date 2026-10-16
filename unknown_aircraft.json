@@ -2572,5 +2572,23 @@
     "minimum_distance_km": 45.9,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "44a079": {
+    "identity": "44a079",
+    "hex": "44a079",
+    "registration": "OO-HCY",
+    "callsign": "OOHCY",
+    "type": "R44",
+    "category": "",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-16T12:28:18.831225+00:00",
+    "last_seen": "2026-10-16T12:28:18.831225+00:00",
+    "last_lat": 51.09939,
+    "last_lon": 5.7704,
+    "last_distance_km": 69.8,
+    "minimum_distance_km": 69.8,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
