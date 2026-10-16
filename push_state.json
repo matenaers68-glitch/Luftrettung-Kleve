@@ -96,17 +96,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-14T12:55:36.452667+00:00",
-    "segment_id": "486a31-20261014T125536",
+    "timestamp": "2026-10-16T08:28:08.606443+00:00",
+    "segment_id": "486a31-20261016T082808",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 25.1,
+    "distance_km": 29.9,
     "location": {
-      "display": "Ooij, Erlecomsedam 36",
-      "road": "Erlecomsedam",
-      "house_number": "36",
-      "city": "Ooij",
-      "postcode": "6576 JW",
+      "display": "Odiliapeel, Beukenlaan",
+      "road": "Beukenlaan",
+      "house_number": null,
+      "city": "Odiliapeel",
+      "postcode": "5409 SW",
       "county": null,
       "country": "Nederland"
     }
