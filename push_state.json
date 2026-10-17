@@ -96,17 +96,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-16T08:28:08.606443+00:00",
-    "segment_id": "486a31-20261016T082808",
+    "timestamp": "2026-10-17T11:55:19.175209+00:00",
+    "segment_id": "486a31-20261017T115519",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 29.9,
+    "distance_km": 26.1,
     "location": {
-      "display": "Odiliapeel, Beukenlaan",
-      "road": "Beukenlaan",
+      "display": "Overasselt, Heegseveldweg",
+      "road": "Heegseveldweg",
       "house_number": null,
-      "city": "Odiliapeel",
-      "postcode": "5409 SW",
+      "city": "Overasselt",
+      "postcode": "6611 KR",
       "county": null,
       "country": "Nederland"
     }
