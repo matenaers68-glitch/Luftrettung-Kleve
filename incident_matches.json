@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T15:43:15.083483+00:00",
+    "checked_at": "2026-10-17T16:04:34.172415+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Radboud Universitair Medisch Centrum",
+    "destination": "Isala Hospital Zwolle Heliport 17:55:40 Lifeliner 4 na",
     "what_happened": "Op zaterdag 17 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Groessen, Heiliglandsestraat. De vlucht duurde 14 minuten en legde een afstand af van 41 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T15:43:15.083483+00:00",
+    "checked_at": "2026-10-17T16:04:34.172415+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.8,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Isala Hospital Zwolle Heliport 17:55:40 Lifeliner 4 na",
     "what_happened": "Op zaterdag 17 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 9 minuten en legde een afstand af van 25 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T15:43:15.083483+00:00",
+    "checked_at": "2026-10-17T16:04:34.172415+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -98,7 +98,7 @@
     "time_difference_hours": 0.4,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": "Radboud Universitair Medisch Centrum",
+    "destination": "Isala Hospital Zwolle Heliport 17:55:40 Lifeliner 4 na",
     "what_happened": "Op zaterdag 17 oktober 2026 is er een Lifeliner 3 vertrokken van Groessen naar Radboud University Medical Center Heliport. De vlucht duurde 10 minuten en legde een afstand af van 23 kilometer.",
     "language": "nl",
     "notify_eligible": false
