@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-17T19:01:09.250850+00:00",
+  "updated": "2026-10-17T19:20:47.257409+00:00",
   "version": "4.8",
   "source": "ADSB.lol",
-  "error": "<urlopen error [Errno 101] Network is unreachable>",
+  "error": "<urlopen error _ssl.c:983: The handshake operation timed out>",
   "total": 0,
   "ac": []
 }
