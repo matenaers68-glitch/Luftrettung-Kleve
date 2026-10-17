@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T21:36:19.937569+00:00",
+    "checked_at": "2026-10-17T22:01:35.305280+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -14,7 +14,7 @@
     "flight_road": "Heegseveldweg",
     "nearest_distance_km": 26.1,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Groessen 13:50:52 | duur: 14 min. | afstand: 41 km",
+    "article_title": "Lifeliner 3 naar Groessen 17 okt 13:50 | duur: 14 min. | afstand: 41 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/17/532261/lifeliner-3-ph-hip-vanuit-vliegbasis-volkel.html",
     "article_published": null,
     "score": 150,
@@ -36,7 +36,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T21:36:19.937569+00:00",
+    "checked_at": "2026-10-17T22:01:35.305280+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -49,7 +49,7 @@
     "flight_road": "Heegseveldweg",
     "nearest_distance_km": 26.1,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 14:44:46 | duur: 9 min. | afstand: 25 km",
+    "article_title": "Lifeliner 3 naar Vliegbasis Volkel 17 okt 14:44 | duur: 9 min. | afstand: 25 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/17/532304/lifeliner-3-ph-hip-vanuit-radboud-universitair-medisch-centrum.html",
     "article_published": null,
     "score": 135,
@@ -71,7 +71,7 @@
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-17T21:36:19.937569+00:00",
+    "checked_at": "2026-10-17T22:01:35.305280+00:00",
     "segment_id": "486a31-20261017T115519",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -84,7 +84,7 @@
     "flight_road": "Heegseveldweg",
     "nearest_distance_km": 26.1,
     "article_source": "TraumaRadar",
-    "article_title": "Lifeliner 3 naar Radboud University Medical Center Heliport 14:16:37 | duur: 10 min. | afstand: 23 km",
+    "article_title": "Lifeliner 3 naar Radboud University Medical Center Heliport 17 okt 14:16 | duur: 10 min. | afstand: 23 km",
     "article_url": "https://traumaradar.nl/vlucht/2026/10/17/532288/lifeliner-3-ph-hip-vanuit-groessen.html",
     "article_published": null,
     "score": 100,
@@ -95,7 +95,7 @@
       "priorisierte Quelle",
       "TraumaRadar-Zeit ±30 min"
     ],
-    "time_difference_hours": 0.4,
+    "time_difference_hours": 0.3,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
     "destination": "Radboud Universitair Medisch Centrum",
