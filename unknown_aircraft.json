@@ -2590,5 +2590,23 @@
     "minimum_distance_km": 69.8,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "3de520": {
+    "identity": "3de520",
+    "hex": "3de520",
+    "registration": "D-HHAE",
+    "callsign": "DHHAE",
+    "type": "B06",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-17T10:29:45.003870+00:00",
+    "last_seen": "2026-10-17T10:29:45.003870+00:00",
+    "last_lat": 51.940846,
+    "last_lon": 6.902239,
+    "last_distance_km": 58.9,
+    "minimum_distance_km": 58.9,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
