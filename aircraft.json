@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-18T11:25:31.230177+00:00",
+  "updated": "2026-10-18T11:47:37.485636+00:00",
   "version": "4.8",
   "source": "ADSB.lol",
-  "error": "<urlopen error [Errno 101] Network is unreachable>",
+  "error": "HTTP Error 503: Service Temporarily Unavailable",
   "total": 0,
   "ac": []
 }
