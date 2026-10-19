@@ -2644,5 +2644,23 @@
     "minimum_distance_km": 70.2,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "480442": {
+    "identity": "480442",
+    "hex": "480442",
+    "registration": "D-481",
+    "callsign": "GRZLY14",
+    "type": "H47",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-19T16:52:01.700146+00:00",
+    "last_seen": "2026-10-19T16:52:01.700146+00:00",
+    "last_lat": 52.286911,
+    "last_lon": 5.85289,
+    "last_distance_km": 70.9,
+    "minimum_distance_km": 70.9,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
