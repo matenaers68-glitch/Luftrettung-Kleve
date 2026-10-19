@@ -1,7 +1,7 @@
 [
   {
     "version": "1.9",
-    "checked_at": "2026-10-19T18:49:35.794272+00:00",
+    "checked_at": "2026-10-19T19:26:21.370824+00:00",
     "segment_id": "486a31-20261019T171621",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -29,14 +29,14 @@
     "time_difference_hours": 0.2,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Vliegbasis Volkel 21:06:55 Lifeliner 4 naar Isala Hospital Zwolle Heliport 21:04:24 Lifeliner 3 na",
     "what_happened": "Op maandag 19 oktober 2026 is er een Lifeliner 3 vertrokken van Radboud Universitair Medisch Centrum naar Vliegbasis Volkel. De vlucht duurde 8 minuten en legde een afstand af van 23 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-19T18:49:35.794272+00:00",
+    "checked_at": "2026-10-19T19:26:21.370824+00:00",
     "segment_id": "486a31-20261019T171621",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -64,14 +64,14 @@
     "time_difference_hours": 0.1,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Vliegbasis Volkel 21:06:55 Lifeliner 4 naar Isala Hospital Zwolle Heliport 21:04:24 Lifeliner 3 na",
     "what_happened": "Op maandag 19 oktober 2026 is er een Lifeliner 3 vertrokken van Arnhem naar Radboud University Medical Center Heliport. De vlucht duurde 6 minuten en legde een afstand af van 17 kilometer.",
     "language": "nl",
     "notify_eligible": false
   },
   {
     "version": "1.9",
-    "checked_at": "2026-10-19T18:49:35.794272+00:00",
+    "checked_at": "2026-10-19T19:26:21.370824+00:00",
     "segment_id": "486a31-20261019T171621",
     "aircraft_name": "Lifeliner 3",
     "registration": "",
@@ -99,7 +99,7 @@
     "time_difference_hours": 0.6,
     "incident_type": "Rettungsdiensteinsatz",
     "affected": "keine gesicherte Angabe",
-    "destination": null,
+    "destination": "Vliegbasis Volkel 21:06:55 Lifeliner 4 naar Isala Hospital Zwolle Heliport 21:04:24 Lifeliner 3 na",
     "what_happened": "Op maandag 19 oktober 2026 is er een Lifeliner 3 vertrokken van Vliegbasis Volkel naar Arnhem. De vlucht duurde 12 minuten en legde een afstand af van 40 kilometer.",
     "language": "nl",
     "notify_eligible": false
