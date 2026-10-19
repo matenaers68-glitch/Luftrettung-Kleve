@@ -96,17 +96,17 @@
     }
   },
   "486a31": {
-    "timestamp": "2026-10-17T11:55:19.175209+00:00",
-    "segment_id": "486a31-20261017T115519",
+    "timestamp": "2026-10-19T17:16:21.212299+00:00",
+    "segment_id": "486a31-20261019T171621",
     "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
     "name": "Lifeliner 3",
-    "distance_km": 26.1,
+    "distance_km": 26.0,
     "location": {
-      "display": "Overasselt, Heegseveldweg",
-      "road": "Heegseveldweg",
-      "house_number": null,
-      "city": "Overasselt",
-      "postcode": "6611 KR",
+      "display": "Nijmegen, Geert Grooteplein Zuid 10",
+      "road": "Geert Grooteplein Zuid",
+      "house_number": "10",
+      "city": "Nijmegen",
+      "postcode": "6525 GA",
       "county": null,
       "country": "Nederland"
     }
