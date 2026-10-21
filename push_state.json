@@ -15,22 +15,6 @@
       "country": "Deutschland"
     }
   },
-  "485e49": {
-    "timestamp": "2026-10-07T16:29:29.474107+00:00",
-    "segment_id": "485e49-20261007T162929",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-    "name": "Lifeliner 3",
-    "distance_km": 29.4,
-    "location": {
-      "display": "Odiliapeel, Ontginningsweg 4",
-      "road": "Ontginningsweg",
-      "house_number": "4",
-      "city": "Odiliapeel",
-      "postcode": "5409 TC",
-      "county": null,
-      "country": "Nederland"
-    }
-  },
   "484a91": {
     "timestamp": "2026-10-11T19:57:37.753137+00:00",
     "segment_id": "484a91-20261011T193429",
