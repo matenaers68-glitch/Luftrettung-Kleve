@@ -142,5 +142,21 @@
       "county": "Kreis Kleve",
       "country": "Deutschland"
     }
+  },
+  "484a92": {
+    "timestamp": "2026-10-22T10:15:52.194790+00:00",
+    "segment_id": "484a92-20261022T101552",
+    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
+    "name": "Politie 02",
+    "distance_km": 28.4,
+    "location": {
+      "display": "Nijmegen, Daniëlsweg 2",
+      "road": "Daniëlsweg",
+      "house_number": "2",
+      "city": "Nijmegen",
+      "postcode": "6543 RJ",
+      "county": null,
+      "country": "Nederland"
+    }
   }
 }
