@@ -15,22 +15,6 @@
       "country": "Deutschland"
     }
   },
-  "484a91": {
-    "timestamp": "2026-10-11T19:57:37.753137+00:00",
-    "segment_id": "484a91-20261011T193429",
-    "reason": "neuer 30-km-Eintritt",
-    "name": "Politie 01",
-    "distance_km": 26.1,
-    "location": {
-      "display": "Mill, Vissteeg",
-      "road": "Vissteeg",
-      "house_number": null,
-      "city": "Mill",
-      "postcode": "5451 NK",
-      "county": null,
-      "country": "Nederland"
-    }
-  },
   "486a31": {
     "timestamp": "2026-10-19T17:16:21.212299+00:00",
     "segment_id": "486a31-20261019T171621",
