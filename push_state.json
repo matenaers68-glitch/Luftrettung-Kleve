@@ -47,22 +47,6 @@
       "country": "Nederland"
     }
   },
-  "484a94": {
-    "timestamp": "2026-10-11T07:51:45.222334+00:00",
-    "segment_id": "484a94-20261011T075145",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-    "name": "Politie 04",
-    "distance_km": 28.5,
-    "location": {
-      "display": "Nijmegen, Lankforst 4221",
-      "road": "Lankforst",
-      "house_number": "4221",
-      "city": "Nijmegen",
-      "postcode": "6538 HV",
-      "county": null,
-      "country": "Nederland"
-    }
-  },
   "3df742": {
     "timestamp": "2026-10-13T08:58:27.458658+00:00",
     "segment_id": "3df742-20261013T085827",
