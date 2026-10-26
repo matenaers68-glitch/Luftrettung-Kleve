@@ -1,20 +1,4 @@
 {
-  "3e167d": {
-    "timestamp": "2026-10-12T08:04:03.488670+00:00",
-    "segment_id": "3e167d-20261012T074757",
-    "reason": "neuer 30-km-Eintritt",
-    "name": "Christoph 9",
-    "distance_km": 5.5,
-    "location": {
-      "display": "Goch, Ostkirchstraße 40",
-      "road": "Ostkirchstraße",
-      "house_number": "40",
-      "city": "Goch",
-      "postcode": "47574",
-      "county": "Kreis Kleve",
-      "country": "Deutschland"
-    }
-  },
   "486a31": {
     "timestamp": "2026-10-19T17:16:21.212299+00:00",
     "segment_id": "486a31-20261019T171621",
