@@ -2770,5 +2770,41 @@
     "minimum_distance_km": 79.8,
     "inside_30km": false,
     "status": "needs_identification"
+  },
+  "480805": {
+    "identity": "480805",
+    "hex": "480805",
+    "registration": "S-440",
+    "callsign": "WILDC69",
+    "type": "AS3B",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-26T18:52:41.852035+00:00",
+    "last_seen": "2026-10-26T18:52:41.852035+00:00",
+    "last_lat": 51.666187,
+    "last_lon": 5.226059,
+    "last_distance_km": 64.3,
+    "minimum_distance_km": 64.3,
+    "inside_30km": false,
+    "status": "needs_identification"
+  },
+  "480808": {
+    "identity": "480808",
+    "hex": "480808",
+    "registration": "S-444",
+    "callsign": "WLDCT05",
+    "type": "AS3B",
+    "category": "A7",
+    "description": "",
+    "operator": "",
+    "first_seen": "2026-10-26T18:52:41.852035+00:00",
+    "last_seen": "2026-10-26T18:52:41.852035+00:00",
+    "last_lat": 51.465683,
+    "last_lon": 5.309588,
+    "last_distance_km": 63.3,
+    "minimum_distance_km": 63.3,
+    "inside_30km": false,
+    "status": "needs_identification"
   }
 }
