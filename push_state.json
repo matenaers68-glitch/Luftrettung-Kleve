@@ -15,22 +15,6 @@
       "country": "Nederland"
     }
   },
-  "3e0a45": {
-    "timestamp": "2026-10-16T18:31:22.436147+00:00",
-    "segment_id": "3e0a45-20261016T183122",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-    "name": "BPO160",
-    "distance_km": 22.9,
-    "location": {
-      "display": "Rees, Halderner Straße 11",
-      "road": "Halderner Straße",
-      "house_number": "11",
-      "city": "Rees",
-      "postcode": "46459",
-      "county": "Kreis Kleve",
-      "country": "Deutschland"
-    }
-  },
   "484a92": {
     "timestamp": "2026-10-22T10:15:52.194790+00:00",
     "segment_id": "484a92-20261022T101552",
