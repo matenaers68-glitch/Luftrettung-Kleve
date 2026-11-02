@@ -1,20 +1,4 @@
 {
-  "486a31": {
-    "timestamp": "2026-10-19T17:16:21.212299+00:00",
-    "segment_id": "486a31-20261019T171621",
-    "reason": "neuer Flug erstmals innerhalb 30 km erkannt",
-    "name": "Lifeliner 3",
-    "distance_km": 26.0,
-    "location": {
-      "display": "Nijmegen, Geert Grooteplein Zuid 10",
-      "road": "Geert Grooteplein Zuid",
-      "house_number": "10",
-      "city": "Nijmegen",
-      "postcode": "6525 GA",
-      "county": null,
-      "country": "Nederland"
-    }
-  },
   "484a92": {
     "timestamp": "2026-10-22T10:15:52.194790+00:00",
     "segment_id": "484a92-20261022T101552",
